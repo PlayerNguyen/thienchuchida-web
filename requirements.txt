@@ -1,0 +1,11 @@
+- Trang đăng nhập
+-- Post truyện, nội dung
+-- Tạo thêm nhiều account admin
+-- 
+
+- Trang đọc truyện
+-- Mỗi truyện có thể đặt mật khẩu và thay đổi mật khẩu
+-- Scroll dài
+
+- Trang tổng quát
+-- Có ảnh nền bọc ngoài, wrapper background đen opacity <= 50

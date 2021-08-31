@@ -1,0 +1,11 @@
+{
+  "rest-client.environmentVariables": {
+    "$shared": {},
+    "host": {
+      "url": "http://localhost:3001"
+    },
+    
+  },
+  "rest-client.rememberCookiesForSubsequentRequests": true,
+  "editor.fontSize": 14
+}

@@ -1,0 +1,35 @@
+const app = require("../app");
+const httpServer = require("http").createServer(app);
+const socketIO = require("socket.io");
+const chalk = require("chalk");
+const { fatalError } = require("../utils/errors-handle");
+const socketController = require("../controllers/socketController");
+
+/**
+ * Collect port from environment or set default port as 3000
+ *
+ */
+const port = process.env.PORT || 3000;
+
+/**
+ * Open socket whether found in environment
+ * Default status is off
+ *
+ */
+const socketEnable = process.env.SOCKET || false;
+if (socketEnable) {
+  const io = socketIO(httpServer);
+  try {
+    socketController(io);
+  } catch (err) {
+    fatalError(err);
+  }
+}
+
+/**
+ * Listen to the server
+ */
+httpServer.listen(port, () => {
+  console.log(chalk.blue(`⚙ Listening at port ${port}`));
+  console.log(chalk.gray(`|- 🌐  http://localhost:${port}/`));
+});

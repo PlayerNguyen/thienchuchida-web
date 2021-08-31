@@ -1,0 +1,31 @@
+
+
+# Initialize a new admin user
+GET {{url}}/users/init
+################################
+
+# Register a new account
+POST {{url}}/users/signup
+Content-Type: application/json
+
+{
+  "username": "admin",
+  "password": "27032002",
+  "email": "admin@example.com"
+}
+###
+
+# Sign in
+POST {{url}}/users/signin
+Content-Type: application/json
+
+{
+  "username": "admin",
+  "password": "123"
+}
+###
+
+# Access token check
+POST {{url}}/users/access
+
+###

@@ -1,0 +1,91 @@
+$text-color: #666666;
+
+.header {
+  
+  &-wrapper  {
+    background: #fff;
+    display: block;
+    border-bottom: 1px solid rgb(223, 223, 223);  
+  }
+
+  &-container {
+    display: flex;
+    flex-flow: row;
+    margin: 0 4rem;
+    gap: 1rem;    
+  }
+
+  &-logo-section { 
+    flex: 1;
+    padding: 1.2rem;
+
+    h1 {
+      margin: 0;
+    }
+  }
+
+  &-navigation {
+    display: flex;
+    flex: 3;
+    align-items: center;
+    flex-flow: row-reverse;
+    > * {
+      font-size: 1.2em;
+      margin: 0 1.4rem;
+      padding: 25px 0;
+      a {
+        text-decoration: none;
+        color: $text-color;
+      }
+      // flex: 1;
+    }
+  }
+
+}
+.dropdown-content {
+  > a {
+    &::after {
+      content: "▼";
+      margin: 0 12px;
+      font-weight: lighter;
+      color: $text-color;
+    }
+  }
+}
+
+@keyframes slideDown {
+  from {
+    transform: translateY(-25px);
+    opacity: 0;
+  }
+
+  to {
+    
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+.dropdown {
+  display: none;
+  position: absolute;
+  margin: 0.8em -2em;
+  background: #fff;
+  width: 150px;
+  padding: 0.68rem 0.48rem;
+  border-bottom-left-radius: 5px;
+  border-bottom-right-radius: 5px;
+  animation: slideDown .25s;
+  
+  a {
+    width: 100%;
+    display: block;
+    padding: 0.6em;
+    box-sizing: border-box;
+    font-size: 0.95em;
+    transition: cubic-bezier(0.175, 0.885, 0.32, 1.275) .25s;
+    &:hover {
+      background: rgb(202, 202, 202);
+    }
+  }
+}
