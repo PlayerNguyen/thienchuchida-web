@@ -1,14 +1,19 @@
 const mongoose = require("mongoose");
 const Language = require("../languages/language");
 const slugify = require("slugify");
+const { v4: uuid } = require("uuid");
 
 const bookSchema = new mongoose.Schema({
+  _id: {
+    type: String,
+    default: uuid,
+  },
   name: {
     type: String,
     required: [true, Language.BookChapter.NameMustNotBeEmpty],
   },
   book: {
-    type: mongoose.Types.ObjectId,
+    type: String,
     ref: process.env.MODEL_NAME_BOOK,
   },
   slug: {
@@ -17,12 +22,9 @@ const bookSchema = new mongoose.Schema({
       return slugify(this.name);
     },
   },
-  resources: [
-    {
-      type: mongoose.Types.ObjectId,
-      ref: process.env.MODEL_NAME_BOOK_IMAGE,
-    }
-  ]
 });
 
-module.exports = mongoose.model(process.env.MODEL_NAME_BOOK_CHAPTER, bookSchema);
+module.exports = mongoose.model(
+  process.env.MODEL_NAME_BOOK_CHAPTER,
+  bookSchema
+);

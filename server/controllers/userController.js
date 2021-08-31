@@ -8,14 +8,12 @@ function signIn(username, password) {
 
     // Username not found
     if (!doc) {
-      reject(new MiddlewareError(`Username ${username} not found.`));
-      return;
+      return reject(new MiddlewareError(`Username ${username} not found.`));
     }
 
     // Password is not match
     if (!doc.comparePassword(password)) {
-      reject(new MiddlewareError("Password is not match."));
-      return;
+      return reject(new MiddlewareError("Password is not match."));
     }
 
     // Create new refresh token
@@ -52,39 +50,42 @@ function signIn(username, password) {
   });
 }
 
-function doRefreshToken(refreshTokenId) {
-  return new Promise(async (resolve, reject) => {
-    const doc = await User.findOne({ "tokens._id": refreshTokenId });
-    // console.log(doc)
-    // Token not existed
-    if (!doc) {
-      return reject(
-        new MiddlewareError(`Token is invalid.`)
-      );
-    }
+async function doRefreshToken(refreshTokenId) {
+  const doc = await User.findOne({ "tokens._id": refreshTokenId });
+  // console.log(doc)
+  // Token not existed
+  if (!doc) {
+    throw new MiddlewareError(`Token is invalid.`);
+  }
 
-    const item = doc.tokens.find(
-      (ele) => ele._id.toString() === refreshTokenId
-    );
-    const { token, _id } = item;
+  const item = doc.tokens.find((ele) => ele._id.toString() === refreshTokenId);
+  const { token, _id } = item;
 
-    try {
-      const data = jsonwebtoken.verify(token, process.env.REFRESH_TOKEN_SECRET);
-      const accessToken = jsonwebtoken.sign(
-        { username: data.username, id: data.id },
-        process.env.ACCESS_TOKEN_SECRET,
-        {
-          expiresIn: process.env.ACCESS_TOKEN_EXPIRATION,
-        }
-      );
-      resolve({ response: doc, accessToken, refreshToken: _id.toString() });
-    } catch (e) {
-      reject(e);
+  const data = jsonwebtoken.verify(token, process.env.REFRESH_TOKEN_SECRET);
+  const accessToken = jsonwebtoken.sign(
+    { username: data.username, id: data.id },
+    process.env.ACCESS_TOKEN_SECRET,
+    {
+      expiresIn: process.env.ACCESS_TOKEN_EXPIRATION,
     }
-  });
+  );
+  return { response: doc, accessToken, refreshToken: _id.toString() };
+}
+
+async function signUp({ username, password, email }) {
+  const doc = await User.findOne({ username });
+
+  // Existed
+  if (doc) {
+    throw new MiddlewareError("Credential existed.");
+  }
+
+  const user = new User({ username, password, email });
+  return user.save();
 }
 
 module.exports = {
   signIn,
   doRefreshToken,
+  signUp,
 };

@@ -1,7 +1,12 @@
 const mongoose = require("mongoose");
 const bcrypt = require("bcrypt");
+const { v4: uuid } = require("uuid");
 
 const userSchema = new mongoose.Schema({
+  _id: {
+    type: String,
+    default: uuid,
+  },
   username: {
     type: String,
     required: [true, "The username field cannot be empty."],
@@ -11,11 +16,13 @@ const userSchema = new mongoose.Schema({
     type: String,
     required: [true, "The password field cannot be empty."],
   },
-  tokens: [{
-    token: {
-      type: String,
+  tokens: [
+    {
+      token: {
+        type: String,
+      },
     },
-  }],
+  ],
 });
 
 /**
@@ -28,7 +35,7 @@ userSchema.pre("save", async function (next) {
     return next();
   }
 
-  const salt = await bcrypt.genSalt(process.env.BCRYPT_SALT_ROUNDS);
+  const salt = await bcrypt.genSalt(parseInt(process.env.BCRYPT_SALT_ROUNDS));
   user.password = await bcrypt.hash(user.password, salt);
   next();
 });

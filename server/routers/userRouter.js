@@ -1,13 +1,27 @@
 const express = require("express");
-const { signIn, doRefreshToken } = require("../controllers/userController");
+const {
+  signIn,
+  doRefreshToken,
+  signUp,
+} = require("../controllers/userController");
 const { MiddlewareError } = require("../errors/MiddlewareError");
 const router = express.Router();
 
-/**
- * Code here
- */
-router.get("/", (req, res, next) => {
-  res.end("user interface");
+router.post("/signup", (req, res, next) => {
+  const { username, password, email } = req.body;
+
+  if (!username || !password || !email) {
+    throw new MiddlewareError("Missing parameters.", 500);
+  }
+
+  signUp({ username, password, email }).then((doc) => {
+    res.json({
+      message: "Successfully create account",
+      data: {
+        id: doc._id,
+      },
+    });
+  }).catch(next);
 });
 
 router.post("/signin", (req, res, next) => {
@@ -37,13 +51,21 @@ router.post("/signin", (req, res, next) => {
 router.post("/refresh-token", (req, res, next) => {
   const { RefreshToken } = req.cookies;
   doRefreshToken(RefreshToken).then(({ accessToken, refreshToken }) => {
-    
     res.cookie("RefreshToken", refreshToken, { httpOnly: true });
     res.cookie("AccessToken", accessToken, { httpOnly: true });
 
     res.json({
       message: "Successfully refresh token",
     });
+  }).catch(next);
+});
+
+router.post("/signout", (req, res, next) => {
+  res.clearCookie("AccessToken");
+  res.clearCookie("RefreshToken");
+
+  res.json({
+    message: "Successfully sign out",
   });
 });
 

@@ -2,8 +2,13 @@ const mongoose = require("mongoose");
 const Language = require("../languages/language");
 const slugify = require("slugify");
 const lodash = require("lodash");
+const { v4: uuid } = require("uuid");
 
 const bookSchema = new mongoose.Schema({
+  _id: {
+    type: String,
+    default: uuid,
+  },
   title: {
     type: String,
     required: [true, Language.Book.TitleMustNotBeEmpty],
@@ -31,6 +36,10 @@ const bookSchema = new mongoose.Schema({
   updatedAt: {
     type: Date,
     default: Date.now,
+  },
+  thumbnail: {
+    type: mongoose.Types.ObjectId,
+    ref: process.env.MODEL_NAME_RESOURCE,
   },
 });
 
