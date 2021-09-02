@@ -1,7 +1,34 @@
 @import "styles/Color";
 
-.book{
+.book {
   &__wrapper {
     background: $background__color--primary;
+  }
+
+  &__header {
+    margin-bottom: 2em;
+  }
+
+  &__body {
+    display: flex;
+    flex-flow: row;
+    margin: 0 4em;
+    gap: 1em;
+  }
+
+  &__thumbnail {
+    padding: 0 6px;
+    flex: 1;
+  }
+
+  &__infobox {
+    overflow: none;
+    flex: 4;
+    padding: 1em;
+  }
+
+  &__description {
+    color: $text__color--secondary;
+    font-size: large;
   }
 }

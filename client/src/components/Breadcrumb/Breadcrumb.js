@@ -7,17 +7,20 @@ export default function Breadcrumb({ data }) {
     <div className="breadcrumb__wrapper">
       <div className="breadcrumb">
         <div className="breadcrumb__container">
-          <div>
-            <Link className="link link--secondary" to='/'>Trang chủ</Link>
-          </div>
-          <div>
-            <Link className="link link--secondary" to='/truyen'>Trang chủ</Link>
-          </div>
-          <div>
-            <Link className="link link--secondary link--active bold" to='/'>Trang chủ</Link>
-          </div>
-
-          
+          {data &&
+            data.map((element, index) => {
+              const representClass =
+                index < data.length - 1
+                  ? `link link--secondary`
+                  : `link link--secondary link--active bold`;
+              return (
+                <div>
+                  <Link className={representClass} to={element && element.url} key={index}>
+                    {element && element.value}
+                  </Link>
+                </div>
+              );
+            })}
         </div>
       </div>
     </div>
