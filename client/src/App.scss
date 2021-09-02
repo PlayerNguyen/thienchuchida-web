@@ -31,3 +31,10 @@
 .bold {
   font-weight: bold;
 }
+
+hr {
+  border-top: 0.12em $hr__color solid;
+  border-bottom: 0;
+  border-left: 0;
+  border-right: 0;
+}

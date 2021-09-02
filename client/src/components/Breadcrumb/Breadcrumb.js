@@ -14,8 +14,8 @@ export default function Breadcrumb({ data }) {
                   ? `link link--secondary`
                   : `link link--secondary link--active bold`;
               return (
-                <div>
-                  <Link className={representClass} to={element && element.url} key={index}>
+                <div key={index}>
+                  <Link className={representClass} to={element && element.url} >
                     {element && element.value}
                   </Link>
                 </div>

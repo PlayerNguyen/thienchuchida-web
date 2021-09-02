@@ -12,13 +12,18 @@
   &__body {
     display: flex;
     flex-flow: row;
-    margin: 0 4em;
+    margin: 0 4em 2em;
     gap: 1em;
+    
   }
 
   &__thumbnail {
     padding: 0 6px;
     flex: 1;
+  }
+
+  &__title {
+    font-size: xx-large;
   }
 
   &__infobox {
@@ -29,6 +34,22 @@
 
   &__description {
     color: $text__color--secondary;
-    font-size: large;
+    font-size: x-large;
+  }
+
+  &__status {
+    margin-top: 12px;
+    display: flex;
+    flex-flow: column;
+    > div {
+      display: flex;
+      flex-flow: row;
+      margin-bottom: 12px;
+      > * {
+        margin: 0 12px;
+        font-size: larger;
+        color: $text__color--secondary;
+      }
+    }
   }
 }
