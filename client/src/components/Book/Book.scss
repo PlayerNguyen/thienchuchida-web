@@ -3,6 +3,7 @@
 .book {
   &__wrapper {
     background: $background__color--primary;
+    padding: 1.8em 3em;
   }
 
   &__header {
@@ -14,12 +15,17 @@
     flex-flow: row;
     margin: 0 4em 2em;
     gap: 1em;
-    
   }
 
   &__thumbnail {
-    padding: 0 6px;
-    flex: 1;
+    flex: 3 1;
+    align-items: center;
+    justify-content: center;
+    padding: 16px;
+    > img {
+      // max-width: 300px;
+      width: 100%;
+    }
   }
 
   &__title {
@@ -34,7 +40,7 @@
 
   &__description {
     color: $text__color--secondary;
-    font-size: x-large;
+    font-size: larger;
   }
 
   &__status {
@@ -51,5 +57,27 @@
         color: $text__color--secondary;
       }
     }
+  }
+}
+
+.chapterbox {
+  display: inline-flex;
+  flex-flow: row;
+  gap: 2em;
+  flex-wrap: wrap;
+}
+
+.chapter {
+  flex: 1 1 320px;
+  &__thumbnail {
+    > img {
+      width: 100%;
+    }
+  }
+
+  &__title {
+    font-size: larger;
+    font-weight: bold;
+    margin-top: 12px;
   }
 }

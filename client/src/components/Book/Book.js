@@ -43,7 +43,7 @@ export default function Book() {
           {/* Big thumbnail in left */}
           <div className="book__thumbnail">
             <img
-              src="https://dummyimage.com/200x300/f5f5f5/000&text=Sample+image"
+              src="https://dummyimage.com/1920x1080/f5f5f5/000&text=Sample+image"
               alt="thumbnail"
             />
           </div>
@@ -57,38 +57,119 @@ export default function Book() {
               <div>
                 <span>
                   <FontAwesomeIcon icon={faEye} />
-                  
                 </span>
                 <span>Lượt xem</span>
-                <span className="bold">
-                  120.356.156
-                </span>
+                <span className="bold">120.356.156</span>
               </div>
 
               <div>
                 <span>
                   <FontAwesomeIcon icon={faClock} />
-                  
                 </span>
                 <span>Cập nhật</span>
-                <span className="bold">
-                  2 giờ trước
-                </span>
+                <span className="bold">2 giờ trước</span>
               </div>
               <div>
                 <span>
                   <FontAwesomeIcon icon={faHeart} />
-                  
                 </span>
                 <span>Yêu thích</span>
-                <span className="bold">
-                  150.303
-                </span>
+                <span className="bold">150.303</span>
               </div>
             </div>
           </div>
         </div>
-        <hr/>
+
+        {/* <hr /> */}
+
+        <div className="chapterbox">
+          <div className="chapter">
+            <div className="chapter__thumbnail">
+              <img
+                src="https://dummyimage.com/1920x1080/f5f5f5/000&text=Sample+image"
+                alt="thumbnail chapter s"
+              />
+            </div>
+            <div className="chapter__footer">
+              <div className="chapter__title title">
+              Chapter 2
+              </div>
+            </div>
+          </div>
+
+          <div className="chapter">
+            <div className="chapter__thumbnail">
+              <img
+                src="https://dummyimage.com/1920x1080/f5f5f5/000&text=Sample+image"
+                alt="thumbnail chapter s"
+              />
+            </div>
+            <div className="chapter__footer">
+              <div className="chapter__title title">
+                Chapter 2
+              </div>
+            </div>
+          </div>
+
+          <div className="chapter">
+            <div className="chapter__thumbnail">
+              <img
+                src="https://dummyimage.com/1920x1080/f5f5f5/000&text=Sample+image"
+                alt="thumbnail chapter s"
+              />
+            </div>
+            <div className="chapter__footer">
+              <div className="chapter__title title">
+              Chapter 2
+              </div>
+            </div>
+          </div>
+
+
+          <div className="chapter">
+            <div className="chapter__thumbnail">
+              <img
+                src="https://dummyimage.com/1920x1080/f5f5f5/000&text=Sample+image"
+                alt="thumbnail chapter s"
+              />
+            </div>
+            <div className="chapter__footer">
+              <div className="chapter__title title">
+              Chapter 2
+              </div>
+            </div>
+          </div>
+
+
+          <div className="chapter">
+            <div className="chapter__thumbnail">
+              <img
+                src="https://dummyimage.com/1920x1080/f5f5f5/000&text=Sample+image"
+                alt="thumbnail chapter s"
+              />
+            </div>
+            <div className="chapter__footer">
+              <div className="chapter__title title">
+              Chapter 2
+              </div>
+            </div>
+          </div>
+
+
+          <div className="chapter">
+            <div className="chapter__thumbnail">
+              <img
+                src="https://dummyimage.com/1920x1080/f5f5f5/000&text=Sample+image"
+                alt="thumbnail chapter s"
+              />
+            </div>
+            <div className="chapter__footer">
+              <div className="chapter__title title">
+              Chapter 2
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   );
