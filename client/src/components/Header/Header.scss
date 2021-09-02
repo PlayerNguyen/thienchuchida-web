@@ -2,13 +2,13 @@ $text-color: #666666;
 
 .header {
   
-  &-wrapper  {
+  &__wrapper  {
     background: #fff;
     display: block;
     border-bottom: 1px solid rgb(223, 223, 223);  
   }
 
-  &-container {
+  &__container {
     display: flex;
     flex-flow: row;
     margin: 0 4rem;
@@ -21,6 +21,11 @@ $text-color: #666666;
 
     h1 {
       margin: 0;
+
+      a {
+        text-decoration: none;
+        color: #000;
+      }
     }
   }
 
@@ -33,24 +38,15 @@ $text-color: #666666;
       font-size: 1.2em;
       margin: 0 1.4rem;
       padding: 25px 0;
-      a {
+      a, span {
         text-decoration: none;
         color: $text-color;
+        cursor: pointer;
       }
       // flex: 1;
     }
   }
 
-}
-.dropdown-content {
-  > a {
-    &::after {
-      content: "▼";
-      margin: 0 12px;
-      font-weight: lighter;
-      color: $text-color;
-    }
-  }
 }
 
 @keyframes slideDown {
@@ -67,25 +63,36 @@ $text-color: #666666;
 }
 
 .dropdown {
-  display: none;
+  display: block;
   position: absolute;
-  margin: 0.8em -2em;
+  margin: 1.4em 0;
   background: #fff;
-  width: 150px;
+  width: 12%;
   padding: 0.68rem 0.48rem;
   border-bottom-left-radius: 5px;
   border-bottom-right-radius: 5px;
   animation: slideDown .25s;
-  
-  a {
+  padding: 0;
+  box-shadow: #d4d4d4 1px 1px 6px;
+
+  &__content {
+    display: flex;
+  }
+
+  &__icon {
+    margin: 0 12px;
+    
+  }
+  &__link {
     width: 100%;
     display: block;
     padding: 0.6em;
     box-sizing: border-box;
     font-size: 0.95em;
-    transition: cubic-bezier(0.175, 0.885, 0.32, 1.275) .25s;
+    // transition: cubic-bezier(0.175, 0.885, 0.32, 1.275) .25s;
+
     &:hover {
-      background: rgb(202, 202, 202);
+      background: #f5f5f5;
     }
   }
 }

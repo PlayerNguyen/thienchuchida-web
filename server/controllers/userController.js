@@ -1,8 +1,9 @@
 const { MiddlewareError } = require("../errors/MiddlewareError");
 const User = require("../models/UserModel");
 const jsonwebtoken = require("jsonwebtoken");
+const UserModel = require("../models/UserModel");
 
-function signIn(username, password) {
+function signIn(username, password, userAgent, address) {
   return new Promise(async (resolve, reject) => {
     const doc = await User.findOne({ username });
 
@@ -18,7 +19,14 @@ function signIn(username, password) {
 
     // Create new refresh token
     const refreshToken = jsonwebtoken.sign(
-      { username: doc.username, id: doc._id },
+      {
+        username: doc.username,
+        id: doc._id,
+        admin: doc.admin,
+        email: doc.email,
+        userAgent,
+        address,
+      },
       process.env.REFRESH_TOKEN_SECRET,
       {
         expiresIn: process.env.REFRESH_TOKEN_EXPIRATION,
@@ -26,7 +34,12 @@ function signIn(username, password) {
     );
 
     const accessToken = jsonwebtoken.sign(
-      { username: doc.username, id: doc._id },
+      {
+        username: doc.username,
+        id: doc._id,
+        admin: doc.admin,
+        email: doc.email,
+      },
       process.env.ACCESS_TOKEN_SECRET,
       {
         expiresIn: process.env.ACCESS_TOKEN_EXPIRATION,
@@ -50,12 +63,18 @@ function signIn(username, password) {
   });
 }
 
+/**
+ * Refresh token.
+ * 
+ * @param {*} refreshTokenId 
+ * @returns 
+ */
 async function doRefreshToken(refreshTokenId) {
   const doc = await User.findOne({ "tokens._id": refreshTokenId });
-  // console.log(doc)
+
   // Token not existed
   if (!doc) {
-    throw new MiddlewareError(`Token is invalid.`);
+    throw new MiddlewareError(`Token is invalid.`, 401);
   }
 
   const item = doc.tokens.find((ele) => ele._id.toString() === refreshTokenId);
@@ -72,6 +91,12 @@ async function doRefreshToken(refreshTokenId) {
   return { response: doc, accessToken, refreshToken: _id.toString() };
 }
 
+/**
+ * Sign up new account. Whether user existed, throws credential existed.
+ *
+ * @param {*} param0
+ * @returns A promise contains document of user inside
+ */
 async function signUp({ username, password, email }) {
   const doc = await User.findOne({ username });
 
@@ -84,8 +109,23 @@ async function signUp({ username, password, email }) {
   return user.save();
 }
 
+/**
+ * Check via id whether user is an admin or not
+ * @param {*} id user id
+ * @returns true whether user is an admin, false otherwise.
+ */
+async function isAdmin(id) {
+  const doc = await UserModel.findOne({ _id: id });
+  if (!doc) {
+    throw new MiddlewareError("Không tìm thấy người dùng.", 404, { id });
+  }
+
+  return doc.admin;
+}
+
 module.exports = {
   signIn,
   doRefreshToken,
   signUp,
+  isAdmin,
 };

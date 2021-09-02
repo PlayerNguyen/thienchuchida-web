@@ -1,10 +1,18 @@
 const express = require("express");
 const router = express.Router();
 const chaptersRouter = require("./bookChapterRouter");
-const { createNewBook } = require("../../controllers/bookController");
-const { getAuthorize } = require("../../middlewares/AuthMiddleware");
+const { createNewBook, getBooks } = require("../../controllers/bookController");
+const { getAdminAuthorize } = require("../../middlewares/AuthMiddleware");
 
-router.post("/new", getAuthorize, (req, res, next) => {
+/**
+ * A chapter router cast
+ */
+router.use("/:bookId/chapters", chaptersRouter);
+
+/**
+ * Create a new book
+ */
+router.post("/", getAdminAuthorize, (req, res, next) => {
   const { title, description } = req.body;
   createNewBook({ title, description })
     .then((doc) => {
@@ -14,8 +22,17 @@ router.post("/new", getAuthorize, (req, res, next) => {
 });
 
 /**
- * A chapter router cast
+ * Get all the newest book
  */
-router.use("/:bookId", chaptersRouter);
+router.get("/", (req, res, next) => {
+  const { sort, page, limit } = req.query;
+  const start = (page && limit) ? (page - 1) * limit : 0;
+  // Get all books and filter it by parameters
+  getBooks({}, sort, (limit ? parseInt(limit) : 0), start)
+    .then((doc) => {
+      res.json({ data: doc });
+    })
+    .catch(next);
+});
 
 module.exports = router;

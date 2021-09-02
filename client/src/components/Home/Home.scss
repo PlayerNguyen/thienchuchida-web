@@ -1,37 +1,75 @@
 .home {
-  &-wrapper {
+  &__wrapper {
     margin: 2em 5em;
     padding: 0.8em 2em;
     background: #fff;
   }
 
-  &-content {
+  &__content {
     display: flex;
     gap: 0.6em;
+    &--outer {
+      flex: 3;
+    }
+    &--aside {
+      flex: 1;
+      display: flex;
+      flex-flow: column;
+    }
   }
 
-  &-item-outer {
-    flex: 3;
-  }
-
-  &-items {
-    display: flex;
-    flex-flow: row;
+  &__item_list {
+    // display: flex;
+    // flex-flow: row;
     gap: 0.6rem;
+    .separator {
+      display: flex;
+      flex-flow: row;
+      gap: 0.6rem;
+    }
   }
 
-  &-item {
-    &-thumbnail {
+  &__item {
+    &__thumbnail {
       > img {
         width: 200px;
         height: 300px;
       }
     }
   }
+}
 
-  &-aside {
-    flex: 1;
-    display: flex;
-    flex-flow: column;
+.cardbox {
+  display: flex;
+  flex-flow: row;
+  flex-wrap: nowrap;
+  overflow: auto;
+  flex: 3;
+}
+
+.card {
+  // max-width: (100%/4);
+  text-decoration: none;
+  flex: 1 0 21%;
+  &__body {
+    &__thumbnail {
+      > img {
+        width: 100%;
+      }
+    }
+  }
+
+  &__footer {
+    padding: 1.2em;
+    &__title {
+      font-weight: bold;
+      text-decoration: none;
+      color: rgb(15, 15, 15);
+    }
+    &__information {
+      * {
+        color: #808080;
+      }
+    }
   }
 }

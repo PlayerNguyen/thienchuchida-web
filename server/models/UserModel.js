@@ -16,6 +16,16 @@ const userSchema = new mongoose.Schema({
     type: String,
     required: [true, "The password field cannot be empty."],
   },
+  email: {
+    type: String
+  },
+  avatar: {
+    type: String
+  },
+  admin: {
+    type: Boolean,
+    default: false
+  },
   tokens: [
     {
       token: {

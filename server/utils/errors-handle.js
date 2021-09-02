@@ -13,8 +13,10 @@ const middlewareError = (err, req, res, next) => {
   fatalError(err);
   // Send back to client
   res.status(err.statusCode || 500).json({
-    message: err.message,
-    name: err.name,
+    error: {
+      message: err.message,
+      name: err.name,
+    },
   });
 };
 

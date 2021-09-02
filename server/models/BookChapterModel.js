@@ -16,6 +16,9 @@ const bookSchema = new mongoose.Schema({
     type: String,
     ref: process.env.MODEL_NAME_BOOK,
   },
+  content: {
+    type: String,
+  },
   slug: {
     type: String,
     default: function () {

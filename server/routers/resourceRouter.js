@@ -14,7 +14,7 @@ const {
 const { MiddlewareError } = require("../errors/MiddlewareError");
 
 router.post(
-  "/upload",
+  "/",
   getAuthorize,
   upload.array("files"),
   async (req, res, next) => {
@@ -46,11 +46,13 @@ router.get("/:name", (req, res, next) => {
     .catch(next);
 });
 
-router.delete("/delete/:id", getAuthorize, async (req, res, next) => {
+router.delete("/:id", getAuthorize, async (req, res, next) => {
   const { id } = req.params;
-  await removeFile(id);
-  res.json({
-    message: "Successfully remove file"
+  removeFile(id).then((doc) => {
+    res.json({
+      message: "Successfully remove file",
+      data: doc,
+    });
   });
 });
 

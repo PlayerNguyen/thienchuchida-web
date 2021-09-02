@@ -38,7 +38,7 @@ const bookSchema = new mongoose.Schema({
     default: Date.now,
   },
   thumbnail: {
-    type: mongoose.Types.ObjectId,
+    type: String,
     ref: process.env.MODEL_NAME_RESOURCE,
   },
 });
