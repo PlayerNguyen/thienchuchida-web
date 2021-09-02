@@ -1,0 +1,12 @@
+$text__color--primary: #000000;
+$text__color--secondary: #666666;
+
+$background__color--primary: #ffffff;
+$background__color--secondary: #f5f5f5;
+
+$url__color--primary: #202020;
+
+.link {
+  color: $url__color--primary;
+  text-decoration: none;
+}

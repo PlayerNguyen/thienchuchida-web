@@ -22,7 +22,7 @@ app.use(cookieParser());
 app.use(
   cors({
     origin: "http://localhost:3000",
-    credentials: true
+    credentials: true,
   })
 );
 /**
@@ -36,7 +36,11 @@ app.use("/uploads", express.static("uploads"));
 /**
  * Database initialize
  */
-mongoose.connect(process.env.DATABASE_URL, {});
+mongoose.connect(process.env.DATABASE_URL, {}).catch((err) => {
+  if (err) {
+    throw err;
+  }
+});
 
 /**
  * Closed middleware

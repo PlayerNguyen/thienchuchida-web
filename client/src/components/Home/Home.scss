@@ -1,8 +1,10 @@
+@import "styles/Color";
+
 .home {
   &__wrapper {
-    margin: 2em 5em;
-    padding: 0.8em 2em;
-    background: #fff;
+    // margin: 2em 5em;
+    padding: 0.8em 3em;
+    background: $background__color--primary;
   }
 
   &__content {
@@ -50,6 +52,7 @@
 .card {
   // max-width: (100%/4);
   text-decoration: none;
+  color: #808080;
   flex: 1 0 21%;
   &__body {
     &__thumbnail {
@@ -67,8 +70,16 @@
       color: rgb(15, 15, 15);
     }
     &__information {
-      * {
-        color: #808080;
+      display: flex;
+        flex-flow: row;
+      >div {
+        padding: 0.4em 0;
+        display: flex;
+        flex-flow: row;
+        // flex: 1;
+        > span {
+          margin: 0.2em 0.5em;
+        }
       }
     }
   }

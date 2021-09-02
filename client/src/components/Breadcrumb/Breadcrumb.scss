@@ -1,0 +1,14 @@
+.breadcrumb {
+  margin: 0 4em;  
+  &__wrapper {
+    padding: 0.4em;
+    background: #fff;
+  }
+
+  &__container {
+    display: flex;
+    flex: row;
+    font-size: large;
+    padding: 0.2em 0;
+  }
+}

@@ -25,12 +25,16 @@ router.post("/", getAdminAuthorize, (req, res, next) => {
  * Get all the newest book
  */
 router.get("/", (req, res, next) => {
-  const { sort, page, limit } = req.query;
-  const start = (page && limit) ? (page - 1) * limit : 0;
+  const { sort, page, limit, slug } = req.query;
+  const start = page && limit ? (page - 1) * limit : 0;
   // Get all books and filter it by parameters
-  getBooks({}, sort, (limit ? parseInt(limit) : 0), start)
+  getBooks({}, sort, limit ? parseInt(limit) : 0, start)
     .then((doc) => {
-      res.json({ data: doc });
+      let result = [...doc];
+      if (slug) {
+        result = result.filter((e) => e.slug === slug);
+      }
+      res.json({ data: result });
     })
     .catch(next);
 });

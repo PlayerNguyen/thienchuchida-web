@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { useHistory } from "react-router-dom";
-import { setSignedIn } from "../../features/auth/authSlice";
+import { setSignedIn } from "../../app/slices/auth";
 import UserService from "../../services/UserService";
 
 

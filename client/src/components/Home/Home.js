@@ -1,13 +1,16 @@
 import React, { useEffect, useState } from "react";
+import moment from "moment";
 import Config from "../../config/Config";
 import BookService from "../../services/BookService";
 import "./Home.scss";
 import { Link } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faEye } from "@fortawesome/free-regular-svg-icons";
+import { faEye, faClock } from "@fortawesome/free-regular-svg-icons";
+import 'moment/locale/vi'
+moment.locale("vi");
 
 function CardItem({ data }) {
-  // console.log(data)
+  
   return (
     <Link className="card" to={`/truyen/${data ? data.slug : null}`}>
       <div className="card__body">
@@ -27,12 +30,20 @@ function CardItem({ data }) {
         <div className="card__footer__title">
           {data.title ? data.title : `Untitled`}
         </div>
-        <div className="card__footer_information">
+        <div className="card__footer__information">
           <div>
             <span>
               <FontAwesomeIcon icon={faEye} />
             </span>
-            <span>{data.views}</span>
+            <span>{data && data.views}</span>
+          </div>
+          <div>
+            <span>
+              <FontAwesomeIcon icon={faClock} />
+            </span>
+            <span>
+              {data && moment(new Date(data.updatedAt)).fromNow(true)}
+            </span>
           </div>
         </div>
       </div>
@@ -50,15 +61,16 @@ export default function Home() {
   }, []);
 
   return (
-    <div className="home__wrapper">
+    <div className="home__wrapper container">
       {/* Header here */}
-
       <div className="home__content">
         {/* Left block */}
         <div className="home__content--outer">
           {/* Title */}
           <div>
-            <h1>Truyện mới</h1>
+            <h1>
+              <Link to="/">Truyện mới</Link>
+            </h1>
           </div>
           {/* Item list */}
           <div className="home__item_list cardbox">
