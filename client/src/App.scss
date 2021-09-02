@@ -1,9 +1,7 @@
 @import "styles/Color";
 .app {
-  
   &-wrapper {
     background: rgba(0, 0, 0, 0.349);
-    
   }
 }
 
@@ -38,3 +36,10 @@ hr {
   border-left: 0;
   border-right: 0;
 }
+
+.text {
+  &--secondary {
+    color: $text__color--secondary !important;
+  }
+}
+

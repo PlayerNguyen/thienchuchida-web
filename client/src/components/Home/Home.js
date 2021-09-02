@@ -6,11 +6,14 @@ import "./Home.scss";
 import { Link } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEye, faClock } from "@fortawesome/free-regular-svg-icons";
-import 'moment/locale/vi'
+import "moment/locale/vi";
+import { faChevronRight } from "@fortawesome/free-solid-svg-icons";
+/**
+ * Initialize locale for moment.js
+ */
 moment.locale("vi");
 
 function CardItem({ data }) {
-  
   return (
     <Link className="card" to={`/truyen/${data ? data.slug : null}`}>
       <div className="card__body">
@@ -65,25 +68,62 @@ export default function Home() {
       {/* Header here */}
       <div className="home__content">
         {/* Left block */}
-        <div className="home__content--outer">
-          {/* Title */}
-          <div>
-            <h1>
-              <Link to="/">Truyện mới</Link>
-            </h1>
+        <div className="category__box">
+          <div className="category">
+            <div className="category__title">
+              <Link to="/truyen-moi-cap-nhat" className="link link--primary">
+                <span>Truyện mới cập nhật</span>
+                <span className="text text--secondary nav__icon">
+                  <FontAwesomeIcon icon={faChevronRight} />
+                </span>
+              </Link>
+            </div>
+            <div className="category__content cardbox">
+              {lastUpdated
+                ? lastUpdated.map((ele, index) => {
+                    return <CardItem key={index} data={ele && ele} />;
+                  })
+                : null}
+            </div>
           </div>
-          {/* Item list */}
-          <div className="home__item_list cardbox">
-            {lastUpdated
-              ? lastUpdated.map((ele, index) => {
-                  return <CardItem key={index} data={ele && ele} />;
-                })
-              : null}
+          <div className="category">
+            <div className="category__title">
+              <Link to="/" className="link link--primary">
+                <span>Truyện mới đăng</span>
+                <span className="text text--secondary nav__icon">
+                  <FontAwesomeIcon icon={faChevronRight} />
+                </span>
+              </Link>
+            </div>
+            <div className="category__content cardbox">
+              {lastUpdated
+                ? lastUpdated.map((ele, index) => {
+                    return <CardItem key={index} data={ele && ele} />;
+                  })
+                : null}
+            </div>
+          </div>
+          <div className="category">
+            <div className="category__title">
+              <Link to="/" className="link link--primary">
+                <span>Truyện mới</span>
+                <span className="text text--secondary nav__icon">
+                  <FontAwesomeIcon icon={faChevronRight} />
+                </span>
+              </Link>
+            </div>
+            <div className="category__content cardbox">
+              {lastUpdated
+                ? lastUpdated.map((ele, index) => {
+                    return <CardItem key={index} data={ele && ele} />;
+                  })
+                : null}
+            </div>
           </div>
         </div>
 
         {/* Aside */}
-        <div className="home__content--aside">
+        <div className="aside__box">
           <div>
             <h1>Thông báo</h1>
           </div>

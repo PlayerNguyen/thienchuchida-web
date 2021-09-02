@@ -65,6 +65,10 @@
   flex-flow: row;
   gap: 2em;
   flex-wrap: wrap;
+
+  &__outer {
+    margin-bottom: 1.22em;
+  }
 }
 
 .chapter {
