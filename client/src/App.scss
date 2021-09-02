@@ -1,4 +1,4 @@
-
+@import "styles/Color";
 .app {
   
   &-wrapper {
@@ -10,4 +10,24 @@
 .container {
   margin: 5em;
   padding: 0.8em 3em;
+}
+
+.link {
+  text-decoration: none;
+
+  &--primary {
+    color: $url__color--primary !important;
+  }
+
+  &--secondary {
+    color: $url__color--secondary !important;
+  }
+
+  &--active {
+    color: $url__color--active !important;
+  }
+}
+
+.bold {
+  font-weight: bold;
 }

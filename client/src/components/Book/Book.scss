@@ -1,5 +1,7 @@
+@import "styles/Color";
+
 .book{
   &__wrapper {
-    
+    background: $background__color--primary;
   }
 }
