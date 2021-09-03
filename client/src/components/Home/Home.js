@@ -23,7 +23,7 @@ function CardItem({ data }) {
               data.thumbnail
                 ? `${Config.SERVER_API_URL}/${data.thumbnail.path}`
                 : // Default size url
-                  `https://dummyimage.com/200x300/f5f5f5/000&text=Sample+image`
+                  Config.DEFAULT_THUMBNAIL
             }
             alt="Thumbnail"
           />

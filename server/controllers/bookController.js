@@ -7,27 +7,25 @@ async function createNewBook({ title, description }) {
   return data;
 }
 
-async function addChapter({ bookId, name, content }) {
+async function addChapter(book, name, content) {
   return new Promise((resolve, reject) => {
-    const chapter = new BookChapterModel({ book: bookId, name, content });
+    const chapter = new BookChapterModel({ book, name, content });
 
     chapter.save().then(resolve).catch(reject);
   });
 }
 
 async function addResourceChapter({ id, resource }) {
-  return new Promise(async (resolve, reject) => {
-    const chapter = await BookChapterModel.findOne({ id });
-    if (!chapter) {
-      return reject(new MiddlewareError("Resource chapter not found.", 404));
-    }
-    chapter.resources = [...chapter.resources, resource];
-    chapter.save().then(resolve).catch(reject);
-  });
+  const chapter = await BookChapterModel.findOne({ id });
+  if (!chapter) {
+    return reject(new MiddlewareError("Resource chapter not found.", 404));
+  }
+  chapter.resources = [...chapter.resources, resource];
+  return chapter.save();
 }
 
-async function getChaptersInBook({ bookId }) {
-  return await BookChapterModel.find({ book: bookId }, "-__v");
+async function getChaptersInBook(book) {
+  return await BookChapterModel.find({ book }, "-__v");
 }
 
 async function getChapterById({ bookId, chapter }) {
@@ -49,7 +47,11 @@ async function getBooks(query, sort, limit, skip) {
     .sort(sort)
     .limit(limit)
     .skip(skip)
-    .populate("thumbnail", '-__v');
+    .populate("thumbnail", "-__v");
+}
+
+async function getBookById(id) {
+  return BookModel.findOne({ _id: id }, "-__v");
 }
 
 module.exports = {
@@ -59,4 +61,5 @@ module.exports = {
   getChaptersInBook,
   getChapterById,
   getBooks,
+  getBookById,
 };

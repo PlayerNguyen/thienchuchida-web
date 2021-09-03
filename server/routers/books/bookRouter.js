@@ -1,13 +1,15 @@
 const express = require("express");
 const router = express.Router();
 const chaptersRouter = require("./bookChapterRouter");
-const { createNewBook, getBooks } = require("../../controllers/bookController");
+const {
+  createNewBook,
+  getBooks,
+  getBookById,
+  getChaptersInBook,
+  addChapter,
+} = require("../../controllers/bookController");
 const { getAdminAuthorize } = require("../../middlewares/AuthMiddleware");
-
-/**
- * A chapter router cast
- */
-router.use("/:bookId/chapters", chaptersRouter);
+const { MiddlewareError } = require("../../errors/MiddlewareError");
 
 /**
  * Create a new book
@@ -34,7 +36,51 @@ router.get("/", (req, res, next) => {
       if (slug) {
         result = result.filter((e) => e.slug === slug);
       }
+
       res.json({ data: result });
+    })
+    .catch(next);
+});
+
+/**
+ * A chapter router cast
+ */
+//  router.use("/:bookId", chaptersRouter);
+
+/**
+ * Get book information
+ */
+router.get("/:bookId", (req, res, next) => {
+  const { bookId } = req.params;
+  getBookById(bookId)
+    .then((book) => {
+      if (!book) {
+        next(new MiddlewareError("Book not found", 404));
+      }
+      
+      getChaptersInBook(book._id)
+        .then((chapters) => {
+          res.json({
+            data: book,
+            chapters: chapters,
+          });
+        })
+        .catch(next);
+    })
+    .catch(next);
+});
+
+/**
+ * Post new chapter into a book
+ */
+router.post("/:bookId/chapters", (req, res, next) => {
+  const { bookId } = req.params;
+  const { name, content } = req.body;
+  addChapter(bookId, name, content)
+    .then((chapter) => {
+      res.json({
+        data: chapter,
+      });
     })
     .catch(next);
 });

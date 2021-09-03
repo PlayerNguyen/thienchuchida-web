@@ -13,7 +13,7 @@
   &__body {
     display: flex;
     flex-flow: row;
-    margin: 0 4em 2em;
+    margin-bottom: 2em;
     gap: 1em;
   }
 
@@ -30,6 +30,7 @@
 
   &__title {
     font-size: xx-large;
+    color: $text__color--primary;
   }
 
   &__infobox {

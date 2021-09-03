@@ -3,6 +3,7 @@ const Language = require("../languages/language");
 const slugify = require("slugify");
 const lodash = require("lodash");
 const { v4: uuid } = require("uuid");
+const BookChapterModel = require("./BookChapterModel");
 
 const bookSchema = new mongoose.Schema({
   _id: {
@@ -41,6 +42,22 @@ const bookSchema = new mongoose.Schema({
     type: String,
     ref: process.env.MODEL_NAME_RESOURCE,
   },
+});
+
+bookSchema.post("find", function (results) {
+  results.map((result) => {
+    BookChapterModel.find({book: result._id}).then(chapters => {
+      console.log(chapters)
+      let sum = 0;
+      for (let i in chapters) {
+        const chapter = chapters[i];
+        sum += chapter.views;
+      }
+      result.views = sum;
+
+    })
+    
+  });
 });
 
 module.exports = mongoose.model(process.env.MODEL_NAME_BOOK, bookSchema);
