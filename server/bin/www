@@ -4,6 +4,7 @@ const socketIO = require("socket.io");
 const chalk = require("chalk");
 const { fatalError } = require("../utils/errors-handle");
 const socketController = require("../controllers/socketController");
+const mongoose = require("mongoose");
 
 /**
  * Collect port from environment or set default port as 3000
@@ -25,6 +26,15 @@ if (socketEnable) {
     fatalError(err);
   }
 }
+
+/**
+ * Database initialize
+ */
+mongoose.connect(process.env.DATABASE_URL, {}).catch((err) => {
+  if (err) {
+    throw err;
+  }
+});
 
 /**
  * Listen to the server

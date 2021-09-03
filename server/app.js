@@ -34,15 +34,6 @@ app.use("/resources", resources);
 app.use("/uploads", express.static("uploads"));
 
 /**
- * Database initialize
- */
-mongoose.connect(process.env.DATABASE_URL, {}).catch((err) => {
-  if (err) {
-    throw err;
-  }
-});
-
-/**
  * Closed middleware
  *  to handle errors
  */

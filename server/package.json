@@ -4,7 +4,7 @@
   "description": "Lite template for express.js application",
   "main": "bin/www",
   "scripts": {
-    "test": "jest",
+    "test": "jest --runInBand --detectOpenHandles --forceExit",
     "start": "nodemon ."
   },
   "author": "",
@@ -17,17 +17,21 @@
     "cors": "^2.8.5",
     "dotenv": "^10.0.0",
     "express": "^4.17.1",
-    "jest": "^27.0.6",
+    "jest": "^27.1.0",
     "jsonwebtoken": "^8.5.1",
+    "lodash": "^4.17.21",
     "mongoose": "^6.0.2",
     "morgan": "^1.10.0",
     "multer": "^1.4.3",
+    "node": "^16.6.1",
     "nodemon": "^2.0.9",
     "slugify": "^1.6.0",
     "socket.io": "^4.1.2",
     "uuidv4": "^6.2.12"
   },
   "devDependencies": {
-    "chai": "^4.3.4"
+    "eslint": "^7.32.0",
+    "eslint-plugin-promise": "^5.1.0",
+    "mongodb-memory-server": "^7.3.6"
   }
 }
