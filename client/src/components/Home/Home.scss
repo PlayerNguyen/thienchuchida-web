@@ -1,21 +1,16 @@
+@import "styles/Color";
+
 .home {
   &__wrapper {
-    margin: 2em 5em;
-    padding: 0.8em 2em;
-    background: #fff;
+    padding: 1.8em 3em;
+    background: transparent;
+
   }
 
   &__content {
     display: flex;
-    gap: 0.6em;
-    &--outer {
-      flex: 3;
-    }
-    &--aside {
-      flex: 1;
-      display: flex;
-      flex-flow: column;
-    }
+    flex-flow: row;
+    gap: 1.2em;
   }
 
   &__item_list {
@@ -39,18 +34,52 @@
   }
 }
 
+.category {
+  &__box {
+    flex: 3;
+  }
+  display: flex;
+  gap: 0.6em;
+  flex-flow: column;
+
+  &__title {
+    font-size: xx-large;
+    font-weight: 600;
+    margin-bottom: 12px;
+    > a {
+      display: flex;
+      flex-flow: row;
+      color: #f5f5f5 !important;
+    }
+  }
+
+  &__content {
+    display: flex;
+    flex-flow: row;
+    gap: 1em;
+  }
+}
+.aside {
+  &__box {
+    flex: 1;
+  }
+}
+
 .cardbox {
   display: flex;
   flex-flow: row;
-  flex-wrap: nowrap;
+  flex-wrap: wrap;
   overflow: auto;
   flex: 3;
+  gap: 1.2em;
 }
 
 .card {
   // max-width: (100%/4);
   text-decoration: none;
-  flex: 1 0 21%;
+  color: #f5f5f5;
+  flex: 1 0 41%;
+
   &__body {
     &__thumbnail {
       > img {
@@ -64,12 +93,33 @@
     &__title {
       font-weight: bold;
       text-decoration: none;
-      color: rgb(15, 15, 15);
+      color: #fff;
+      font-size: larger;
     }
     &__information {
-      * {
-        color: #808080;
+      display: flex;
+      flex-flow: row;
+      > div {
+        padding: 0.4em 0;
+        display: flex;
+        flex-flow: row;
+        // flex: 1;
+        > span {
+          margin: 0.2em 0.5em;
+        }
       }
     }
   }
+}
+
+
+.nav__icon {
+  
+  color: #b4b4b4 !important;
+  font-weight: 100;
+  margin: 0.6em 0.76em;
+  font-size: large;
+  align-items: center;
+  justify-content: center;
+
 }

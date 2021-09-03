@@ -1,8 +1,45 @@
-
+@import "styles/Color";
 .app {
-  
   &-wrapper {
-    background: rgba(0, 0, 0, 0.349);
-    
+    background: rgba(0, 0, 0, 0.690);
   }
 }
+
+.container {
+  margin: 5em;
+  padding: 0.8em 3em;
+}
+
+.link {
+  text-decoration: none;
+
+  &--primary {
+    color: $url__color--primary !important;
+  }
+
+  &--secondary {
+    color: $url__color--secondary !important;
+  }
+
+  &--active {
+    color: $url__color--active !important;
+  }
+}
+
+.bold {
+  font-weight: bold;
+}
+
+hr {
+  border-top: 0.12em $hr__color solid;
+  border-bottom: 0;
+  border-left: 0;
+  border-right: 0;
+}
+
+.text {
+  &--secondary {
+    color: $text__color--secondary !important;
+  }
+}
+

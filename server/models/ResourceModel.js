@@ -33,6 +33,6 @@ const resourceSchema = new mongoose.Schema({
 });
 
 module.exports = mongoose.model(
-  process.env.MODEL_NAME_RESOURCE,
+  process.env.MODEL_NAME_RESOURCES,
   resourceSchema
 );

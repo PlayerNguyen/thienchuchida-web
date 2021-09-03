@@ -1,8 +1,25 @@
 const mongoose = require("mongoose");
 const Language = require("../languages/language");
-const slugify = require("slugify");
 const lodash = require("lodash");
 const { v4: uuid } = require("uuid");
+const BookChapterModel = require("./BookChapterModel");
+const slugHelper = require("../utils/slugHelper");
+
+const tagSchema = new mongoose.Schema({
+  _id: {
+    type: String,
+    default: uuid,
+  },
+  name: {
+    type: String,
+    required: [true, "Tên thẻ không được để trống"],
+    unique: true,
+  },
+  slug: {
+    type: String,
+    default: slugHelper.doSlugify,
+  },
+});
 
 const bookSchema = new mongoose.Schema({
   _id: {
@@ -19,10 +36,8 @@ const bookSchema = new mongoose.Schema({
   slug: {
     type: String,
     default: function () {
-      return `${slugify(this.title, { lower: true })}-${lodash.random(
-        1,
-        9999
-      )}`;
+      // slug-random number from 1 to 9999, not to collapse
+      return `${slugHelper.doSlugify(this.title)}-${lodash.random(1, 9999)}`;
     },
   },
   views: {
@@ -39,8 +54,27 @@ const bookSchema = new mongoose.Schema({
   },
   thumbnail: {
     type: String,
-    ref: process.env.MODEL_NAME_RESOURCE,
+    ref: process.env.MODEL_NAME_RESOURCES,
   },
+  authors: {
+    type: String,
+    ref: process.env.MODEL_NAME_AUTHORS,
+  },
+  tags: [{ type: String, ref: process.env.MODEL_NAME_BOOK_TAGS }],
+});
+
+bookSchema.post("find", function (results) {
+  results.map((result) => {
+    BookChapterModel.find({ book: result._id }).then((chapters) => {
+      console.log(chapters);
+      let sum = 0;
+      for (let i in chapters) {
+        const chapter = chapters[i];
+        sum += chapter.views;
+      }
+      result.views = sum;
+    });
+  });
 });
 
 module.exports = mongoose.model(process.env.MODEL_NAME_BOOK, bookSchema);

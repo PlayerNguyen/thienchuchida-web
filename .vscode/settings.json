@@ -8,5 +8,6 @@
   },
   "rest-client.rememberCookiesForSubsequentRequests": true,
   "editor.fontSize": 14,
-  "prettier.tabWidth": 2
+  "prettier.tabWidth": 2,
+  "editor.cursorBlinking": "phase"
 }

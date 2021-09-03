@@ -3,71 +3,69 @@ const User = require("../models/UserModel");
 const jsonwebtoken = require("jsonwebtoken");
 const UserModel = require("../models/UserModel");
 
-function signIn(username, password, userAgent, address) {
-  return new Promise(async (resolve, reject) => {
-    const doc = await User.findOne({ username });
+async function signIn(username, password, userAgent, address) {
+  const doc = await User.findOne({ username });
 
-    // Username not found
-    if (!doc) {
-      return reject(new MiddlewareError(`Username ${username} not found.`));
+  // Username not found
+  if (!doc) {
+    throw new MiddlewareError(`Username ${username} not found.`);
+  }
+
+  // Password is not match
+  if (!doc.comparePassword(password)) {
+    throw new MiddlewareError("Password is not match.");
+  }
+
+  // Create new refresh token
+  const refreshToken = jsonwebtoken.sign(
+    {
+      username: doc.username,
+      id: doc._id,
+      admin: doc.admin,
+      email: doc.email,
+      userAgent,
+      address,
+    },
+    process.env.REFRESH_TOKEN_SECRET,
+    {
+      expiresIn: process.env.REFRESH_TOKEN_EXPIRATION,
     }
+  );
 
-    // Password is not match
-    if (!doc.comparePassword(password)) {
-      return reject(new MiddlewareError("Password is not match."));
+  const accessToken = jsonwebtoken.sign(
+    {
+      username: doc.username,
+      id: doc._id,
+      admin: doc.admin,
+      email: doc.email,
+    },
+    process.env.ACCESS_TOKEN_SECRET,
+    {
+      expiresIn: process.env.ACCESS_TOKEN_EXPIRATION,
     }
+  );
 
-    // Create new refresh token
-    const refreshToken = jsonwebtoken.sign(
-      {
-        username: doc.username,
-        id: doc._id,
-        admin: doc.admin,
-        email: doc.email,
-        userAgent,
-        address,
+  // Then append it into database
+  const len = doc.tokens.push({ token: refreshToken });
+  doc.save().then((doc) => {
+    const session = doc.tokens[len - 1];
+    // console.log(session)
+    return {
+      response: doc,
+      refreshToken: {
+        id: session._id.toString(),
+        value: session.token,
       },
-      process.env.REFRESH_TOKEN_SECRET,
-      {
-        expiresIn: process.env.REFRESH_TOKEN_EXPIRATION,
-      }
-    );
-
-    const accessToken = jsonwebtoken.sign(
-      {
-        username: doc.username,
-        id: doc._id,
-        admin: doc.admin,
-        email: doc.email,
-      },
-      process.env.ACCESS_TOKEN_SECRET,
-      {
-        expiresIn: process.env.ACCESS_TOKEN_EXPIRATION,
-      }
-    );
-
-    // Then append it into database
-    const len = doc.tokens.push({ token: refreshToken });
-    doc.save().then((doc) => {
-      const session = doc.tokens[len - 1];
-      // console.log(session)
-      resolve({
-        response: doc,
-        refreshToken: {
-          id: session._id.toString(),
-          value: session.token,
-        },
-        accessToken,
-      });
-    });
+      accessToken,
+    };
   });
 }
 
 /**
  * Refresh token.
- * 
- * @param {*} refreshTokenId 
- * @returns 
+ *
+ * @param {*} refreshTokenId
+ * @returns
  */
 async function doRefreshToken(refreshTokenId) {
   const doc = await User.findOne({ "tokens._id": refreshTokenId });
@@ -97,7 +95,7 @@ async function doRefreshToken(refreshTokenId) {
  * @param {*} param0
  * @returns A promise contains document of user inside
  */
-async function signUp({ username, password, email }) {
+async function signUp(username, password, email) {
   const doc = await User.findOne({ username });
 
   // Existed

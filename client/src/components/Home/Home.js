@@ -1,13 +1,19 @@
 import React, { useEffect, useState } from "react";
+import moment from "moment";
 import Config from "../../config/Config";
 import BookService from "../../services/BookService";
 import "./Home.scss";
 import { Link } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faEye } from "@fortawesome/free-regular-svg-icons";
+import { faEye, faClock } from "@fortawesome/free-regular-svg-icons";
+import "moment/locale/vi";
+import { faChevronRight } from "@fortawesome/free-solid-svg-icons";
+/**
+ * Initialize locale for moment.js
+ */
+moment.locale("vi");
 
 function CardItem({ data }) {
-  // console.log(data)
   return (
     <Link className="card" to={`/truyen/${data ? data.slug : null}`}>
       <div className="card__body">
@@ -17,7 +23,7 @@ function CardItem({ data }) {
               data.thumbnail
                 ? `${Config.SERVER_API_URL}/${data.thumbnail.path}`
                 : // Default size url
-                  `https://dummyimage.com/200x300/f5f5f5/000&text=Sample+image`
+                  Config.DEFAULT_THUMBNAIL
             }
             alt="Thumbnail"
           />
@@ -27,12 +33,20 @@ function CardItem({ data }) {
         <div className="card__footer__title">
           {data.title ? data.title : `Untitled`}
         </div>
-        <div className="card__footer_information">
+        <div className="card__footer__information">
           <div>
             <span>
               <FontAwesomeIcon icon={faEye} />
             </span>
-            <span>{data.views}</span>
+            <span>{data && data.views}</span>
+          </div>
+          <div>
+            <span>
+              <FontAwesomeIcon icon={faClock} />
+            </span>
+            <span>
+              {data && moment(new Date(data.updatedAt)).fromNow(true)}
+            </span>
           </div>
         </div>
       </div>
@@ -50,28 +64,66 @@ export default function Home() {
   }, []);
 
   return (
-    <div className="home__wrapper">
+    <div className="home__wrapper container">
       {/* Header here */}
-
       <div className="home__content">
         {/* Left block */}
-        <div className="home__content--outer">
-          {/* Title */}
-          <div>
-            <h1>Truyện mới</h1>
+        <div className="category__box">
+          <div className="category">
+            <div className="category__title">
+              <Link to="/truyen-moi-cap-nhat" className="link link--primary">
+                <span>Truyện mới cập nhật</span>
+                <span className="text text--secondary nav__icon">
+                  <FontAwesomeIcon icon={faChevronRight} />
+                </span>
+              </Link>
+            </div>
+            <div className="category__content cardbox">
+              {lastUpdated
+                ? lastUpdated.map((ele, index) => {
+                    return <CardItem key={index} data={ele && ele} />;
+                  })
+                : null}
+            </div>
           </div>
-          {/* Item list */}
-          <div className="home__item_list cardbox">
-            {lastUpdated
-              ? lastUpdated.map((ele, index) => {
-                  return <CardItem key={index} data={ele && ele} />;
-                })
-              : null}
+          <div className="category">
+            <div className="category__title">
+              <Link to="/" className="link link--primary">
+                <span>Truyện mới đăng</span>
+                <span className="text text--secondary nav__icon">
+                  <FontAwesomeIcon icon={faChevronRight} />
+                </span>
+              </Link>
+            </div>
+            <div className="category__content cardbox">
+              {lastUpdated
+                ? lastUpdated.map((ele, index) => {
+                    return <CardItem key={index} data={ele && ele} />;
+                  })
+                : null}
+            </div>
+          </div>
+          <div className="category">
+            <div className="category__title">
+              <Link to="/" className="link link--primary">
+                <span>Truyện mới</span>
+                <span className="text text--secondary nav__icon">
+                  <FontAwesomeIcon icon={faChevronRight} />
+                </span>
+              </Link>
+            </div>
+            <div className="category__content cardbox">
+              {lastUpdated
+                ? lastUpdated.map((ele, index) => {
+                    return <CardItem key={index} data={ele && ele} />;
+                  })
+                : null}
+            </div>
           </div>
         </div>
 
         {/* Aside */}
-        <div className="home__content--aside">
+        <div className="aside__box">
           <div>
             <h1>Thông báo</h1>
           </div>

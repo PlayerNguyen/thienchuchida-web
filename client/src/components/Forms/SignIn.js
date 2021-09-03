@@ -3,7 +3,7 @@ import "./Forms.scss";
 import UserService from "../../services/UserService";
 import { useHistory } from "react-router-dom";
 import { useDispatch } from "react-redux";
-import { setPersistUser, setSignedIn } from "../../features/auth/authSlice";
+import { setPersistUser, setSignedIn } from "../../app/slices/auth";
 
 const NAVIGATE_DURATION = 3000;
 

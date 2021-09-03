@@ -1,0 +1,88 @@
+@import "styles/Color";
+
+.book {
+  &__wrapper {
+    background: $background__color--primary;
+    padding: 1.8em 3em;
+  }
+
+  &__header {
+    margin-bottom: 2em;
+  }
+
+  &__body {
+    display: flex;
+    flex-flow: row;
+    margin-bottom: 2em;
+    gap: 1em;
+  }
+
+  &__thumbnail {
+    flex: 3 1;
+    align-items: center;
+    justify-content: center;
+    padding: 16px;
+    > img {
+      // max-width: 300px;
+      width: 100%;
+    }
+  }
+
+  &__title {
+    font-size: xx-large;
+    color: $text__color--primary;
+  }
+
+  &__infobox {
+    overflow: none;
+    flex: 4;
+    padding: 1em;
+  }
+
+  &__description {
+    color: $text__color--secondary;
+    font-size: larger;
+  }
+
+  &__status {
+    margin-top: 12px;
+    display: flex;
+    flex-flow: column;
+    > div {
+      display: flex;
+      flex-flow: row;
+      margin-bottom: 12px;
+      > * {
+        margin: 0 12px;
+        font-size: larger;
+        color: $text__color--secondary;
+      }
+    }
+  }
+}
+
+.chapterbox {
+  display: inline-flex;
+  flex-flow: row;
+  gap: 2em;
+  flex-wrap: wrap;
+
+  &__outer {
+    margin-bottom: 1.22em;
+  }
+}
+
+.chapter {
+  flex: 1 1 320px;
+  &__thumbnail {
+    > img {
+      width: 100%;
+    }
+  }
+
+  &__title {
+    font-size: larger;
+    font-weight: bold;
+    margin-top: 12px;
+  }
+}

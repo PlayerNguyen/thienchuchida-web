@@ -8,7 +8,7 @@ import {
   faInfo,
   faSignOutAlt,
   faSignInAlt,
-  faUserPlus
+  faUserPlus,
 } from "@fortawesome/free-solid-svg-icons";
 
 function useOutsideDropdown(ref, setOpen) {
@@ -65,13 +65,15 @@ function NavDropdown({ title, items }) {
 export default function Header() {
   const isSignedIn = useSelector((state) => state.auth.isSignedIn);
   const persistUser = useSelector((state) => state.auth.persistUser);
-  
+
   return (
     <div className="header__wrapper">
       <div className="header__container">
         <div className="header-logo-section">
           <h1>
-            <Link to="/">Thiên Chu Chi Dạ</Link>
+            <Link to="/" className="link">
+              Thiên Chu Chi Dạ
+            </Link>
           </h1>
         </div>
         <div className="header-navigation">
@@ -85,21 +87,40 @@ export default function Header() {
             />
           ) : (
             <NavDropdown
-              title={`Tài khoản`}
+              title={`Account`}
               items={[
-                { url: `/dang-nhap`, text: `Đăng nhập`, icon: faSignInAlt },
-                { url: `/dang-ky`, text: `Đăng ký`, icon: faUserPlus },
+                { url: `/dang-nhap`, text: `Sign in`, icon: faSignInAlt },
+                { url: `/dang-ky`, text: `Sign up`, icon: faUserPlus },
               ]}
             />
           )}
+          <NavDropdown
+            title={`Services`}
+            items={[
+              { url: `/`, text: `Donate` },
+              { url: `/`, text: `Raw purchase` },
+            ]}
+          />
           <div>
-            <Link to="/">Liên hệ</Link>
+            <Link to='/'>Password</Link>
           </div>
+          <NavDropdown
+            title={`ManhWa`}
+            items={[
+              { url: `/`, text: `On-going` },
+              { url: `/`, text: `Hoàn` },
+              { url: `/`, text: `Drop` },
+            ]}
+          />
+          <NavDropdown
+            title={`Info`}
+            items={[
+              { url: `/`, text: `Confession` },
+              { url: `/`, text: `About` },
+            ]}
+          />
           <div>
-            <Link to="/">Thông tin</Link>
-          </div>
-          <div>
-            <Link to="/">Trang chủ</Link>
+            <Link to="/">Home</Link>
           </div>
         </div>
       </div>

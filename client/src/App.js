@@ -4,7 +4,7 @@ import Header from "./components/Header/Header";
 import Home from "./components/Home/Home";
 import { Switch, Route } from "react-router-dom";
 import { useDispatch } from "react-redux";
-import { setPersistUser, setSignedIn } from "./features/auth/authSlice";
+import { setPersistUser, setSignedIn } from "./app/slices/auth";
 import UserService from "./services/UserService";
 import SignIn from "./components/Forms/SignIn";
 import UnauthorizeRoute from "./route/UnauthorizeRoute";
@@ -12,6 +12,7 @@ import RestrictedRoute from "./route/RestrictedRoute";
 import Footer from "./components/Footer/Footer";
 import SignOut from "./components/Forms/SignOut";
 import AccountManagement from "./components/AccountManagement";
+import Book from "./components/Book/Book";
 
 function App() {
     const dispatch = useDispatch();
@@ -30,32 +31,42 @@ function App() {
             });
     }, [dispatch]);
 
-    return (
-        <div className="app-wrapper">
-            <div className="app-header">
-                <Header />
-            </div>
-            <div className="app-content">
-                <Switch>
-                    <RestrictedRoute path="/dang-xuat">
-                        <SignOut />
-                    </RestrictedRoute>
-                    <UnauthorizeRoute path="/dang-nhap">
-                        <SignIn />
-                    </UnauthorizeRoute>
-                    <Route path="/" exact>
-                        <Home />
-                    </Route>
-                    <Route path="/admin/quan-ly-tai-khoan" exact>
+return (
+    <div className="app-wrapper">
+      <div className="app-header">
+        <Header />
+      </div>
+      <div className="app-content">
+        <Switch>
+    <Route path="/admin/quan-ly-tai-khoan" exact>
                         <AccountManagement />
                     </Route>
-                </Switch>
-            </div>
-            <div className="app__footer">
-                <Footer />
-            </div>
-        </div>
-    );
+          <RestrictedRoute path="/admin">
+            {/* Inspect admin app here */}
+          </RestrictedRoute>
+
+          <RestrictedRoute path="/dang-xuat">
+            <SignOut />
+          </RestrictedRoute>
+
+          <UnauthorizeRoute path="/dang-nhap">
+            <SignIn />
+          </UnauthorizeRoute>
+
+          <Route path='/truyen/:slug'>
+            <Book/>
+          </Route>
+
+          <Route path="/" exact>
+            <Home />
+          </Route>
+        </Switch>
+      </div>
+      <div className="app__footer">
+        <Footer />
+      </div>
+    </div>
+  );
 }
 
 export default App;
