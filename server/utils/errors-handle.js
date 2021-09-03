@@ -17,6 +17,7 @@ const middlewareError = (err, req, res, next) => {
       message: err.message,
       name: err.name,
     },
+    data: err.response,
   });
 };
 

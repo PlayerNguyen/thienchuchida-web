@@ -7,9 +7,11 @@ const {
   getBookById,
   getChaptersInBook,
   addChapter,
+  getBooksByTag,
 } = require("../../controllers/bookController");
 const { getAdminAuthorize } = require("../../middlewares/AuthMiddleware");
 const { MiddlewareError } = require("../../errors/MiddlewareError");
+const { findSingleTag } = require("../../controllers/bookTagController");
 
 /**
  * Create a new book
@@ -50,14 +52,14 @@ router.get("/", (req, res, next) => {
 /**
  * Get book information
  */
-router.get("/:bookId", (req, res, next) => {
+router.get("/book/:bookId", (req, res, next) => {
   const { bookId } = req.params;
   getBookById(bookId)
     .then((book) => {
       if (!book) {
         next(new MiddlewareError("Book not found", 404));
       }
-      
+
       getChaptersInBook(book._id)
         .then((chapters) => {
           res.json({
@@ -73,16 +75,44 @@ router.get("/:bookId", (req, res, next) => {
 /**
  * Post new chapter into a book
  */
-router.post("/:bookId/chapters", (req, res, next) => {
+router.post("/book/:bookId/chapters", (req, res, next) => {
   const { bookId } = req.params;
   const { name, content } = req.body;
-  addChapter(bookId, name, content)
-    .then((chapter) => {
-      res.json({
-        data: chapter,
-      });
-    })
-    .catch(next);
+  getBookById(bookId).then((doc) => {
+    // Not found a book
+    if (!doc) {
+      next(
+        new MiddlewareError("Book not found with current id", 404, {
+          id: bookId,
+        })
+      );
+    }
+
+    // Add chapter
+    addChapter(bookId, name, content)
+      .then((chapter) => {
+        res.json({
+          data: chapter,
+        });
+      })
+      .catch(next);
+  });
+});
+
+router.get("/tags/tag/:tag", (req, res, next) => {
+  const { tag } = req.params;
+  findSingleTag(tag).then((tag) => {
+    // Tag not found, return nothing here
+    if (!tag) {
+      return res.json({ data: [] });
+    }
+
+    // Find by tag
+    const id = tag._id;
+    getBooksByTag(id).then((books) => {
+      res.json({ data: books });
+    });
+  });
 });
 
 module.exports = router;

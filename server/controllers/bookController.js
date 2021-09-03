@@ -47,11 +47,16 @@ async function getBooks(query, sort, limit, skip) {
     .sort(sort)
     .limit(limit)
     .skip(skip)
-    .populate("thumbnail", "-__v");
+    .populate("thumbnail", "-__v")
+    .populate("tags", "-__v");
 }
 
 async function getBookById(id) {
-  return BookModel.findOne({ _id: id }, "-__v");
+  return BookModel.findOne({ _id: id }, "-__v").populate("tags", "-__v");
+}
+
+async function getBooksByTag(tagId) {
+  return BookModel.find({ tags: tagId }, "-__v").populate("tags", "-__v");
 }
 
 module.exports = {
@@ -62,4 +67,5 @@ module.exports = {
   getChapterById,
   getBooks,
   getBookById,
+  getBooksByTag,
 };
