@@ -59,6 +59,24 @@
       }
     }
   }
+
+  &__tags {
+    
+    > div {
+      // display: inline-block;
+      // flex-flow: row;
+      // flex-wrap: wrap;
+      > * {
+        margin-bottom: 12px;
+        // flex: 1 0 21%;
+        margin-right: 12px;
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+        display: inline-block;
+      }
+    }
+  }
 }
 
 .chapterbox {

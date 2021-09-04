@@ -8,6 +8,8 @@ import Breadcrumb from "../Breadcrumb/Breadcrumb";
 import "./Book.scss";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEye, faClock, faHeart } from "@fortawesome/free-regular-svg-icons";
+import {faTag} from "@fortawesome/free-solid-svg-icons"
+import { Link } from "react-router-dom";
 
 export default function Book() {
   const [bookInfo, setBookInfo] = useState(null);
@@ -58,8 +60,8 @@ export default function Book() {
                 <span>
                   <FontAwesomeIcon icon={faEye} />
                 </span>
-                <span>Lượt xem</span>
-                <span className="bold">120.356.156</span>
+                <span className="bold">Tác giả</span>
+                <span>Tác giả</span>
               </div>
 
               <div>
@@ -76,6 +78,31 @@ export default function Book() {
                 <span>Yêu thích</span>
                 <span className="bold">150.303</span>
               </div>
+              <div className="book__tags">
+                <span>
+                  <FontAwesomeIcon icon={faTag} />
+                </span>
+                <div>
+                <span className="badge"><Link className="link link--primary" to='/'>to lớn</Link></span>
+                <span className="badge"><Link className="link link--primary" to='/'>nhỏ bé</Link></span>
+                <span className="badge"><Link className="link link--primary" to='/'>có nhiều nếp nhăn</Link></span>
+                <span className="badge"><Link className="link link--primary" to='/'>mập</Link></span>
+                <span className="badge"><Link className="link link--primary" to='/'>thẻ 1</Link></span>
+                <span className="badge"><Link className="link link--primary" to='/'>thẻ 1</Link></span>
+                <span className="badge"><Link className="link link--primary" to='/'>thẻ 1</Link></span>
+                <span className="badge"><Link className="link link--primary" to='/'>thẻ 1</Link></span>
+                <span className="badge"><Link className="link link--primary" to='/'>thẻ 1</Link></span>
+                <span className="badge"><Link className="link link--primary" to='/'>thẻ 1</Link></span>
+                <span className="badge"><Link className="link link--primary" to='/'>thẻ 1</Link></span>
+                <span className="badge"><Link className="link link--primary" to='/'>thẻ 1</Link></span>
+                <span className="badge"><Link className="link link--primary" to='/'>thẻ 1</Link></span>
+                <span className="badge"><Link className="link link--primary" to='/'>thẻ 1</Link></span>
+                <span className="badge"><Link className="link link--primary" to='/'>thẻ 1</Link></span>
+                <span className="badge"><Link className="link link--primary" to='/'>thẻ 1</Link></span>
+                <span className="badge"><Link className="link link--primary" to='/'>thẻ 1</Link></span>
+                <span className="badge"><Link className="link link--primary" to='/'>thẻ 1</Link></span>
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -83,9 +110,7 @@ export default function Book() {
         {/* <hr /> */}
 
         <div class="chapterbox__outer">
-          <h1 className="title">
-            Danh sách các tập
-          </h1>
+          <h1 className="title">Danh sách các tập</h1>
           <div className="chapterbox">
             <div className="chapter">
               <div className="chapter__thumbnail">

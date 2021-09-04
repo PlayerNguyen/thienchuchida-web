@@ -47,3 +47,8 @@ hr {
   }
 }
 
+.badge {
+  padding: .2em 1em;
+  border: $badge__color--outline 1px solid;
+  border-radius: 4px;
+}

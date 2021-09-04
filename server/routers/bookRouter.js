@@ -1,6 +1,5 @@
 const express = require("express");
 const router = express.Router();
-const chaptersRouter = require("./bookChapterRouter");
 const {
   createNewBook,
   getBooks,
@@ -8,10 +7,10 @@ const {
   getChaptersInBook,
   addChapter,
   getBooksByTag,
-} = require("../../controllers/bookController");
-const { getAdminAuthorize } = require("../../middlewares/AuthMiddleware");
-const { MiddlewareError } = require("../../errors/MiddlewareError");
-const { findSingleTag } = require("../../controllers/bookTagController");
+} = require("../controllers/bookController");
+const { getAdminAuthorize } = require("../middlewares/AuthMiddleware");
+const { MiddlewareError } = require("../errors/MiddlewareError");
+const { findSingleTag } = require("../controllers/bookTagController");
 
 /**
  * Create a new book
@@ -64,7 +63,10 @@ router.get("/book/:bookId", (req, res, next) => {
         .then((chapters) => {
           res.json({
             data: book,
-            chapters: chapters,
+            chapters: {
+              total_size: chapters.length,
+              data: chapters,
+            },
           });
         })
         .catch(next);
