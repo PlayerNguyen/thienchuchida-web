@@ -81,6 +81,7 @@ export default function Header() {
             <NavDropdown
               title={persistUser && persistUser.username}
               items={[
+                (persistUser && persistUser.admin) && { url: `/admin`, text: `Quản trị`, icon: faInfo },
                 { url: `/thong-tin`, text: `Thông tin`, icon: faInfo },
                 { url: `/dang-xuat`, text: `Đăng xuất`, icon: faSignOutAlt },
               ]}

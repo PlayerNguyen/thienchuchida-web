@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Row, Col, Table, Checkbox, Space, Button } from "antd";
 import { useDispatch } from "react-redux";
-import ModifyUserModal from "../Modal/ModifyUser";
+import ModifyUserModal from "../../Modal/ModifyUser";
 import { v1 } from "uuid";
 
 function AccountManagement() {
@@ -15,6 +15,7 @@ function AccountManagement() {
 
     useEffect(() => {
         // Get users here
+        
     }, [dispatch]);
 
     const handleCloseModifyModal = () => {

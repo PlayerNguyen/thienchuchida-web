@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import "./App.scss";
 import Header from "./components/Header/Header";
 import Home from "./components/Home/Home";
@@ -11,11 +11,15 @@ import UnauthorizeRoute from "./route/UnauthorizeRoute";
 import RestrictedRoute from "./route/RestrictedRoute";
 import Footer from "./components/Footer/Footer";
 import SignOut from "./components/Forms/SignOut";
-import AccountManagement from "./components/AccountManagement";
+import AccountManagement from "./components/Admin/AccountManagement";
 import Book from "./components/Book/Book";
+import Admin from "./components/Admin/Admin";
+import Profile from "./components/Profile/Profile";
+import AdminRestrictedRoute from "./route/AdminRestrictedRoute";
 
 function App() {
   const dispatch = useDispatch();
+  const [isWaiting, setIsWaiting] = useState(true);
 
   useEffect(() => {
     document.title = "Thiên Chu Chi Dạ";
@@ -24,6 +28,7 @@ function App() {
       .then((response) => {
         dispatch(setSignedIn(true));
         dispatch(setPersistUser(response.data));
+        setIsWaiting(false);
       })
       .catch(() => {
         // Failed to sign in
@@ -37,31 +42,40 @@ function App() {
         <Header />
       </div>
       <div className="app-content">
-        <Switch>
-          <RestrictedRoute path="/admin/quan-ly-tai-khoan" exact>
-            <AccountManagement />
-          </RestrictedRoute>
-          
-          <RestrictedRoute path="/admin">
-            {/* Inspect admin app here */}
-          </RestrictedRoute>
+        {isWaiting ? (
+          <div></div>
+        ) : (
+          <Switch>
+            <RestrictedRoute path="/admin/quan-ly-tai-khoan" exact>
+              <AccountManagement />
+            </RestrictedRoute>
 
-          <RestrictedRoute path="/dang-xuat">
-            <SignOut />
-          </RestrictedRoute>
+            <AdminRestrictedRoute path="/admin">
+              {/* Inspect admin app here */}
+              <Admin />
+            </AdminRestrictedRoute>
 
-          <UnauthorizeRoute path="/dang-nhap">
-            <SignIn />
-          </UnauthorizeRoute>
+            <RestrictedRoute path="/thong-tin">
+              <Profile />
+            </RestrictedRoute>
 
-          <Route path="/truyen/:slug">
-            <Book />
-          </Route>
+            <RestrictedRoute path="/dang-xuat">
+              <SignOut />
+            </RestrictedRoute>
 
-          <Route path="/" exact>
-            <Home />
-          </Route>
-        </Switch>
+            <UnauthorizeRoute path="/dang-nhap">
+              <SignIn />
+            </UnauthorizeRoute>
+
+            <Route path="/truyen/:slug">
+              <Book />
+            </Route>
+
+            <Route path="/" exact>
+              <Home />
+            </Route>
+          </Switch>
+        )}
       </div>
       <div className="app__footer">
         <Footer />
