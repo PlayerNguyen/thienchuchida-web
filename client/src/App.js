@@ -15,32 +15,33 @@ import AccountManagement from "./components/AccountManagement";
 import Book from "./components/Book/Book";
 
 function App() {
-    const dispatch = useDispatch();
+  const dispatch = useDispatch();
 
-    useEffect(() => {
-        document.title = "Thiên Chu Chi Dạ";
-        // Check whether user is logged in yet via cookie
-        UserService.getProfile()
-            .then((response) => {
-                dispatch(setSignedIn(true));
-                dispatch(setPersistUser(response.data));
-            })
-            .catch(() => {
-                // Failed to sign in
-                dispatch(setSignedIn(false));
-            });
-    }, [dispatch]);
+  useEffect(() => {
+    document.title = "Thiên Chu Chi Dạ";
+    // Check whether user is logged in yet via cookie
+    UserService.getProfile()
+      .then((response) => {
+        dispatch(setSignedIn(true));
+        dispatch(setPersistUser(response.data));
+      })
+      .catch(() => {
+        // Failed to sign in
+        dispatch(setSignedIn(false));
+      });
+  }, [dispatch]);
 
-return (
+  return (
     <div className="app-wrapper">
       <div className="app-header">
         <Header />
       </div>
       <div className="app-content">
         <Switch>
-    <Route path="/admin/quan-ly-tai-khoan" exact>
-                        <AccountManagement />
-                    </Route>
+          <RestrictedRoute path="/admin/quan-ly-tai-khoan" exact>
+            <AccountManagement />
+          </RestrictedRoute>
+          
           <RestrictedRoute path="/admin">
             {/* Inspect admin app here */}
           </RestrictedRoute>
@@ -53,8 +54,8 @@ return (
             <SignIn />
           </UnauthorizeRoute>
 
-          <Route path='/truyen/:slug'>
-            <Book/>
+          <Route path="/truyen/:slug">
+            <Book />
           </Route>
 
           <Route path="/" exact>

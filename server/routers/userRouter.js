@@ -46,7 +46,7 @@ router.post("/signin", (req, res, next) => {
       res.cookie("AccessToken", accessToken, { httpOnly: true });
 
       res.json({
-        message: "Successfully sign in.",
+        message: "Đăng nhập thành công.",
         data: {
           username: response.username,
           email: response.email,

@@ -47,18 +47,18 @@ async function signIn(username, password, userAgent, address) {
 
   // Then append it into database
   const len = doc.tokens.push({ token: refreshToken });
-  doc.save().then((doc) => {
-    const session = doc.tokens[len - 1];
-    // console.log(session)
-    return {
-      response: doc,
-      refreshToken: {
-        id: session._id.toString(),
-        value: session.token,
-      },
-      accessToken,
-    };
-  });
+  const user = await doc.save();
+  const session = user.tokens[len - 1];
+  // console.log(session, doc)
+  const response = {
+    response: user,
+    refreshToken: {
+      id: session._id.toString(),
+      value: session.token,
+    },
+    accessToken,
+  };
+  return response;
 }
 
 /**

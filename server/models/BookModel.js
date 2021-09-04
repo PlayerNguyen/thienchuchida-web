@@ -66,7 +66,7 @@ const bookSchema = new mongoose.Schema({
 bookSchema.post("find", function (results) {
   results.map((result) => {
     BookChapterModel.find({ book: result._id }).then((chapters) => {
-      console.log(chapters);
+      
       let sum = 0;
       for (let i in chapters) {
         const chapter = chapters[i];
