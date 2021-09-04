@@ -43,7 +43,7 @@ function App() {
       </div>
       <div className="app-content">
         {isWaiting ? (
-          <div></div>
+          <></>
         ) : (
           <Switch>
             <AdminRestrictedRoute path="/admin">

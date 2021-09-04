@@ -52,3 +52,17 @@ hr {
   border: $badge__color--outline 1px solid;
   border-radius: 4px;
 }
+
+.title {
+
+  font-weight: bold;
+  color: $text__color--primary;
+
+  &--large {
+    font-size: 36pt !important;
+  }
+
+  &--medium {
+    font-size: 30pt !important;
+  }
+}
