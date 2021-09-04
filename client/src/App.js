@@ -46,10 +46,6 @@ function App() {
           <div></div>
         ) : (
           <Switch>
-            <RestrictedRoute path="/admin/quan-ly-tai-khoan" exact>
-              <AccountManagement />
-            </RestrictedRoute>
-
             <AdminRestrictedRoute path="/admin">
               {/* Inspect admin app here */}
               <Admin />
