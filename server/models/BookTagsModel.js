@@ -1,6 +1,7 @@
 const mongoose = require("mongoose");
 const { v4: uuid } = require("uuid");
 const slugHelper = require("../utils/slugHelper");
+const DatabaseConfig = require('../config/database.config')
 
 const tagsSchema = new mongoose.Schema({
   _id: {
@@ -20,4 +21,4 @@ const tagsSchema = new mongoose.Schema({
   },
 });
 
-module.exports = mongoose.model(process.env.MODEL_NAME_BOOK_TAGS, tagsSchema);
+module.exports = mongoose.model(DatabaseConfig.Model.Tags.Name, tagsSchema);

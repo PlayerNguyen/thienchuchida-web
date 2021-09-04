@@ -8,39 +8,36 @@ const {
   addChapter,
   getBooksByTag,
 } = require("../controllers/bookController");
-const { getAdminAuthorize } = require("../middlewares/AuthMiddleware");
+const {
+  getAdminAuthorize,
+  getAuthorize,
+} = require("../middlewares/AuthMiddleware");
 const { MiddlewareError } = require("../errors/MiddlewareError");
 const { findSingleTag } = require("../controllers/bookTagController");
+const { addBookComment } = require("../controllers/bookCommentsController");
 
 /**
  * Create a new book
  */
-router.post("/", getAdminAuthorize, (req, res, next) => {
+router.post("/", getAdminAuthorize, async (req, res, next) => {
   const { title, description } = req.body;
-  createNewBook({ title, description })
-    .then((doc) => {
-      res.json({ data: doc, url: {}, message: "Successfully create a book." });
-    })
-    .catch(next);
+  const book = await createNewBook({ title, description });
+  res.json({ data: book, url: {}, message: "Successfully create a book." });
 });
 
 /**
  * Get all the newest book
  */
-router.get("/", (req, res, next) => {
+router.get("/", async (req, res, next) => {
   const { sort, page, limit, slug } = req.query;
   const start = page && limit ? (page - 1) * limit : 0;
   // Get all books and filter it by parameters
-  getBooks({}, sort, limit ? parseInt(limit) : 0, start)
-    .then((doc) => {
-      let result = [...doc];
-      if (slug) {
-        result = result.filter((e) => e.slug === slug);
-      }
-
-      res.json({ data: result });
-    })
-    .catch(next);
+  const doc = await getBooks({}, sort, limit ? parseInt(limit) : 0, start);
+  let result = [...doc];
+  if (slug) {
+    result = result.filter((e) => e.slug === slug);
+  }
+  res.json({ data: result });
 });
 
 /**
@@ -49,72 +46,73 @@ router.get("/", (req, res, next) => {
 //  router.use("/:bookId", chaptersRouter);
 
 /**
- * Get book information
+ * Get book information with chapters
  */
-router.get("/book/:bookId", (req, res, next) => {
+router.get("/book/:bookId", async (req, res, next) => {
   const { bookId } = req.params;
-  getBookById(bookId)
-    .then((book) => {
-      if (!book) {
-        next(new MiddlewareError("Book not found", 404));
-      }
+  const book = await getBookById(bookId);
+  if (!book) {
+    throw new MiddlewareError("Book not found", 404);
+  }
 
-      getChaptersInBook(book._id)
-        .then((chapters) => {
-          res.json({
-            data: book,
-            chapters: {
-              total_size: chapters.length,
-              data: chapters,
-            },
-          });
-        })
-        .catch(next);
-    })
-    .catch(next);
+  const chapters = await getChaptersInBook(book._id);
+  res.json({
+    data: book,
+    chapters: {
+      total_size: chapters.length,
+      data: chapters,
+    },
+  });
 });
 
 /**
  * Post new chapter into a book
  */
-router.post("/book/:bookId/chapters", (req, res, next) => {
+router.post("/book/:bookId/chapters", async (req, res, next) => {
   const { bookId } = req.params;
   const { name, content } = req.body;
-  getBookById(bookId).then((doc) => {
-    // Not found a book
-    if (!doc) {
-      next(
-        new MiddlewareError("Book not found with current id", 404, {
-          id: bookId,
-        })
-      );
-    }
+  const book = await getBookById(bookId);
+  // Not found a book
+  if (!book) {
+    throw new MiddlewareError("Book not found with current id", 404, {
+      id: bookId,
+    });
+  }
 
-    // Add chapter
-    addChapter(bookId, name, content)
-      .then((chapter) => {
-        res.json({
-          data: chapter,
-        });
-      })
-      .catch(next);
+  // Add chapter
+  const chapter = await addChapter(bookId, name, content);
+  res.json({
+    data: chapter,
   });
 });
 
-router.get("/tags/tag/:tag", (req, res, next) => {
-  const { tag } = req.params;
-  findSingleTag(tag).then((tag) => {
-    // Tag not found, return nothing here
-    if (!tag) {
-      return res.json({ data: [] });
-    }
+/**
+ * Get all books by tag (slug, name, ...)
+ */
+router.get("/tags/tag/:tag", async (req, res, next) => {
+  const { tag: query } = req.params;
+  const tag = await findSingleTag(query);
+  // Tag not found, return nothing here
+  if (!tag) {
+    return res.json({ data: [] });
+  }
 
-    // Find by tag
-    const id = tag._id;
-    getBooksByTag(id).then((books) => {
-      res.json({ data: books });
-    });
-  });
+  // Find by tag
+  const id = tag._id;
+  const books = await getBooksByTag(id);
+  res.json({ data: books });
+});
+
+/**
+ * Comment to a book
+ */
+router.post("/comments/:bookId", getAuthorize, async (req, res, next) => {
+  const { content } = req.body;
+  if (!content) {
+    throw new MiddlewareError("Field `content` not found", 500);
+  }
+  const comment = await addBookComment(content);
+  res.json({ data: comment });
 });
 
 module.exports = router;

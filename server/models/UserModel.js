@@ -1,7 +1,7 @@
 const mongoose = require("mongoose");
 const bcrypt = require("bcrypt");
 const { v4: uuid } = require("uuid");
-
+const DatabaseConfig = require("../config/database.config");
 const userSchema = new mongoose.Schema({
   _id: {
     type: String,
@@ -17,14 +17,14 @@ const userSchema = new mongoose.Schema({
     required: [true, "The password field cannot be empty."],
   },
   email: {
-    type: String
+    type: String,
   },
   avatar: {
-    type: String
+    type: String,
   },
   admin: {
     type: Boolean,
-    default: false
+    default: false,
   },
   tokens: [
     {
@@ -60,4 +60,4 @@ userSchema.methods.comparePassword = async function (password) {
   return bcrypt.compare(password, this.password);
 };
 
-module.exports = mongoose.model(process.env.MODEL_NAME_USER, userSchema);
+module.exports = mongoose.model(DatabaseConfig.Model.User.Name, userSchema);

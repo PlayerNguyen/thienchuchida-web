@@ -4,22 +4,7 @@ const lodash = require("lodash");
 const { v4: uuid } = require("uuid");
 const BookChapterModel = require("./BookChapterModel");
 const slugHelper = require("../utils/slugHelper");
-
-const tagSchema = new mongoose.Schema({
-  _id: {
-    type: String,
-    default: uuid,
-  },
-  name: {
-    type: String,
-    required: [true, "Tên thẻ không được để trống"],
-    unique: true,
-  },
-  slug: {
-    type: String,
-    default: slugHelper.doSlugify,
-  },
-});
+const DatabaseConfig = require('../config/database.config')
 
 const bookSchema = new mongoose.Schema({
   _id: {
@@ -54,11 +39,11 @@ const bookSchema = new mongoose.Schema({
   },
   thumbnail: {
     type: String,
-    ref: process.env.MODEL_NAME_RESOURCES,
+    ref: DatabaseConfig.Model.Resource.Name,
   },
   authors: {
     type: String,
-    ref: process.env.MODEL_NAME_AUTHORS,
+    ref: DatabaseConfig.Model.Author.Name,
   },
   tags: [{ type: String, ref: process.env.MODEL_NAME_BOOK_TAGS }],
 });
@@ -77,4 +62,4 @@ bookSchema.post("find", function (results) {
   });
 });
 
-module.exports = mongoose.model(process.env.MODEL_NAME_BOOK, bookSchema);
+module.exports = mongoose.model(DatabaseConfig.Model.Book.Name, bookSchema);
