@@ -1,5 +1,5 @@
 import React from "react";
-import { Modal, Form, Input, Checkbox } from "antd";
+// import { Modal, Form, Input, Checkbox } from "antd";
 
 function ModifyUserModal({ visible, onConfirm, onCancel, user = null }) {
     const initUserInfo = {
@@ -8,16 +8,16 @@ function ModifyUserModal({ visible, onConfirm, onCancel, user = null }) {
         admin: false,
     };
 
-    const [form] = Form.useForm();
+    // const [form] = Form.useForm();
 
     const handleConfirmModifyUser = () => {
-        const newUserInfo = form.getFieldsValue(true);
-        onConfirm(newUserInfo);
+        // const newUserInfo = form.getFieldsValue(true);
+        // onConfirm(newUserInfo);
     };
 
     return (
         <>
-            <Modal
+            {/* <Modal
                 title="Chỉnh sửa tài khoản"
                 visible={visible}
                 okText="Xác nhận"
@@ -46,7 +46,7 @@ function ModifyUserModal({ visible, onConfirm, onCancel, user = null }) {
                         <Checkbox>Quản trị viên</Checkbox>
                     </Form.Item>
                 </Form>
-            </Modal>
+            </Modal> */}
         </>
     );
 }

@@ -28,11 +28,13 @@ function App() {
       .then((response) => {
         dispatch(setSignedIn(true));
         dispatch(setPersistUser(response.data));
-        setIsWaiting(false);
       })
       .catch(() => {
         // Failed to sign in
         dispatch(setSignedIn(false));
+      })
+      .finally(() => {
+        setIsWaiting(false);
       });
   }, [dispatch]);
 
