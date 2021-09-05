@@ -2,10 +2,12 @@
   padding: 0 3em;
 
   &--outer {
-    padding: 1.8em 3em;
+    padding: 3em 1.2em;
+    border-radius: 12px;
     margin: 3em auto;
     width: 57%;
-    background: #fff;
+    background: #fdfdfd;
+    color: #000;
     display: flex;
     flex-flow: row;
   }
@@ -47,6 +49,12 @@
     > a {
       display: block;
       margin-bottom: 6px;
+      
+    }
+    .link {
+      &--secondary {
+        color: #616161 !important;
+      }
     }
   }
 

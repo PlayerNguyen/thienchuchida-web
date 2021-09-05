@@ -25,6 +25,9 @@ export default function SignIn() {
     // Prevent a submit form action
     e.preventDefault();
 
+    // Empty field means no sign in
+    if (username === "" && password === "") return;
+
     // Sign in
     UserService.postSignIn({ username, password })
       .then(({ data }) => {
