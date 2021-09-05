@@ -9,14 +9,16 @@ const chapterCommentSchema = new mongoose.Schema({
   user: {
     type: String,
     ref: DatabaseConfig.Model.User.Name,
+    required: [true, "`user` must not be empty"],
   },
-  chapterId: {
+  bookId: {
     type: String,
-    ref: DatabaseConfig.Model.BookChapter.Name,
+    ref: DatabaseConfig.Model.Book.Name,
+    require: [true, "`bookId` must not be empty"],
   },
   content: {
     type: String,
-    required: true,
+    required: [true, "`content` must not be empty"],
   },
   createdAt: {
     type: Date,
@@ -29,6 +31,6 @@ const chapterCommentSchema = new mongoose.Schema({
 });
 
 module.exports = mongoose.model(
-  DatabaseConfig.Model.BookChapterComment.Name,
+  DatabaseConfig.Model.BookComment.Name,
   chapterCommentSchema
 );

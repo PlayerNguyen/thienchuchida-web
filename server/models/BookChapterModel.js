@@ -2,6 +2,7 @@ const mongoose = require("mongoose");
 const Language = require("../languages/language");
 const { v4: uuid } = require("uuid");
 const slugHelper = require("../utils/slugHelper");
+const DatabaseConfig = require('../config/database.config')
 
 const bookChapterSchema = new mongoose.Schema({
   _id: {
@@ -14,11 +15,12 @@ const bookChapterSchema = new mongoose.Schema({
   },
   book: {
     type: String,
-    ref: process.env.MODEL_NAME_BOOK,
+    ref: DatabaseConfig.Model.Book.Name,
     required: [true, "Mục book không thể thiếu"],
   },
   content: {
     type: String,
+    required: [true, "`content` cannot be empty"],
   },
   views: {
     type: Number,
@@ -33,6 +35,6 @@ const bookChapterSchema = new mongoose.Schema({
 });
 
 module.exports = mongoose.model(
-  process.env.MODEL_NAME_BOOK_CHAPTERS,
+  DatabaseConfig.Model.BookChapter.Name,
   bookChapterSchema
 );

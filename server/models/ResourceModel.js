@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
 const { v4: uuid } = require("uuid");
-
+const DatabaseConfig = require('../config/database.config')
 const resourceSchema = new mongoose.Schema({
   _id: {
     type: String,
@@ -33,6 +33,6 @@ const resourceSchema = new mongoose.Schema({
 });
 
 module.exports = mongoose.model(
-  process.env.MODEL_NAME_RESOURCES,
+  DatabaseConfig.Model.Resource.Name,
   resourceSchema
 );
