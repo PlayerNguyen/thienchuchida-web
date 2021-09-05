@@ -1,5 +1,5 @@
 @import "styles/Color";
-
+@import "styles/Mixins";
 .home {
   &__wrapper {
     // padding: 1.8em 3em;
@@ -11,6 +11,11 @@
     display: flex;
     flex-flow: row;
     gap: 1.2em;
+    @include mobile {
+      margin: 0 !important;
+      margin-top: 100px !important;
+      flex-flow: column;
+    }
   }
 
   &__item_list {

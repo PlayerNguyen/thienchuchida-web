@@ -11,7 +11,7 @@ function getBookBySlug(slug) {
 }
 
 function getChapterById(book, chapterId) {
-  return axiosInstance.get(`/books/book/${book}/chapters/{$chapterId}`);
+  return axiosInstance.get(`/books/book/${book}/chapters/${chapterId}`);
 }
 
 const BookService = {

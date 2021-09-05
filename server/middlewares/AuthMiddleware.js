@@ -36,7 +36,9 @@ async function getAdminAuthorize(req, res, next) {
   const admin = await isAdmin(data._id);
   // User is not an administrator
   if (!admin) {
-    return next(new MiddlewareError("Unauthorize access.", 401, { id: data.id }));
+    return next(
+      new MiddlewareError("Unauthorize access.", 401, { id: data.id })
+    );
   }
   // Otherwise, continue the task
   req.currentUser = data;

@@ -10,8 +10,9 @@ const resources = require("./routers/resourceRouter");
 const tags = require("./routers/tagRouter");
 const { middlewareError } = require("./utils/errors-handle");
 const mongoose = require("mongoose");
-const MiscConfig = require("./config/misc.config");
 const DatabaseConfig = require("./config/database.config");
+// const MiscConfig = require("./config/misc.config");
+const { fetchCors } = require("./utils/corsLoader");
 /**
  * Middleware settings here
  */
@@ -22,7 +23,8 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cookieParser());
 app.use(
   cors({
-    origin: MiscConfig.cors.whitelist,
+    // origin: MiscConfig.cors.whitelist,
+    origin: "http://localhost:3000",
     credentials: true,
   })
 );
@@ -44,14 +46,15 @@ app.use(middlewareError);
 /**
  * Database initialize
  */
-setTimeout(async () => {
-  mongoose.connect(process.env.DATABASE_URL);
-  mongoose.connection.on("error", (err) => {
-    console.log("err", err);
-  });
-  mongoose.connection.on("connected", () => {
-    console.log("mongoose is connected");
-  });
+ mongoose.connect(process.env.DATABASE_URL);
+ mongoose.connection.on("error", (err) => {
+   console.log("err", err);
+ });
+ mongoose.connection.on("connected", () => {
+   console.log("mongoose is connected");
+ });
+setTimeout(() => {
+  
 }, DatabaseConfig.ConnectionDelay);
 
 /**

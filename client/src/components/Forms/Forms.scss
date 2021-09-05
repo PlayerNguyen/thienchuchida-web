@@ -1,3 +1,5 @@
+@import "styles/Mixins.scss";
+
 .form {
   padding: 0 3em;
 
@@ -10,6 +12,11 @@
     color: #000;
     display: flex;
     flex-flow: row;
+
+    @include mobile {
+      width: 90%;
+      flex-flow: column;
+    }
   }
 
   &__header {
@@ -99,4 +106,7 @@
 .formSignIn {
   flex: 1;
   border-right: 2px solid #d8d8d8 !important;
+  @include mobile {
+    border: 0 !important;
+  }
 }

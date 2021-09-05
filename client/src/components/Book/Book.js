@@ -11,6 +11,7 @@ import { faEye, faClock, faHeart } from "@fortawesome/free-regular-svg-icons";
 import { faTag } from "@fortawesome/free-solid-svg-icons";
 import { Link } from "react-router-dom";
 import Config from "../../config/server.config";
+import Header from '../Header/Header'
 
 function Chapter({data, bookId}) {
   const [isLoading, setLoading] = useState(true);
@@ -26,6 +27,10 @@ function Chapter({data, bookId}) {
       </div>
       <div className="chapter__footer">
         <div className="chapter__title title">{data && data.name}</div>
+        <div className="chapter__views">
+          <span>Views:</span>
+          <span>{data && data.views}</span>
+        </div>
       </div>
     </div>
   );
@@ -57,6 +62,7 @@ export default function Book() {
 
   return (
     <div className="book__wrapper container">
+      <Header />
       {isLoading ? (
         <></>
       ) : (
@@ -221,76 +227,9 @@ export default function Book() {
           <div className="chapterbox__outer">
             <h1 className="title title--large">Danh sách các tập</h1>
             <div className="chapterbox">
-              {chapters && chapters.data.map((ele, ind) => {
+            {chapters && chapters.data.map((ele, ind) => {
                 return <Chapter data={ele} key={ind} bookId={bookInfo._id} />
               })}
-
-              <div className="chapter">
-                <div className="chapter__thumbnail">
-                  <img
-                    src={Config.DEFAULT_THUMBNAIL}
-                    alt="thumbnail chapter s"
-                  />
-                </div>
-                <div className="chapter__footer">
-                  <div className="chapter__title title">Chapter 2</div>
-                </div>
-              </div>
-              <div className="chapter">
-                <div className="chapter__thumbnail">
-                  <img
-                    src="https://dummyimage.com/1920x1080/f5f5f5/000&text=Sample+image"
-                    alt="thumbnail chapter s"
-                  />
-                </div>
-                <div className="chapter__footer">
-                  <div className="chapter__title title">Chapter 2</div>
-                </div>
-              </div>
-              <div className="chapter">
-                <div className="chapter__thumbnail">
-                  <img
-                    src="https://dummyimage.com/1920x1080/f5f5f5/000&text=Sample+image"
-                    alt="thumbnail chapter s"
-                  />
-                </div>
-                <div className="chapter__footer">
-                  <div className="chapter__title title">Chapter 2</div>
-                </div>
-              </div>
-              <div className="chapter">
-                <div className="chapter__thumbnail">
-                  <img
-                    src="https://dummyimage.com/1920x1080/f5f5f5/000&text=Sample+image"
-                    alt="thumbnail chapter s"
-                  />
-                </div>
-                <div className="chapter__footer">
-                  <div className="chapter__title title">Chapter 2</div>
-                </div>
-              </div>
-              <div className="chapter">
-                <div className="chapter__thumbnail">
-                  <img
-                    src="https://dummyimage.com/1920x1080/f5f5f5/000&text=Sample+image"
-                    alt="thumbnail chapter s"
-                  />
-                </div>
-                <div className="chapter__footer">
-                  <div className="chapter__title title">Chapter 2</div>
-                </div>
-              </div>
-              <div className="chapter">
-                <div className="chapter__thumbnail">
-                  <img
-                    src="https://dummyimage.com/1920x1080/f5f5f5/000&text=Sample+image"
-                    alt="thumbnail chapter s"
-                  />
-                </div>
-                <div className="chapter__footer">
-                  <div className="chapter__title title">Chapter 2</div>
-                </div>
-              </div>
             </div>
           </div>
         </div>
