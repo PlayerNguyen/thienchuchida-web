@@ -101,11 +101,6 @@ function AccountManagement() {
           <span className="text-success">Success text</span>
         </div>
       </div>
-      {/* <Row>
-                <Col span={20} offset={2}>
-                    <Table dataSource={sampleData} columns={columns} />
-                </Col>
-            </Row> */}
       <ModifyUserModal
         user={modifyUser}
         visible={isModifyModalVisible}
