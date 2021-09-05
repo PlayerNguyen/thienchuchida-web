@@ -11,7 +11,7 @@ const tags = require("./routers/tagRouter");
 const { middlewareError } = require("./utils/errors-handle");
 const mongoose = require("mongoose");
 const MiscConfig = require("./config/misc.config");
-
+const DatabaseConfig = require("./config/database.config");
 /**
  * Middleware settings here
  */
@@ -44,14 +44,15 @@ app.use(middlewareError);
 /**
  * Database initialize
  */
-mongoose
-  .connect(process.env.DATABASE_URL, {})
-  .then()
-  .catch((err) => {
-    if (err) {
-      throw err;
-    }
+setTimeout(async () => {
+  mongoose.connect(process.env.DATABASE_URL);
+  mongoose.connection.on("error", (err) => {
+    console.log("err", err);
   });
+  mongoose.connection.on("connected", () => {
+    console.log("mongoose is connected");
+  });
+}, DatabaseConfig.ConnectionDelay);
 
 /**
  * Export express
