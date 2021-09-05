@@ -10,7 +10,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEye, faClock, faHeart } from "@fortawesome/free-regular-svg-icons";
 import { faTag } from "@fortawesome/free-solid-svg-icons";
 import { Link } from "react-router-dom";
-import Config from "../../config/Config";
+import Config from "../../config/server.config";
 
 function Chapter({data, bookId}) {
   const [isLoading, setLoading] = useState(true);

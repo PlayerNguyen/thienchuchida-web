@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import Config from "../../config/Config";
+import Config from "../../config/server.config";
 import BookService from "../../services/BookService";
 import "./Home.scss";
 import { Link } from "react-router-dom";
