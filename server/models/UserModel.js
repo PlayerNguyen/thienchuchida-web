@@ -28,6 +28,10 @@ const userSchema = new mongoose.Schema({
   },
   tokens: [
     {
+      _id: {
+        type: String,
+        default: uuid,
+      },
       token: {
         type: String,
       },

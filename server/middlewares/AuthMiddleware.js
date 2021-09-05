@@ -20,11 +20,11 @@ function getAuthorize(req, res, next) {
   next();
 }
 
-function getAdminAuthorize(req, res, next) {
+async function getAdminAuthorize(req, res, next) {
   const { AccessToken } = req.cookies;
   // No access token, mean unauthorize
   if (!AccessToken) {
-    throw new TokenNotFoundError("Access token not found.");
+    return next(new TokenNotFoundError("Access token not found."));
   }
 
   // Validate token
@@ -33,15 +33,14 @@ function getAdminAuthorize(req, res, next) {
     process.env.ACCESS_TOKEN_SECRET
   );
 
-  isAdmin(data.id).then((result) => {
-    // User is not an administrator
-    if (!result) {
-      next(new MiddlewareError("Unauthorize access.", 401, { id: data.id }));
-    }
-    // Otherwise, continue the task
-    req.currentUser = data;
-    next();
-  });
+  const admin = await isAdmin(data._id);
+  // User is not an administrator
+  if (!admin) {
+    return next(new MiddlewareError("Unauthorize access.", 401, { id: data.id }));
+  }
+  // Otherwise, continue the task
+  req.currentUser = data;
+  next();
 }
 
 function getAuthorizeSilent(req, res, next) {

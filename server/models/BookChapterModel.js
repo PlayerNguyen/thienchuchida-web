@@ -32,6 +32,10 @@ const bookChapterSchema = new mongoose.Schema({
       return slugHelper.doSlugify(this.name);
     },
   },
+  thumbnail: {
+    type: String,
+    ref: DatabaseConfig.Model.Resource.Name
+  }
 });
 
 module.exports = mongoose.model(
