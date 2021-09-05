@@ -17,36 +17,38 @@ function ModifyUserModal({ visible, onConfirm, onCancel, user = null }) {
 
     return (
         <>
-            {/* <Modal
-                title="Chỉnh sửa tài khoản"
-                visible={visible}
-                okText="Xác nhận"
-                onOk={handleConfirmModifyUser}
-                cancelText="Đóng"
-                onCancel={onCancel}
+            <div
+                class="modal fade"
+                id="modifyUserModal"
+                tabindex="-1"
+                aria-labelledby="modifyUserModalLabel"
+                aria-hidden="true"
             >
-                <Form
-                    form={form}
-                    name="modify-user"
-                    initialValues={user || initUserInfo}
-                    labelCol={{ span: 6 }}
-                    wrapperCol={{ span: 18 }}
-                >
-                    <Form.Item label="Tên đăng nhập" name="username">
-                        <Input />
-                    </Form.Item>
-                    <Form.Item label="Email" name="email">
-                        <Input />
-                    </Form.Item>
-                    <Form.Item
-                        name="admin"
-                        valuePropName="checked"
-                        wrapperCol={{ offset: 6, span: 18 }}
-                    >
-                        <Checkbox>Quản trị viên</Checkbox>
-                    </Form.Item>
-                </Form>
-            </Modal> */}
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="modifyUserModalLabel">
+                                Modal title
+                            </h5>
+                            <button
+                                type="button"
+                                class="btn-close"
+                                data-bs-dismiss="modal"
+                                aria-label="Close"
+                            ></button>
+                        </div>
+                        <div class="modal-body">...</div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                                Close
+                            </button>
+                            <button type="button" class="btn btn-primary">
+                                Save changes
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </>
     );
 }
