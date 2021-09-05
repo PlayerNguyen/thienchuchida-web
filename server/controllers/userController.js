@@ -20,7 +20,7 @@ async function signIn(username, password, userAgent, address) {
   const refreshToken = jsonwebtoken.sign(
     {
       username: doc.username,
-      id: doc._id,
+      _id: doc._id,
       admin: doc.admin,
       email: doc.email,
       userAgent,
@@ -35,7 +35,7 @@ async function signIn(username, password, userAgent, address) {
   const accessToken = jsonwebtoken.sign(
     {
       username: doc.username,
-      id: doc._id,
+      _id: doc._id,
       admin: doc.admin,
       email: doc.email,
     },
@@ -49,13 +49,10 @@ async function signIn(username, password, userAgent, address) {
   const len = doc.tokens.push({ token: refreshToken });
   const user = await doc.save();
   const session = user.tokens[len - 1];
-  // console.log(session, doc)
+
   const response = {
     response: user,
-    refreshToken: {
-      id: session._id.toString(),
-      value: session.token,
-    },
+    refreshToken: session._id,
     accessToken,
   };
   return response;
@@ -113,12 +110,15 @@ async function signUp(username, password, email) {
  * @returns true whether user is an admin, false otherwise.
  */
 async function isAdmin(id) {
-  const doc = await UserModel.findOne({ _id: id });
-  if (!doc) {
-    throw new MiddlewareError("Không tìm thấy người dùng.", 404, { id });
+  const user = await UserModel.findOne({ _id: id });
+  if (!user) {
+    throw new Error(`User not found ` + id);
   }
+  return user.admin;
+}
 
-  return doc.admin;
+async function getAllAccount() {
+  return UserModel.find({}, "-password -__v -tokens");
 }
 
 module.exports = {
@@ -126,4 +126,5 @@ module.exports = {
   doRefreshToken,
   signUp,
   isAdmin,
+  getAllAccount,
 };
