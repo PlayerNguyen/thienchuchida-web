@@ -90,10 +90,13 @@
 }
 
 .form {
-  &--sign-in {
-    flex: 1;
-  }
+  
   &--others {
     flex: 1.5;
   }
+}
+
+.formSignIn {
+  flex: 1;
+  border-right: 2px solid #d8d8d8 !important;
 }

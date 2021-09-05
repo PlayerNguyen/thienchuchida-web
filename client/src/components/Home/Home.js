@@ -61,12 +61,12 @@ export default function Home() {
   }, []);
 
   return (
-    <div className="home__wrapper container">
+    <div className="home__wrapper">
       <div className="home__header">
         <Header />
       </div>
       {/* Header here */}
-      <div className="home__content">
+      <div className="home__content container">
         {/* Left block */}
         <div className="category__box">
           <div className="category">

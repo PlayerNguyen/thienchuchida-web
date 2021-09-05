@@ -50,7 +50,7 @@ export default function SignIn() {
 
   return (
     <div className="container form--outer ">
-      <form className="form form--sign-in" onSubmit={handleSubmit}>
+      <form className="form formSignIn" onSubmit={handleSubmit}>
         <div className="form__header">
           <h1 className="form__header__title">Đăng nhập</h1>
         </div>
