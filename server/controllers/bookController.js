@@ -25,17 +25,14 @@ async function addResourceChapter({ id, resource }) {
 }
 
 async function getChaptersInBook(book) {
-  return await BookChapterModel.find({ book }, "-__v");
+  return await BookChapterModel.find({ book }, "_id name views");
 }
 
-async function getChapterById({ bookId, chapter }) {
-  const query = {
-    $or: [{ slug: chapter }],
-  };
-  if (chapter.match(/^[0-9a-fA-F]{24}$/)) {
-    query.$or.push({ _id: chapter });
-  }
-  return await BookChapterModel.find(query).populate("resources", "-__v");
+async function getChapterById(book, chapter) {
+  return BookChapterModel.findOne({
+    book,
+    $or: [{ _id: chapter }, { slug: chapter }],
+  }).populate("thumbnail", "-__v");
 }
 
 /**
@@ -43,7 +40,7 @@ async function getChapterById({ bookId, chapter }) {
  * @returns
  */
 async function getBooks(query, sort, limit, skip) {
-  return BookModel.find(query, "-__v")
+  return await BookModel.find(query, "-__v")
     .sort(sort)
     .limit(limit)
     .skip(skip)
@@ -51,8 +48,24 @@ async function getBooks(query, sort, limit, skip) {
     .populate("tags", "-__v");
 }
 
+/**
+ *
+ * @param {*} id
+ * @returns
+ * @deprecated using get book by id
+ */
 async function getBookById(id) {
   return BookModel.findOne({ _id: id }, "-__v").populate("tags", "-__v");
+}
+/**
+ * Find a book by query
+ * @param {*} query any input
+ * @returns a book whether find or null
+ */
+async function findBook(query) {
+  return BookModel.findOne({ $or: [{ _id: query }, { slug: query }] }, "-__v")
+    .populate("tags", "-__v")
+    .populate("thumbnail", "-__v");
 }
 
 async function getBooksByTag(tagId) {
@@ -68,4 +81,6 @@ module.exports = {
   getBooks,
   getBookById,
   getBooksByTag,
+
+  findBook,
 };

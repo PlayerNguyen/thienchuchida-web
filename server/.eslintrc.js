@@ -3,7 +3,6 @@ module.exports = {
     node: true,
     commonjs: true,
     es2021: true,
-    "jest/globals": true,
   },
   extends: "eslint:recommended",
   parserOptions: {
@@ -22,6 +21,7 @@ module.exports = {
     "promise/no-new-statics": "error",
     "promise/no-return-in-finally": "warn",
     "promise/valid-params": "warn",
+    "no-return-await": "error",
   },
   plugins: ["promise"],
 };

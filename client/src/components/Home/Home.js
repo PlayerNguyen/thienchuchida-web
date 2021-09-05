@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import moment from "moment";
 import Config from "../../config/Config";
 import BookService from "../../services/BookService";
 import "./Home.scss";
@@ -8,16 +7,13 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEye, faClock } from "@fortawesome/free-regular-svg-icons";
 import "moment/locale/vi";
 import { faChevronRight } from "@fortawesome/free-solid-svg-icons";
-/**
- * Initialize locale for moment.js
- */
-moment.locale("vi");
+import moment from '../../helpers/momentHelper'
 
 function CardItem({ data }) {
   return (
-    <Link className="card" to={`/truyen/${data ? data.slug : null}`}>
-      <div className="card__body">
-        <div className="card__body__thumbnail">
+    <Link className="bookcard" to={`/truyen/${data ? data.slug : null}`}>
+      <div className="bookcard__body">
+        <div className="bookcard__body__thumbnail">
           <img
             src={
               data.thumbnail
@@ -29,11 +25,11 @@ function CardItem({ data }) {
           />
         </div>
       </div>
-      <div className="card__footer">
-        <div className="card__footer__title">
+      <div className="bookcard__footer">
+        <div className="bookcard__footer__title">
           {data.title ? data.title : `Untitled`}
         </div>
-        <div className="card__footer__information">
+        <div className="bookcard__footer__information">
           <div>
             <span>
               <FontAwesomeIcon icon={faEye} />

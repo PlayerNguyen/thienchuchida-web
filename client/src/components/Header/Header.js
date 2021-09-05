@@ -34,24 +34,30 @@ function NavDropdown({ title, items }) {
   useOutsideDropdown(contentRef, setIsOpen);
 
   return (
-    <div className="dropdown-content" onClick={(e) => setIsOpen(!isOpen)}>
-      <span>{title} </span>
-      <span>
-        <FontAwesomeIcon icon={faCaretDown} />
-      </span>
+    <div className="dropdown__outer" onClick={() => setIsOpen(!isOpen)}>
+      <div className="dropdown__render">
+        <span>{title}</span>
+        <span className="icon">
+          <FontAwesomeIcon icon={faCaretDown} />
+        </span>
+      </div>
       {isOpen ? (
         <div className="dropdown" ref={contentRef}>
           {items &&
             items.map((ele, index) => {
               return (
-                <div key={index} className="dropdown__content">
-                  <Link to={ele ? ele.url : ``} className="dropdown__link">
+                <div key={index} className="">
+                  <Link
+                    to={ele ? ele.url : ``}
+                    className=" dropdown__content dropdown__link"
+                  >
                     {ele ? (
                       <span className="dropdown__icon">
                         <FontAwesomeIcon icon={ele && ele.icon} />
                       </span>
                     ) : null}
-                    {ele ? ele.text : ``}
+                    <span>{ele ? ele.text : ``}</span>
+                    <span className="dropdown__icon"></span>
                   </Link>
                 </div>
               );
@@ -81,7 +87,12 @@ export default function Header() {
             <NavDropdown
               title={persistUser && persistUser.username}
               items={[
-                (persistUser && persistUser.admin) && { url: `/admin`, text: `Quản trị`, icon: faInfo },
+                persistUser &&
+                  persistUser.admin && {
+                    url: `/admin`,
+                    text: `Quản trị`,
+                    icon: faInfo,
+                  },
                 { url: `/thong-tin`, text: `Thông tin`, icon: faInfo },
                 { url: `/dang-xuat`, text: `Đăng xuất`, icon: faSignOutAlt },
               ]}
@@ -103,7 +114,7 @@ export default function Header() {
             ]}
           />
           <div>
-            <Link to='/'>Password</Link>
+            <Link to="/">Password</Link>
           </div>
           <NavDropdown
             title={`ManhWa`}

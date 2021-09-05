@@ -10,24 +10,49 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEye, faClock, faHeart } from "@fortawesome/free-regular-svg-icons";
 import { faTag } from "@fortawesome/free-solid-svg-icons";
 import { Link } from "react-router-dom";
+import Config from "../../config/Config";
+
+function Chapter({data, bookId}) {
+  const [isLoading, setLoading] = useState(true);
+  useEffect(() => {
+    BookService.getChapterById(bookId, data._id).then(response => {
+      console.log()
+    })
+  }, [data, bookId])
+  return (
+    <div className="chapter">
+      <div className="chapter__thumbnail">
+        <img src={Config.DEFAULT_THUMBNAIL} alt="thumbnail chapter s" />
+      </div>
+      <div className="chapter__footer">
+        <div className="chapter__title title">{data && data.name}</div>
+      </div>
+    </div>
+  );
+}
 
 export default function Book() {
   const [isLoading, setIsLoading] = useState(true);
   const [bookInfo, setBookInfo] = useState(null);
+  const [chapters, setChapters] = useState(null);
   const { slug } = useParams();
   const history = useHistory();
 
   useEffect(() => {
-    BookService.getBookBySlug(slug).then(({ data }) => {
-      const book = data.data[0];
-      if (!book) {
-        history.push("/");
-      }
-      // Set a book info
-      setBookInfo(data.data[0]);
-      // Set loading to false to render
-      setIsLoading(false);
-    });
+    BookService.getBookBySlug(slug)
+      .then(({ data }) => {
+        const book = data.data;
+        if (!book) {
+          history.push("/");
+        }
+        // Set a book info
+        setBookInfo(book);
+        setChapters(data.chapters);
+      })
+      .finally(() => {
+        // Set loading to false to render
+        setIsLoading(false);
+      });
   }, [slug, history]);
 
   return (
@@ -51,7 +76,11 @@ export default function Book() {
             {/* Big thumbnail in left */}
             <div className="book__thumbnail">
               <img
-                src="https://dummyimage.com/1920x1080/f5f5f5/000&text=Sample+image"
+                src={
+                  bookInfo
+                    ? `${Config.SERVER_API_URL}/${bookInfo.thumbnail.path}`
+                    : Config.DEFAULT_THUMBNAIL
+                }
                 alt="thumbnail"
               />
             </div>
@@ -192,10 +221,14 @@ export default function Book() {
           <div className="chapterbox__outer">
             <h1 className="title title--large">Danh sách các tập</h1>
             <div className="chapterbox">
+              {chapters && chapters.data.map((ele, ind) => {
+                return <Chapter data={ele} key={ind} bookId={bookInfo._id} />
+              })}
+
               <div className="chapter">
                 <div className="chapter__thumbnail">
                   <img
-                    src="https://dummyimage.com/1920x1080/f5f5f5/000&text=Sample+image"
+                    src={Config.DEFAULT_THUMBNAIL}
                     alt="thumbnail chapter s"
                   />
                 </div>

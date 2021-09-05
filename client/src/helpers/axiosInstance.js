@@ -23,7 +23,7 @@ axiosInstance.interceptors.response.use(
     return config;
   },
   (error) => {
-    if (error.response.data.error) {
+    if (error.response && error.response.data.error) {
       const { name } = error.response.data.error;
       // console.log(name)
       if (name === "TokenExpiredError") {
