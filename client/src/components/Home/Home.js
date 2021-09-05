@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import Config from "../../config/Config";
+import Config from "../../config/server.config";
 import BookService from "../../services/BookService";
 import "./Home.scss";
 import { Link } from "react-router-dom";
@@ -61,12 +61,12 @@ export default function Home() {
   }, []);
 
   return (
-    <div className="home__wrapper container">
+    <div className="home__wrapper">
       <div className="home__header">
         <Header />
       </div>
       {/* Header here */}
-      <div className="home__content">
+      <div className="home__content container">
         {/* Left block */}
         <div className="category__box">
           <div className="category">

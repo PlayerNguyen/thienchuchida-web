@@ -2,10 +2,12 @@
   padding: 0 3em;
 
   &--outer {
-    padding: 1.8em 3em;
+    padding: 3em 1.2em;
+    border-radius: 12px;
     margin: 3em auto;
     width: 57%;
-    background: #fff;
+    background: #fdfdfd;
+    color: #000;
     display: flex;
     flex-flow: row;
   }
@@ -47,6 +49,12 @@
     > a {
       display: block;
       margin-bottom: 6px;
+      
+    }
+    .link {
+      &--secondary {
+        color: #616161 !important;
+      }
     }
   }
 
@@ -82,10 +90,13 @@
 }
 
 .form {
-  &--sign-in {
-    flex: 1;
-  }
+  
   &--others {
     flex: 1.5;
   }
+}
+
+.formSignIn {
+  flex: 1;
+  border-right: 2px solid #d8d8d8 !important;
 }
