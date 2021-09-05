@@ -8,6 +8,7 @@ import { faEye, faClock } from "@fortawesome/free-regular-svg-icons";
 import "moment/locale/vi";
 import { faChevronRight } from "@fortawesome/free-solid-svg-icons";
 import moment from '../../helpers/momentHelper'
+import Header from '../Header/Header'
 
 function CardItem({ data }) {
   return (
@@ -61,6 +62,9 @@ export default function Home() {
 
   return (
     <div className="home__wrapper container">
+      <div className="home__header">
+        <Header />
+      </div>
       {/* Header here */}
       <div className="home__content">
         {/* Left block */}
