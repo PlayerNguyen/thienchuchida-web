@@ -40,10 +40,17 @@ function App() {
 
   return (
     <div className="app-wrapper">
-      <div className="app-header">
+      {/* <div className="app-header">
         <Header />
       </div>
       <div className="app-content">
+        
+      </div>
+      <div className="app__footer">
+        <Footer />
+      </div> */}
+
+      <div className="app__content">
         {isWaiting ? (
           <></>
         ) : (
@@ -74,9 +81,6 @@ function App() {
             </Route>
           </Switch>
         )}
-      </div>
-      <div className="app__footer">
-        <Footer />
       </div>
     </div>
   );
