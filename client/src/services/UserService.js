@@ -16,5 +16,9 @@ const postSignOut = () => {
   return axiosInstance.post("/users/signout");
 };
 
-const UserService = { getProfile, postSignIn, getRefreshToken, postSignOut };
+const getAllUsers = () => {
+  return axiosInstance.get("/users/");
+};
+
+const UserService = { getProfile, postSignIn, getRefreshToken, postSignOut, getAllUsers };
 export default UserService;
