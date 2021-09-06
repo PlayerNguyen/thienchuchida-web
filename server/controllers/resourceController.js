@@ -34,21 +34,23 @@ async function findFile(id) {
  * Find and remove a file (and uploads)
  */
 async function removeFile(id) {
-  return new Promise((resolve, reject) => {
-    Resource.findOneAndDelete({ _id: id }).then((doc) => {
-      if (!doc) {
-        return reject(new MiddlewareError("Document not found"));
-      }
-      // Remove in directory
-      // console.log(doc.path)
-      fs.unlink(`./${doc.path}`, (err) => {
-        if (err) {
-          return reject(err);
-        }
-        resolve(doc);
-      });
-    });
+  const doc = await Resource.findOneAndDelete({ _id: id });
+
+  if (!doc) {
+    throw new MiddlewareError("Document not found");
+  }
+  // Remove in directory
+  fs.unlink(`./${doc.path}`, (err) => {
+    if (err) {
+      throw err;
+    }
   });
+
+  return doc;
 }
 
-module.exports = { createNewFile, findFile, removeFile };
+async function getAllFiles() {
+  return Resource.find({});
+}
+
+module.exports = { createNewFile, findFile, removeFile, getAllFiles };

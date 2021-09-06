@@ -61,7 +61,7 @@ export default function Book() {
   }, [slug, history]);
 
   return (
-    <div className="book__wrapper container">
+    <div className="book__wrapper">
       <Header />
       {isLoading ? (
         <></>

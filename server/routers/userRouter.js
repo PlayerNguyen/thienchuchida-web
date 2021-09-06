@@ -39,14 +39,8 @@ router.post("/signin", async (req, res, next) => {
   if (!username || !password) {
     return next(new MiddlewareError("Missing parameters.", 500));
   }
-  // Sign in method in controller
-  // signIn(username, password, userAgent, address)
-  //   .then(({ response, refreshToken, accessToken }) => {
-
-  //   })
-  //   .catch(next);
+  
   const user = await signIn(username, password, userAgent, address);
-  // console.log(user)
   const { response, refreshToken, accessToken } = user;
   // Set token to cookie
   res.cookie("RefreshToken", refreshToken, { httpOnly: true });

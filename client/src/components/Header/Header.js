@@ -15,6 +15,7 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import useClickOutsideRef from "../../hooks/useClickOutsideRef";
 import useWindowSize from "../../hooks/useWindowSize";
+import MiscConfig from "../../config/misc.config";
 
 function NavDropdown({ title, items }) {
   const [isOpen, setIsOpen] = useState(false);
@@ -120,7 +121,7 @@ export default function Header() {
           {/* <FontAwesomeIcon icon={faBars} /> */}
         </div>
         {/* Using mobile or not */}
-        {width < 768 ? (
+        {width <= MiscConfig.TABLET_SIZE ? (
           <>
             {expand && (
               <div className="header-navigation" ref={expansionMenu}>

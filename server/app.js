@@ -11,8 +11,6 @@ const tags = require("./routers/tagRouter");
 const { middlewareError } = require("./utils/errors-handle");
 const mongoose = require("mongoose");
 const DatabaseConfig = require("./config/database.config");
-// const MiscConfig = require("./config/misc.config");
-const { fetchCors } = require("./utils/corsLoader");
 /**
  * Middleware settings here
  */

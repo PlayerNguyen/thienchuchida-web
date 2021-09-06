@@ -11,6 +11,7 @@
   "prettier.tabWidth": 2,
   "editor.cursorBlinking": "phase",
   "cSpell.words": [
-    "bookcard"
+    "bookcard",
+    "resourceitem"
   ]
 }
