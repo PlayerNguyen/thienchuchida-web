@@ -24,11 +24,6 @@ function App() {
     // Check whether user is logged in yet via cookie
     UserService.getProfile()
       .then((response) => {
-        console.log(response.data)
-        // if (!response.data.response) {
-        //   dispatch(setSignedIn(false));
-        //   return;
-        // }
         dispatch(setSignedIn(true));
         dispatch(setPersistUser(response.data));
       })

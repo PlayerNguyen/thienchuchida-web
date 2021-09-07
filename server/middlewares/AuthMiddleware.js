@@ -2,7 +2,7 @@ const jsonwebtoken = require("jsonwebtoken");
 const { isAdmin, doRefreshToken } = require("../controllers/userController");
 const { MiddlewareError } = require("../errors/MiddlewareError");
 const TokenNotFoundError = require("../errors/TokenNotFoundError");
-const { setTokenCookies } = require("../helpers/cookieHelper");
+const CookieHelper = require("../helpers/cookieHelper");
 
 function getAuthorize(req, res, next) {
   const { AccessToken } = req.cookies;
@@ -60,8 +60,8 @@ async function getAuthorizeSilent(req, res, next) {
     } else {
       const response = await doRefreshToken(RefreshToken);
       const { _id, username, admin } = response;
-      console.log(response);
-      setTokenCookies(res, response.refreshToken, response.accessToken);
+      // console.log(response);
+      CookieHelper.setTokenCookies(res, response.refreshToken, response.accessToken);
 
       req.currentUser = { _id, username, admin };
       next();
@@ -74,6 +74,8 @@ async function getAuthorizeSilent(req, res, next) {
     AccessToken,
     process.env.ACCESS_TOKEN_SECRET
   );
+
+  console.log(data)
 
   req.currentUser = data;
   next();
