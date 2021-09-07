@@ -1,5 +1,13 @@
 import React, { useEffect, useRef, useState } from "react";
-import { Card, Modal, Form, Button, ProgressBar, Alert } from "react-bootstrap";
+import {
+  Card,
+  Modal,
+  Form,
+  Button,
+  ProgressBar,
+  Alert,
+  Pagination,
+} from "react-bootstrap";
 import Config from "../../../config/server.config";
 import ResourceService from "../../../services/ResourceService";
 import "./ResourceManager.scss";
@@ -14,7 +22,7 @@ function ResourceItem({ resourceItem, selected, onClick }) {
         <Card.Img
           src={
             resourceItem
-              ? `${Config.SERVER_API_URL}/${resourceItem.path}`
+              ? `${Config.SERVER_API_URL}/resources/${resourceItem._id}/raw`
               : Config.DEFAULT_THUMBNAIL
           }
           alt="A thumbnail for resource"
@@ -193,7 +201,25 @@ export default function ResourceManager() {
               />
             );
           })}
+        
       </div>
+      <Pagination>
+          <Pagination.First />
+          <Pagination.Prev />
+          <Pagination.Item>{1}</Pagination.Item>
+          <Pagination.Ellipsis />
+
+          <Pagination.Item>{10}</Pagination.Item>
+          <Pagination.Item>{11}</Pagination.Item>
+          <Pagination.Item active>{12}</Pagination.Item>
+          <Pagination.Item>{13}</Pagination.Item>
+          <Pagination.Item disabled>{14}</Pagination.Item>
+
+          <Pagination.Ellipsis />
+          <Pagination.Item>{20}</Pagination.Item>
+          <Pagination.Next />
+          <Pagination.Last />
+        </Pagination>
       <UploadModal
         show={isUploadVisible}
         onClose={handleCloseUploadModal}

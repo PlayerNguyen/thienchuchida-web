@@ -9,9 +9,7 @@ import UserService from "./services/UserService";
 import SignIn from "./components/Forms/SignIn";
 import UnauthorizeRoute from "./route/UnauthorizeRoute";
 import RestrictedRoute from "./route/RestrictedRoute";
-import Footer from "./components/Footer/Footer";
 import SignOut from "./components/Forms/SignOut";
-import AccountManagement from "./components/Admin/AccountManagement";
 import Book from "./components/Book/Book";
 import Admin from "./components/Admin/Admin";
 import Profile from "./components/Profile/Profile";
@@ -26,6 +24,11 @@ function App() {
     // Check whether user is logged in yet via cookie
     UserService.getProfile()
       .then((response) => {
+        console.log(response.data)
+        // if (!response.data.response) {
+        //   dispatch(setSignedIn(false));
+        //   return;
+        // }
         dispatch(setSignedIn(true));
         dispatch(setPersistUser(response.data));
       })

@@ -77,13 +77,20 @@ async function doRefreshToken(refreshTokenId) {
 
   const data = jsonwebtoken.verify(token, process.env.REFRESH_TOKEN_SECRET);
   const accessToken = jsonwebtoken.sign(
-    { username: data.username, id: data.id },
+    { username: data.username, _id: data._id },
     process.env.ACCESS_TOKEN_SECRET,
     {
       expiresIn: process.env.ACCESS_TOKEN_EXPIRATION,
     }
   );
-  return { response: doc, accessToken, refreshToken: _id.toString() };
+
+  return {
+    _id: doc._id,
+    username: doc.username,
+    admin: doc.admin,
+    accessToken,
+    refreshToken: _id.toString(),
+  };
 }
 
 /**
