@@ -36,7 +36,7 @@ export default function Admin() {
           className="admin__sidebar d-flex flex-column flex-shrink-0 p-3 text-white bg-dark"
         >
           {/* Aside render here, navigate follows a below link */}
-          <ui className="nav nav-pills flex-column mb-auto">
+          <ul className="nav nav-pills flex-column mb-auto">
             {menu.map((_item) => (
               <li className="nav-item" key={_item.path}>
                 <Link
@@ -47,7 +47,7 @@ export default function Admin() {
                 </Link>
               </li>
             ))}
-          </ui>
+          </ul>
         </div>
         <div className="admin__content w-100">
           <Switch>
