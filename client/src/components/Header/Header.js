@@ -4,41 +4,52 @@ import { Link } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
+  faTimes,
+  faCaretLeft,
   faCaretDown,
   faInfo,
   faSignOutAlt,
   faSignInAlt,
   faUserPlus,
+  faBars,
 } from "@fortawesome/free-solid-svg-icons";
-
-function useOutsideDropdown(ref, setOpen) {
-  useEffect(() => {
-    function handleClickOutside(event) {
-      if (ref.current && !ref.current.contains(event.target)) {
-        // alert("You clicked outside of me!");
-        setOpen(false);
-      }
-    }
-
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
-  }, [ref, setOpen]);
-}
+import useClickOutsideRef from "../../hooks/useClickOutsideRef";
+import useWindowSize from "../../hooks/useWindowSize";
+import MiscConfig from "../../config/misc.config";
 
 function NavDropdown({ title, items }) {
   const [isOpen, setIsOpen] = useState(false);
   const contentRef = useRef(null);
 
-  useOutsideDropdown(contentRef, setIsOpen);
+  const { width } = useWindowSize();
+
+  /**
+   * Toggle open or not
+   */
+  const toggleOpen = () => {
+    setIsOpen(!isOpen);
+  };
+
+  useClickOutsideRef(contentRef, () => {
+    setIsOpen(false);
+  });
 
   return (
-    <div className="dropdown__outer" onClick={() => setIsOpen(!isOpen)}>
+    <div className="dropdown__outer" onClick={toggleOpen}  data-toggle="collapse">
       <div className="dropdown__render">
         <span>{title}</span>
         <span className="icon">
-          <FontAwesomeIcon icon={faCaretDown} />
+          {width < 480 ? (
+            <>
+              {isOpen ? (
+                <FontAwesomeIcon icon={faCaretDown} />
+              ) : (
+                <FontAwesomeIcon icon={faCaretLeft} />
+              )}
+            </>
+          ) : (
+            <FontAwesomeIcon icon={faCaretDown} />
+          )}
         </span>
       </div>
       {isOpen ? (
@@ -53,7 +64,7 @@ function NavDropdown({ title, items }) {
                   >
                     {ele ? (
                       <span className="dropdown__icon">
-                        <FontAwesomeIcon icon={ele && ele.icon} />
+                        <FontAwesomeIcon icon={ele.icon && ele.icon} />
                       </span>
                     ) : null}
                     <span>{ele ? ele.text : ``}</span>
@@ -71,10 +82,34 @@ function NavDropdown({ title, items }) {
 export default function Header() {
   const isSignedIn = useSelector((state) => state.auth.isSignedIn);
   const persistUser = useSelector((state) => state.auth.persistUser);
+  const [expand, setExpand] = useState(false);
+  const { width, height } = useWindowSize();
+  const expansionMenu = useRef(null);
+
+  useEffect(() => {
+    console.log(width, height);
+  }, [width, height]);
+
+  /**
+   * Expand an aside left menu
+   */
+  const handleExpand = () => {
+    setExpand(!expand);
+  };
+
+  /**
+   * On click outside of the expansion menu
+   */
+  useClickOutsideRef(expansionMenu, setExpand);
 
   return (
     <div className="header__wrapper">
       <div className="header__container">
+        {width < 768 && (
+          <div className="header__expand" onClick={handleExpand}>
+            <FontAwesomeIcon icon={faBars} />
+          </div>
+        )}
         <div className="header-logo-section">
           <h1>
             <Link to="/" className="link">
@@ -82,59 +117,136 @@ export default function Header() {
             </Link>
           </h1>
         </div>
-        <div className="header-navigation">
-          {isSignedIn ? (
-            <NavDropdown
-              title={persistUser && persistUser.username}
-              items={[
-                persistUser &&
-                  persistUser.admin && {
-                    url: `/admin`,
-                    text: `Quản trị`,
-                    icon: faInfo,
-                  },
-                { url: `/thong-tin`, text: `Thông tin`, icon: faInfo },
-                { url: `/dang-xuat`, text: `Đăng xuất`, icon: faSignOutAlt },
-              ]}
-            />
-          ) : (
-            <NavDropdown
-              title={`Account`}
-              items={[
-                { url: `/dang-nhap`, text: `Sign in`, icon: faSignInAlt },
-                { url: `/dang-ky`, text: `Sign up`, icon: faUserPlus },
-              ]}
-            />
-          )}
-          <NavDropdown
-            title={`Services`}
-            items={[
-              { url: `/`, text: `Donate` },
-              { url: `/`, text: `Raw purchase` },
-            ]}
-          />
-          <div>
-            <Link to="/">Password</Link>
-          </div>
-          <NavDropdown
-            title={`ManhWa`}
-            items={[
-              { url: `/`, text: `On-going` },
-              { url: `/`, text: `Hoàn` },
-              { url: `/`, text: `Drop` },
-            ]}
-          />
-          <NavDropdown
-            title={`Info`}
-            items={[
-              { url: `/`, text: `Confession` },
-              { url: `/`, text: `About` },
-            ]}
-          />
-          <div>
-            <Link to="/">Home</Link>
-          </div>
+        <div className="header__expand">
+          {/* <FontAwesomeIcon icon={faBars} /> */}
         </div>
+        {/* Using mobile or not */}
+        {width <= MiscConfig.TABLET_SIZE ? (
+          <>
+            {expand && (
+              <div className="header-navigation" ref={expansionMenu}>
+                <div
+                  onClick={handleExpand}
+                  style={{ display: "flex", flexFlow: "row" }}
+                >
+                  <span style={{ fontSize: 18 }}>
+                    <FontAwesomeIcon icon={faTimes} />
+                  </span>
+                  <span style={{ flex: 2 }}></span>
+                </div>
+                <div>
+                  <Link to="/">Home</Link>
+                </div>
+                {isSignedIn ? (
+                  <NavDropdown
+                    title={persistUser && persistUser.username}
+                    items={[
+                      persistUser &&
+                        persistUser.admin && {
+                          url: `/admin`,
+                          text: `Quản trị`,
+                          icon: faInfo,
+                        },
+                      { url: `/thong-tin`, text: `Thông tin`, icon: faInfo },
+                      {
+                        url: `/dang-xuat`,
+                        text: `Đăng xuất`,
+                        icon: faSignOutAlt,
+                      },
+                    ]}
+                  />
+                ) : (
+                  <NavDropdown
+                    title={`Account`}
+                    items={[
+                      { url: `/dang-nhap`, text: `Sign in`, icon: faSignInAlt },
+                      { url: `/dang-ky`, text: `Sign up`, icon: faUserPlus },
+                    ]}
+                  />
+                )}
+                <NavDropdown
+                  title={`Services`}
+                  items={[
+                    { url: `/`, text: `Donate` },
+                    { url: `/`, text: `Raw purchase` },
+                  ]}
+                />
+                <div>
+                  <Link to="/">Password</Link>
+                </div>
+                <NavDropdown
+                  title={`ManhWa`}
+                  items={[
+                    { url: `/`, text: `On-going` },
+                    { url: `/`, text: `Hoàn` },
+                    { url: `/`, text: `Drop` },
+                  ]}
+                />
+                <NavDropdown
+                  title={`Info`}
+                  items={[
+                    { url: `/`, text: `Confession` },
+                    { url: `/`, text: `About` },
+                  ]}
+                />
+              </div>
+            )}
+          </>
+        ) : (
+          <div className="header-navigation">
+            {isSignedIn ? (
+              <NavDropdown
+                title={persistUser && persistUser.username}
+                items={[
+                  persistUser &&
+                    persistUser.admin && {
+                      url: `/admin`,
+                      text: `Quản trị`,
+                      icon: faInfo,
+                    },
+                  { url: `/thong-tin`, text: `Thông tin`, icon: faInfo },
+                  { url: `/dang-xuat`, text: `Đăng xuất`, icon: faSignOutAlt },
+                ]}
+              />
+            ) : (
+              <NavDropdown
+                title={`Account`}
+                items={[
+                  { url: `/dang-nhap`, text: `Sign in`, icon: faSignInAlt },
+                  { url: `/dang-ky`, text: `Sign up`, icon: faUserPlus },
+                ]}
+              />
+            )}
+            <NavDropdown
+              title={`Services`}
+              items={[
+                { url: `/`, text: `Donate` },
+                { url: `/`, text: `Raw purchase` },
+              ]}
+            />
+            <div>
+              <Link to="/">Password</Link>
+            </div>
+            <NavDropdown
+              title={`ManhWa`}
+              items={[
+                { url: `/`, text: `On-going` },
+                { url: `/`, text: `Hoàn` },
+                { url: `/`, text: `Drop` },
+              ]}
+            />
+            <NavDropdown
+              title={`Info`}
+              items={[
+                { url: `/`, text: `Confession` },
+                { url: `/`, text: `About` },
+              ]}
+            />
+            <div>
+              <Link to="/">Home</Link>
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );

@@ -13,7 +13,7 @@ function AccountManagement() {
     // Random key for modify modal, for new instance every render
     const [randomKey, setRandomKey] = useState(v1());
 
-    const dispatch = useDispatch();
+  const dispatch = useDispatch();
 
     useEffect(() => {
         getAllUser();
@@ -33,27 +33,27 @@ function AccountManagement() {
         setIsModifyModalVisible(false);
     };
 
-    /**
-     *
-     * @param {Object} _modifyUser
-     */
-    const handleOpenModifyModal = (_modifyUser = null) => {
-        setModifyUser(_modifyUser);
-        setIsModifyModalVisible(true);
-        setRandomKey(v1());
-    };
+  /**
+   *
+   * @param {Object} _modifyUser
+   */
+  const handleOpenModifyModal = (_modifyUser = null) => {
+    setModifyUser(_modifyUser);
+    setIsModifyModalVisible(true);
+    setRandomKey(v1());
+  };
 
-    /**
-     *
-     * @param {Object} _newUserInfo
-     */
-    const handleConfirmModifyUser = (_newUserInfo) => {
-        if (!modifyUser) {
-            // Create new user
-        } else {
-            // Modify exist user
-        }
-    };
+  /**
+   *
+   * @param {Object} _newUserInfo
+   */
+  const handleConfirmModifyUser = (_newUserInfo) => {
+    if (!modifyUser) {
+      // Create new user
+    } else {
+      // Modify exist user
+    }
+  };
 
     const columns = [
         {
@@ -131,7 +131,7 @@ function AccountManagement() {
                 key={randomKey}
             />
         </>
-    );
+      ),
 }
 
 export default AccountManagement;

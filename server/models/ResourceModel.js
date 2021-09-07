@@ -30,6 +30,10 @@ const resourceSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  data: {
+    type: Buffer,
+    required: true
+  }
 });
 
 module.exports = mongoose.model(

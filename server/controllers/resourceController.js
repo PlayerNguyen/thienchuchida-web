@@ -1,20 +1,21 @@
 const Resource = require("../models/ResourceModel");
-const fs = require("fs");
 const { MiddlewareError } = require("../errors/MiddlewareError");
 
 /**
  * Uploads and adds new image into database
  *
- * @param {*} a properties of this plugin
+ * @param {*} file a properties of this plugin
+ * @param {Buffer}  data a buffer to set up
  * @returns a promise with doc which was added
  */
-async function createNewFile(file) {
+async function createNewFile(file, data) {
   const resource = new Resource({
     originalName: file.originalname,
     fileName: file.filename,
     size: file.size,
     path: file.path,
     mimetype: file.mimetype,
+    data: data,
   });
   return resource.save();
 }
@@ -26,29 +27,38 @@ async function createNewFile(file) {
  * @param {*} id file name
  * @returns a metadata of that file if found, otherwise null
  */
-async function findFile(id) {
-  return Resource.findOne({ _id: id }, "-__v");
+async function findFileMetadata(id) {
+  return Resource.findOne({ _id: id }, `-__v -data`);
+}
+
+async function findFileData(id) {
+  return Resource.findOne({ _id: id }, `-__v`);
 }
 
 /**
  * Find and remove a file (and uploads)
  */
 async function removeFile(id) {
-  return new Promise((resolve, reject) => {
-    Resource.findOneAndDelete({ _id: id }).then((doc) => {
-      if (!doc) {
-        return reject(new MiddlewareError("Document not found"));
-      }
-      // Remove in directory
-      // console.log(doc.path)
-      fs.unlink(`./${doc.path}`, (err) => {
-        if (err) {
-          return reject(err);
-        }
-        resolve(doc);
-      });
-    });
-  });
+  const doc = await Resource.findOneAndDelete({ _id: id });
+
+  if (!doc) {
+    throw new MiddlewareError("File not found", 404);
+  }
+
+  return doc;
 }
 
-module.exports = { createNewFile, findFile, removeFile };
+async function getAllFiles(sort, limit, skip) {
+  return Resource.find({}, "-data")
+    .sort(sort)
+    .limit(limit ? parseInt(limit): 0)
+    .skip(skip ? parseInt(skip) : 0);
+}
+
+module.exports = {
+  createNewFile,
+  findFileMetadata,
+  removeFile,
+  getAllFiles,
+  findFileData,
+};

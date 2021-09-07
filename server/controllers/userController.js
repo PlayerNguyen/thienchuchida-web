@@ -1,7 +1,8 @@
 const { MiddlewareError } = require("../errors/MiddlewareError");
 const User = require("../models/UserModel");
-const jsonwebtoken = require("jsonwebtoken");
 const UserModel = require("../models/UserModel");
+const TokenHelper = require("../helpers/tookenHelper");
+
 
 async function signIn(username, password, userAgent, address) {
   const doc = await User.findOne({ username });
@@ -17,33 +18,13 @@ async function signIn(username, password, userAgent, address) {
   }
 
   // Create new refresh token
-  const refreshToken = jsonwebtoken.sign(
-    {
-      username: doc.username,
-      _id: doc._id,
-      admin: doc.admin,
-      email: doc.email,
-      userAgent,
-      address,
-    },
-    process.env.REFRESH_TOKEN_SECRET,
-    {
-      expiresIn: process.env.REFRESH_TOKEN_EXPIRATION,
-    }
+  const refreshToken = await TokenHelper.generateRefreshToken(
+    doc,
+    userAgent,
+    address
   );
-
-  const accessToken = jsonwebtoken.sign(
-    {
-      username: doc.username,
-      _id: doc._id,
-      admin: doc.admin,
-      email: doc.email,
-    },
-    process.env.ACCESS_TOKEN_SECRET,
-    {
-      expiresIn: process.env.ACCESS_TOKEN_EXPIRATION,
-    }
-  );
+  // And Access token too
+  const accessToken = await TokenHelper.generateAccessToken(doc);
 
   // Then append it into database
   const len = doc.tokens.push({ token: refreshToken });
@@ -65,25 +46,31 @@ async function signIn(username, password, userAgent, address) {
  * @returns
  */
 async function doRefreshToken(refreshTokenId) {
-  const doc = await User.findOne({ "tokens._id": refreshTokenId });
+  // refreshTokenId cannot be null
+  if (!refreshTokenId) {
+    throw new MiddlewareError("Refresh token id cannot be null");
+  }
+  
+  const user = await User.findOne({ "tokens._id": refreshTokenId });
 
   // Token not existed
-  if (!doc) {
+  if (!user) {
     throw new MiddlewareError(`Token is invalid.`, 401);
   }
 
-  const item = doc.tokens.find((ele) => ele._id.toString() === refreshTokenId);
+  const item = user.tokens.find((ele) => ele._id.toString() === refreshTokenId);
   const { token, _id } = item;
 
-  const data = jsonwebtoken.verify(token, process.env.REFRESH_TOKEN_SECRET);
-  const accessToken = jsonwebtoken.sign(
-    { username: data.username, id: data.id },
-    process.env.ACCESS_TOKEN_SECRET,
-    {
-      expiresIn: process.env.ACCESS_TOKEN_EXPIRATION,
-    }
-  );
-  return { response: doc, accessToken, refreshToken: _id.toString() };
+  const data = TokenHelper.verifyRefreshToken(token);
+  const accessToken = TokenHelper.generateAccessToken(data);
+
+  return {
+    _id: user._id,
+    username: user.username,
+    admin: user.admin,
+    accessToken,
+    refreshToken: _id.toString(),
+  };
 }
 
 /**

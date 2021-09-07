@@ -4,13 +4,13 @@ const morgan = require("morgan");
 const bodyParser = require("body-parser");
 const cors = require("cors");
 const cookieParser = require("cookie-parser");
+const compression = require("compression");
+
 const users = require("./routers/userRouter");
 const books = require("./routers/bookRouter");
 const resources = require("./routers/resourceRouter");
 const tags = require("./routers/tagRouter");
 const { middlewareError } = require("./utils/errors-handle");
-const mongoose = require("mongoose");
-const MiscConfig = require("./config/misc.config");
 
 /**
  * Middleware settings here
@@ -22,10 +22,12 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cookieParser());
 app.use(
   cors({
-    origin: MiscConfig.cors.whitelist,
+    // origin: MiscConfig.cors.whitelist,
+    origin: "http://localhost:3000",
     credentials: true,
   })
 );
+app.use(compression({ level: -1 }));
 /**
  * Initialize stuffs
  */
@@ -41,17 +43,6 @@ app.use("/uploads", express.static("uploads"));
  */
 app.use(middlewareError);
 
-/**
- * Database initialize
- */
-mongoose
-  .connect(process.env.DATABASE_URL, {})
-  .then()
-  .catch((err) => {
-    if (err) {
-      throw err;
-    }
-  });
 
 /**
  * Export express

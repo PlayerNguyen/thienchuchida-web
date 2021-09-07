@@ -8,7 +8,7 @@ body {
   background-color: #000000;
   background: url(assets/Background.png) center fixed;
   background-size: cover;
-  color: #fff !important;
+  /* color: #fff !important; */
 }
 
 code {

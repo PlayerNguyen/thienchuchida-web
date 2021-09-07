@@ -1,9 +1,17 @@
 @import "styles/Color";
+@import "styles/Mixins";
 
 .book {
+  padding: 1.8em 3em;
+  margin-top: 100px;
+
+
   &__wrapper {
     background: $background__color--primary;
-    padding: 1.8em 3em;
+    margin: 0 !important;
+    @include mobile {
+      // padding: 1.8em 1em;
+    }
   }
 
   &__header {
@@ -15,6 +23,9 @@
     flex-flow: row;
     margin-bottom: 2em;
     gap: 1em;
+    @include mobile {
+      flex-flow: column;
+    }
   }
 
   &__thumbnail {
@@ -61,7 +72,6 @@
   }
 
   &__tags {
-    
     > div {
       // display: inline-block;
       // flex-flow: row;
@@ -102,5 +112,12 @@
     font-size: larger;
     font-weight: bold;
     margin-top: 12px;
+  }
+  &__views {
+    display: flex;
+    flex-flow: row;
+    > span {
+      // flex: 1;
+    }
   }
 }

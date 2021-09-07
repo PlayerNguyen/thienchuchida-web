@@ -2,11 +2,24 @@ const app = require("../app");
 const httpServer = require("http").createServer(app);
 const chalk = require("chalk");
 const mongoose = require("mongoose");
+const DatabaseConfig = require("../config/database.config");
 /**
  * Collect port from environment or set default port as 3000
  *
  */
 const port = process.env.PORT || 3000;
+
+/**
+ * Database initialize
+ */
+mongoose.connect(process.env.DATABASE_URL);
+mongoose.connection.on("error", (err) => {
+  console.log("err", err);
+});
+mongoose.connection.on("connected", () => {
+  console.log(`💾  ${chalk.greenBright(`Mongoose is connected`)}`);
+});
+setTimeout(() => {}, DatabaseConfig.ConnectionDelay);
 
 /**
  * Listen to the server

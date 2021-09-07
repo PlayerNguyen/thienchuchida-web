@@ -1,4 +1,5 @@
 const express = require("express");
+const CookieHelper = require('../helpers/cookieHelper.js');
 const {
   signIn,
   doRefreshToken,
@@ -7,8 +8,8 @@ const {
 } = require("../controllers/userController");
 const { MiddlewareError } = require("../errors/MiddlewareError");
 const {
-  getAuthorize,
   getAdminAuthorize,
+  getAuthorizeSilent,
 } = require("../middlewares/AuthMiddleware");
 const router = express.Router();
 
@@ -39,18 +40,11 @@ router.post("/signin", async (req, res, next) => {
   if (!username || !password) {
     return next(new MiddlewareError("Missing parameters.", 500));
   }
-  // Sign in method in controller
-  // signIn(username, password, userAgent, address)
-  //   .then(({ response, refreshToken, accessToken }) => {
 
-  //   })
-  //   .catch(next);
   const user = await signIn(username, password, userAgent, address);
-  // console.log(user)
   const { response, refreshToken, accessToken } = user;
-  // Set token to cookie
-  res.cookie("RefreshToken", refreshToken, { httpOnly: true });
-  res.cookie("AccessToken", accessToken, { httpOnly: true });
+  
+  CookieHelper.setTokenCookies(res, refreshToken, accessToken);
 
   res.json({
     message: "Đăng nhập thành công.",
@@ -68,8 +62,7 @@ router.post("/refresh-token", async (req, res, next) => {
   const responseRefreshToken = await doRefreshToken(RefreshToken);
   const { accessToken, refreshToken } = responseRefreshToken;
   try {
-    res.cookie("RefreshToken", refreshToken, { httpOnly: true });
-    res.cookie("AccessToken", accessToken, { httpOnly: true });
+    CookieHelper.setTokenCookies(res, refreshToken, accessToken);
 
     res.json({
       message: "Successfully refresh token",
@@ -92,13 +85,14 @@ router.post("/signout", (req, res) => {
   });
 });
 
-router.post("/profile", getAuthorize, (req, res) => {
-  const { id, username, admin } = req.currentUser;
-  res.json({ id, username, admin });
+router.post("/profile", getAuthorizeSilent, (req, res) => {
+  const { _id, username, admin } = req.currentUser;
+
+  res.json({ _id, username, admin });
 });
 
 /**
- * Return all users account without password
+ * Return all users account except password
  */
 router.get("/", getAdminAuthorize, async (req, res) => {
   const accounts = await getAllAccount();
