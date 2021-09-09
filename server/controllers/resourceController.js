@@ -36,7 +36,7 @@ async function findFileData(id) {
 }
 
 /**
- * Find and remove a file (and uploads)
+ * Find and remove a file
  */
 async function removeFile(id) {
   const doc = await Resource.findOneAndDelete({ _id: id });
@@ -44,12 +44,17 @@ async function removeFile(id) {
   if (!doc) {
     throw new MiddlewareError("File not found", 404);
   }
+  doc.data = null;
 
   return doc;
 }
 
+async function countAllFiles() {
+  return Resource.count();
+}
+
 async function getAllFiles(sort, limit, skip) {
-  return Resource.find({}, "-data")
+  return Resource.find({}, "_id")
     .sort(sort)
     .limit(limit ? parseInt(limit): 0)
     .skip(skip ? parseInt(skip) : 0);
@@ -61,4 +66,5 @@ module.exports = {
   removeFile,
   getAllFiles,
   findFileData,
+  countAllFiles
 };

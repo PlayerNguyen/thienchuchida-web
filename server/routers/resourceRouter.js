@@ -5,13 +5,17 @@ const storage = multer.diskStorage({
   destination: process.env.UPLOADED_DIRECTORY,
 });
 const upload = multer({ storage: storage });
-const { getAuthorize } = require("../middlewares/AuthMiddleware");
+const {
+  getAuthorize,
+  getAdminAuthorize,
+} = require("../middlewares/AuthMiddleware");
 const {
   createNewFile,
   findFileMetadata,
   findFileData,
   removeFile,
   getAllFiles,
+  countAllFiles,
 } = require("../controllers/resourceController");
 const { MiddlewareError } = require("../errors/MiddlewareError");
 const ResourceHelper = require("../helpers/resourceHelper");
@@ -33,7 +37,7 @@ router.post(
       return next(new MiddlewareError("No input files"));
     }
 
-    const responseFiles = [];
+    let responseFiles = [];
     for (let i in files) {
       const file = files[i];
       const filePath = path.join(path.dirname(__dirname), file.path);
@@ -42,15 +46,16 @@ router.post(
       const responseFile = await createNewFile(file, buffer);
       // Then delete the cache file
       await deleteFile(filePath);
+      responseFile.data = null;
       // Then push the id into a response file
-      responseFiles.push(responseFile._id);
+      responseFiles.push(responseFile);
     }
 
     res.json({ data: responseFiles });
   }
 );
 
-router.get("/", getAuthorize, async (req, res, next) => {
+router.get("/", getAdminAuthorize, async (req, res, next) => {
   try {
     const { sort, limit, page } = req.query;
     let skip = 0;
@@ -58,7 +63,12 @@ router.get("/", getAuthorize, async (req, res, next) => {
       skip = (page - 1) * limit;
     }
     const files = await getAllFiles(sort, limit, skip);
-    res.json({ data: files });
+    const filesIds = [];
+    for (let i in files) {
+      const fileObject = files[i];
+      filesIds.push(fileObject._id);
+    }
+    res.json({ total_size: await countAllFiles(), data: filesIds });
   } catch (err) {
     next(err);
   }
@@ -80,7 +90,7 @@ router.get("/:id", async (req, res, next) => {
   }
 });
 
-router.get("/:id/raw", async (req, res, next) => {
+router.get("/:id/raw", getAuthorize ,async (req, res, next) => {
   const { id } = req.params;
   try {
     const doc = await findFileData(id);
@@ -97,13 +107,17 @@ router.get("/:id/raw", async (req, res, next) => {
   }
 });
 
-router.delete("/:id", getAuthorize, async (req, res) => {
-  const { id } = req.params;
-  const file = await removeFile(id);
-  res.json({
-    message: "Successfully remove file",
-    data: file,
-  });
+router.delete("/:id", getAuthorize, async (req, res, next) => {
+  try {
+    const { id } = req.params;
+    const file = await removeFile(id);
+    res.json({
+      message: "Successfully remove file",
+      data: file,
+    });
+  } catch (err) {
+    next(err);
+  }
 });
 
 module.exports = router;

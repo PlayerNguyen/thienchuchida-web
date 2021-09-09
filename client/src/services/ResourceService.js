@@ -1,7 +1,7 @@
 import axiosInstance from "../helpers/axiosInstance";
 
 async function getAllResources() {
-  return axiosInstance.get("/resources/");
+  return axiosInstance.get(`/resources/?sorted=createdAt`);
 }
 
 async function uploadResources(formData) {
@@ -10,6 +10,19 @@ async function uploadResources(formData) {
   });
 }
 
-const ResourceService = { getAllResources, uploadResources };
+async function removeResource(id) {
+  return axiosInstance.delete(`/resources/${id}`);
+}
+
+async function getResourceMetadata(id) {
+  return axiosInstance.get(`/resources/${id}`);
+}
+
+const ResourceService = {
+  getAllResources,
+  uploadResources,
+  removeResource,
+  getResourceMetadata,
+};
 
 export default ResourceService;

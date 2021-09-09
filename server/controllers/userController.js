@@ -59,17 +59,18 @@ async function doRefreshToken(refreshTokenId) {
   }
 
   const item = user.tokens.find((ele) => ele._id.toString() === refreshTokenId);
-  const { token, _id } = item;
+  const { token } = item;
 
-  const data = TokenHelper.verifyRefreshToken(token);
-  const accessToken = TokenHelper.generateAccessToken(data);
+  
+  const data = await TokenHelper.verifyRefreshToken(token);
+  const accessToken = await TokenHelper.generateAccessToken(data);
 
   return {
     _id: user._id,
     username: user.username,
     admin: user.admin,
     accessToken,
-    refreshToken: _id.toString(),
+    refreshToken: refreshTokenId,
   };
 }
 

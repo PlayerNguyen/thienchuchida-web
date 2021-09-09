@@ -51,34 +51,38 @@ async function getAdminAuthorize(req, res, next) {
 }
 
 async function getAuthorizeSilent(req, res, next) {
-  const { AccessToken, RefreshToken } = req.cookies;
-  // No access token, try to get refresh token
-  if (!AccessToken) {
-    // Not exist refresh token too
-    if (!RefreshToken) {
-      throw new MiddlewareError("Unauthorized");
-    } else {
-      const response = await doRefreshToken(RefreshToken);
-      const { _id, username, admin } = response;
-      // console.log(response);
-      CookieHelper.setTokenCookies(res, response.refreshToken, response.accessToken);
-
-      req.currentUser = { _id, username, admin };
-      next();
+  try {
+    const { AccessToken, RefreshToken } = req.cookies;
+    // No access token, try to get refresh token
+    if (!AccessToken) {
+      // Not exist refresh token too
+      if (!RefreshToken) {
+        throw new MiddlewareError("Unauthorized");
+      } else {
+        const response = await doRefreshToken(RefreshToken);
+        const { _id, username, admin } = response;
+        // console.log(response);
+        CookieHelper.setTokenCookies(res, response.refreshToken, response.accessToken);
+  
+        req.currentUser = { _id, username, admin };
+        next();
+      }
+      return;
     }
-    return;
+  
+    // Validate token
+    const data = jsonwebtoken.verify(
+      AccessToken,
+      process.env.ACCESS_TOKEN_SECRET
+    );
+  
+    console.log(data)
+  
+    req.currentUser = data;
+    next();
+  } catch(err) {
+    next(err)
   }
-
-  // Validate token
-  const data = jsonwebtoken.verify(
-    AccessToken,
-    process.env.ACCESS_TOKEN_SECRET
-  );
-
-  console.log(data)
-
-  req.currentUser = data;
-  next();
 }
 
 module.exports = { getAuthorize, getAuthorizeSilent, getAdminAuthorize };

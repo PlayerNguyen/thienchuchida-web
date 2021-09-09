@@ -1,18 +1,31 @@
-import React, { useEffect, useRef, useState } from "react";
-import {
-  Card,
-  Modal,
-  Form,
-  Button,
-  ProgressBar,
-  Alert,
-  Pagination,
-} from "react-bootstrap";
+import React, { useEffect, useState } from "react";
+import { Card, Pagination, Button, Title } from "react-bootstrap";
 import Config from "../../../config/server.config";
 import ResourceService from "../../../services/ResourceService";
 import "./ResourceManager.scss";
+import UploadModal from "./UploadModal";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {
+  faTrashAlt,
+  faEdit,
+  faCheckSquare,
+} from "@fortawesome/free-regular-svg-icons";
+import RemoveModal from "./RemoveModal";
 
-function ResourceItem({ resourceItem, selected, onClick }) {
+const PAGE_ITEMS_LIMIT = 12;
+
+function ResourceItem({ id, selected, onClick }) {
+  const [data, setData] = useState(null);
+
+  useEffect(() => {
+    ResourceService.getResourceMetadata(id)
+      .then((res) => {
+        const { data } = res.data;
+        setData(data);
+      })
+      .catch(() => {});
+  }, [id]);
+
   return (
     <Card
       className={`resourceitem ${selected ? `resourceitem--selected` : ``}`}
@@ -21,130 +34,85 @@ function ResourceItem({ resourceItem, selected, onClick }) {
       <div className="resourceitem__thumbnail">
         <Card.Img
           src={
-            resourceItem
-              ? `${Config.SERVER_API_URL}/resources/${resourceItem._id}/raw`
+            data
+              ? `${Config.SERVER_API_URL}/resources/${data._id}/raw`
               : Config.DEFAULT_THUMBNAIL
           }
           alt="A thumbnail for resource"
         />
       </div>
+
+      <Card.Body>
+        <Card.Title>{data && data.originalName}</Card.Title>
+        <span>Text</span>
+      </Card.Body>
     </Card>
   );
 }
 
-function UploadModal(props) {
-  const [isValid, setValid] = useState(false);
-  const [files, setFiles] = useState(null);
-  const [isUploading, setIsUploading] = useState();
-  const [isError, setIsError] = useState(false);
-  const [responseMessage, setResponseMessage] = useState(null);
-  const fileInput = useRef(null);
-
-  /**
-   * Selected or added files into input
-   */
-  const handleChangeFiles = (event) => {
-    setFiles(event.target.files);
-  };
+// 0 1 2 3 4 5 6 7
+//
+function ResourceFooter({ totalSize, setPage, page }) {
+  const [totalPages, setTotalPages] = useState(0);
+  const [pages, setPages] = useState(0);
+  const [startIndex, setStartIndex] = useState(0);
+  const [endIndex, setEndIndex] = useState(0);
 
   useEffect(() => {
-    if (files) setValid(files.length > 0);
-  }, [files]);
-  /**
-   * Clean up
-   */
-  useEffect(() => {
-    return resetModal();
-  }, []);
+    async function updatePage() {
+      if (totalSize) {
+        setTotalPages(Math.abs(Math.ceil(totalSize / PAGE_ITEMS_LIMIT)));
+        setPages(totalPages > 0 ? totalPages : 1);
+        setStartIndex(page - 2);
+        setEndIndex(page + 2);
+      }
+    }
+    updatePage();
+  }, [totalSize, totalPages, page]);
 
-  const handleUpload = () => {
-    setValid(false);
-    setIsUploading(true);
-    const formData = new FormData();
-    const fileArray = [...files];
-    fileArray.forEach((file) => {
-      formData.append("files", file);
-    });
-
-    ResourceService.uploadResources(formData)
-      .then((response) => {
-        // Report to user
-        setResponseMessage(response.data.message);
-        // Remove files
-        setFiles(null);
-        // Set files to lobby
-        response.data.data.forEach((file) => {
-          props.setData([...props.data, file]);
-        });
-      })
-      .catch((error) => {
-        const message = error.response && error.response.data.error.message;
-        // Set response message
-        setResponseMessage(message);
-        // Set is error
-        setIsError(true);
-      })
-      .finally(() => {
-        // Reset a form, not to duplicate upload files
-        fileInput.current.value = null;
-        // Disable is loading
-        setIsUploading(false);
-      });
+  const handleClickNext = () => {
+    setPage(page + 1 > totalPages ? page : page + 1);
   };
 
-  const resetModal = () => {
-    setResponseMessage(null);
-    setValid(false);
-    setIsError(false);
-    setIsUploading(false);
-    setFiles(null);
+  const handleClickPrevious = () => {
+    setPage(page - 1 < 1 ? page : page - 1);
   };
 
-  const handleOnClose = () => {
-    resetModal();
-    props.onClose();
+  const handleClickLast = () => {
+    setPage(pages);
+  };
+
+  const handleClickFirst = () => {
+    setPage(1);
   };
 
   return (
-    <Modal
-      {...props}
-      size="lg"
-      aria-labelledby="contained-modal-title-vcenter"
-      centered
-      onHide={handleOnClose}
-    >
-      <Modal.Header closeButton>
-        <Modal.Title id="contained-modal-title-vcenter">
-          Thêm tệp mới
-        </Modal.Title>
-      </Modal.Header>
-      <Modal.Body>
-        {/* File upload form */}
-        <Form ref={fileInput}>
-          <Form.Group controlId="formFileMultiple">
-            <Form.Label>
-              <>Chọn tệp hoặc kéo/thả để tải lên</>
-            </Form.Label>
-            <Form.Control type="file" multiple onChange={handleChangeFiles} />
-          </Form.Group>
-        </Form>
-        {/* A progress bar when uploading */}
-        {isUploading && <ProgressBar animated now={100} className="mt-2" />}
-        {responseMessage && (
-          <Alert className="mt-2" variant={isError ? `error` : `success`}>
-            {responseMessage}
-          </Alert>
-        )}
-      </Modal.Body>
-      <Modal.Footer>
-        <Button onClick={handleOnClose} variant="danger">
-          Đóng
-        </Button>
-        <Button onClick={handleUpload} disabled={!isValid}>
-          Tải lên
-        </Button>
-      </Modal.Footer>
-    </Modal>
+    <Pagination>
+      <Pagination.First onClick={handleClickFirst} />
+      <Pagination.Prev onClick={handleClickPrevious} />
+
+      {pages > 0 &&
+        [...Array(pages)].map((e, i) => {
+          const currentPage = i + 1;
+          if (startIndex <= i && i <= endIndex) {
+            return (
+              <Pagination.Item
+                key={i}
+                active={page === currentPage}
+                onClick={() => {
+                  setPage(currentPage);
+                }}
+              >
+                {currentPage}
+              </Pagination.Item>
+            );
+          }
+          return null;
+        })}
+
+      <Pagination.Next onClick={handleClickNext} />
+      <Pagination.Last onClick={handleClickLast} />
+    </Pagination>
   );
 }
 
@@ -154,75 +122,142 @@ export default function ResourceManager() {
    */
   const [selection, setSelection] = useState([]);
   const [isUploadVisible, setUploadVisible] = useState(false);
-  const [data, setData] = useState([]);
+  const [isRemoveVisible, setRemoveVisible] = useState(false);
+  const [data, setData] = useState(null);
+  const [totalSize, setTotalSize] = useState(0);
+  const [page, setPage] = useState(1);
+  const [loading, setLoading] = useState(false);
 
-  const handleToggleSelect = (index) => {
+  const handleToggleSelect = (value) => {
     // Found index in selection, remove it
-    selection.indexOf(index) !== -1
-      ? setSelection(selection.filter((e) => e !== index))
-      : setSelection([...selection, index]);
+    selection.indexOf(value) !== -1
+      ? setSelection(selection.filter((e) => e !== value))
+      : setSelection([...selection, value]);
   };
 
   const handleOpenUploadModal = () => {
     setUploadVisible(true);
   };
+
   const handleCloseUploadModal = () => {
     setUploadVisible(false);
   };
 
+  const handleOpenRemoveModal = () => {
+    setRemoveVisible(true);
+  };
+
+  const handleCloseRemoveModal = () => {
+    setRemoveVisible(false);
+  };
+
   /**
-   * Trackers selection
+   * Update items
    */
   useEffect(() => {
-    // console.log(selection);
-    ResourceService.getAllResources().then(({ data }) => {
-      // console.log()
-      setData(data.data);
-    });
-  }, [selection]);
+    setLoading(true);
+    ResourceService.getAllResources()
+      .then((response) => {
+        const { data } = response.data;
+        setData(data);
+      })
+      .catch((e) => {})
+      .finally(() => {
+        setLoading(false);
+      });
+  }, [page]);
+
+  useEffect(() => {
+    // Selection update
+
+    if (data) {
+      setTotalSize(data.length);
+    }
+  }, [data]);
 
   return (
     <div className="resource__wrapper">
       <div className="resource__header">
         <h1 className="title text-dark">Tài nguyên</h1>
-        <p onClick={handleOpenUploadModal}>Thêm tệp mới </p>
       </div>
-      <div className="resource__container">
-        {data &&
-          data.map((ele, index) => {
-            return (
-              <ResourceItem
-                resourceItem={ele}
-                selected={selection.indexOf(index) !== -1}
-                key={index}
-                onClick={() => {
-                  handleToggleSelect(index);
-                }}
+      <div className="resource__actionbar">
+        <Button onClick={handleOpenUploadModal}>Tải lên</Button>
+      </div>
+      {data && data.length > 0 ? (
+        <>
+          <div className="resource__container">
+            {selection.length > 0 && (
+              <div className="resourceitem__actionbar actionbar">
+                <div className="actionbar__block--left">
+                  <span>
+                    <FontAwesomeIcon icon={faCheckSquare} />
+                  </span>
+                  <span>
+                    <b>{selection.length}</b>
+                  </span>
+                </div>
+                <div className="actionbar__block--right">
+                  <span>
+                    <FontAwesomeIcon icon={faEdit} />
+                  </span>
+                  <span onClick={handleOpenRemoveModal}>
+                    <FontAwesomeIcon icon={faTrashAlt} />
+                  </span>
+                </div>
+              </div>
+            )}
+            <div className="resourceitem__wrapper">
+              {data
+                ? data.map((ele, index) => {
+                    const start = (page - 1) * PAGE_ITEMS_LIMIT;
+                    const end = start + PAGE_ITEMS_LIMIT;
+                    if (start <= index && index < end) {
+                      return (
+                        <ResourceItem
+                          id={ele}
+                          selected={selection.indexOf(ele) !== -1}
+                          key={index}
+                          onClick={() => {
+                            handleToggleSelect(ele);
+                          }}
+                        />
+                      );
+                    }
+                    return null;
+                  })
+                : null}
+            </div>
+          </div>
+          {data && !loading ? (
+            <div className="resources__footer">
+              <ResourceFooter
+                totalSize={totalSize}
+                page={page}
+                setPage={setPage}
               />
-            );
-          })}
-        
-      </div>
-      <Pagination>
-          <Pagination.First />
-          <Pagination.Prev />
-          <Pagination.Item>{1}</Pagination.Item>
-          <Pagination.Ellipsis />
-
-          <Pagination.Item>{10}</Pagination.Item>
-          <Pagination.Item>{11}</Pagination.Item>
-          <Pagination.Item active>{12}</Pagination.Item>
-          <Pagination.Item>{13}</Pagination.Item>
-          <Pagination.Item disabled>{14}</Pagination.Item>
-
-          <Pagination.Ellipsis />
-          <Pagination.Item>{20}</Pagination.Item>
-          <Pagination.Next />
-          <Pagination.Last />
-        </Pagination>
+            </div>
+          ) : null}
+        </>
+      ) : (
+        <div className="resource__container">
+          <h1>
+            Không tìm thấy tài nguyên nào, bạn có thể tải lên tài nguyên mới
+          </h1>
+        </div>
+      )}
+      {/* Register upload modal */}
       <UploadModal
         show={isUploadVisible}
         onClose={handleCloseUploadModal}
+        setData={setData}
+        data={data}
+      />
+      {/* Register remove modal */}
+      <RemoveModal
+        show={isRemoveVisible}
+        onClose={handleCloseRemoveModal}
+        selection={selection}
+        setSelection={setSelection}
         setData={setData}
         data={data}
       />
