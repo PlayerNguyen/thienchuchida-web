@@ -18,7 +18,7 @@ async function addChapter(book, name, content) {
 async function addResourceChapter({ id, resource }) {
   const chapter = await BookChapterModel.findOne({ id });
   if (!chapter) {
-    return reject(new MiddlewareError("Resource chapter not found.", 404));
+    throw new new MiddlewareError("Resource chapter not found.", 404)
   }
   chapter.resources = [...chapter.resources, resource];
   return chapter.save();
