@@ -4,7 +4,7 @@ import "./ResourceSelectModal.scss";
 import ResourceItem from "./ResourceItem";
 import ResourceService from "../../../services/ResourceService";
 
-export default function ResourceSelectModal({ visible, close }) {
+export default function ResourceSelectModal({ visible, close, onChoose }) {
   const [data, setData] = useState(null);
   const [page, setPage] = useState(1);
   const [totalPage, setTotalPage] = useState(1);
