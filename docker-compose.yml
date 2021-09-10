@@ -1,0 +1,33 @@
+version: "3.8"
+services:
+  mongodb:
+    image: mongo
+    restart: always
+    ports:
+      - "27017:27017"
+    networks:
+      - nw
+    volumes:
+      - mongo-data:/data/db
+  server:
+    image: thienchuchidia/server
+    networks:
+      - nw
+    ports:
+      - "3001:30001"
+    depends_on:
+      - mongodb
+  client:
+    image: thienchuchidia/client
+    networks:
+      - nw
+    ports: 
+      - "3000:3000"
+    stdin_open: true
+
+networks:
+  nw:
+    driver: bridge
+volumes:
+  mongo-data:
+    driver: local
