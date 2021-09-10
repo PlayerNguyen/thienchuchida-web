@@ -11,7 +11,7 @@ async function createNewTag(name) {
 }
 
 async function findSingleTag(data) {
-  return BookTag.findOne({
+  return BookTag.find({
     $or: [{ name: data }, { _id: data }, { slug: data }],
   });
 }

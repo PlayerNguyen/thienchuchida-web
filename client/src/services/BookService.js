@@ -22,11 +22,16 @@ async function getChaptersInBook(bookId) {
   return axiosInstance.get(`/books/book/${bookId}/chapters/`);
 }
 
+async function findTagByName(name) {
+  return axiosInstance.get(`/books/tags/tag/${name}/`);
+}
+
 const BookService = {
   getLatestUpdateBook,
   getBookBySlug,
   getChapterById,
   getAllBooks,
-  getChaptersInBook
+  getChaptersInBook,
+  findTagByName,
 };
 export default BookService;

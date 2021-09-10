@@ -11,44 +11,9 @@ import {
   faCheckSquare,
 } from "@fortawesome/free-regular-svg-icons";
 import RemoveModal from "./RemoveModal";
+import ResourceItem from "./ResourceItem";
 
 const PAGE_ITEMS_LIMIT = 12;
-
-function ResourceItem({ id, selected, onClick }) {
-  const [data, setData] = useState(null);
-
-  useEffect(() => {
-    ResourceService.getResourceMetadata(id)
-      .then((res) => {
-        const { data } = res.data;
-        setData(data);
-      })
-      .catch(() => {});
-  }, [id]);
-
-  return (
-    <Card
-      className={`resourceitem ${selected ? `resourceitem--selected` : ``}`}
-      onClick={onClick}
-    >
-      <div className="resourceitem__thumbnail">
-        <Card.Img
-          src={
-            data
-              ? `${Config.SERVER_API_URL}/resources/${data._id}/raw`
-              : Config.DEFAULT_THUMBNAIL
-          }
-          alt="A thumbnail for resource"
-        />
-      </div>
-
-      <Card.Body>
-        <Card.Title>{data && data.originalName}</Card.Title>
-        <span>Text</span>
-      </Card.Body>
-    </Card>
-  );
-}
 
 // 0 1 2 3 4 5 6 7
 //

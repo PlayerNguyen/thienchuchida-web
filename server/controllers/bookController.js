@@ -8,17 +8,14 @@ async function createNewBook({ title, description }) {
 }
 
 async function addChapter(book, name, content) {
-  return new Promise((resolve, reject) => {
-    const chapter = new BookChapterModel({ book, name, content });
-
-    chapter.save().then(resolve).catch(reject);
-  });
+  const chapter = new BookChapterModel({ book, name, content });
+  return chapter.save();
 }
 
 async function addResourceChapter({ id, resource }) {
   const chapter = await BookChapterModel.findOne({ id });
   if (!chapter) {
-    throw new new MiddlewareError("Resource chapter not found.", 404)
+    throw new new MiddlewareError("Resource chapter not found.", 404)();
   }
   chapter.resources = [...chapter.resources, resource];
   return chapter.save();

@@ -106,7 +106,7 @@ router.get("/book/:bookId/chapters/:chapterId", async (req, res, next) => {
 /**
  * Get all books by tag (slug, name, ...)
  */
-router.get("/tags/tag/:tag", async (req, res) => {
+router.get("/tags/books/:tag", async (req, res) => {
   const { tag: query } = req.params;
   const tag = await findSingleTag(query);
   // Tag not found, return nothing here
@@ -118,6 +118,12 @@ router.get("/tags/tag/:tag", async (req, res) => {
   const id = tag._id;
   const books = await getBooksByTag(id);
   res.json({ data: books });
+});
+
+router.get("/tags/tag/:tag", async (req, res) => {
+  const { tag: query } = req.params;
+  const tags = await findSingleTag(query);
+  res.json({ data: tags });
 });
 
 /**
