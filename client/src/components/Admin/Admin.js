@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import { useLocation, useRouteMatch } from "react-router";
-import { Link } from "react-router-dom";
 import { Switch } from "react-router-dom/cjs/react-router-dom.min";
 import AdminRestrictedRoute from "../../route/AdminRestrictedRoute";
 import AccountManagement from "./AccountManagement";
@@ -9,6 +8,8 @@ import { Row, Col } from "react-bootstrap";
 import AdminAside from "./AdminSidebar/AdminSidebar";
 import ResourceManager from "./ResourceManager/ResourceManager";
 import BookManager from "./BookManager/BookManager";
+import AdminNavbar from "./AdminNavbar";
+
 
 export default function Admin() {
   const [activeMenu, setActiveMenu] = useState(null);
@@ -24,9 +25,7 @@ export default function Admin() {
   return (
     <div className="admin__wrapper">
       <Col className="admin__header mb-0 bg-dark">
-        <div className="">
-          <Link to="/">Trở về trang chủ</Link>
-        </div>
+        <AdminNavbar />
       </Col>
       <Col className="admin__container bg-light d-flex">
         {/* Aside render here, navigate follows a below link */}
