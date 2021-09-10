@@ -8,7 +8,7 @@ const MiscConfig = {
       maxAge: ms("7d"),
     },
     accessToken: {
-      maxAge: ms("15m"),
+      maxAge: ms("7d"),
     },
   },
 };

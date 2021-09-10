@@ -14,9 +14,19 @@ function getChapterById(book, chapterId) {
   return axiosInstance.get(`/books/book/${book}/chapters/${chapterId}`);
 }
 
+function getAllBooks() {
+  return axiosInstance.get(`/books/`);
+}
+
+async function getChaptersInBook(bookId) {
+  return axiosInstance.get(`/books/book/${bookId}/chapters/`);
+}
+
 const BookService = {
   getLatestUpdateBook,
   getBookBySlug,
-  getChapterById
+  getChapterById,
+  getAllBooks,
+  getChaptersInBook
 };
 export default BookService;

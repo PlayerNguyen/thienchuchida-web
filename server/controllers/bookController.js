@@ -25,7 +25,7 @@ async function addResourceChapter({ id, resource }) {
 }
 
 async function getChaptersInBook(book) {
-  return await BookChapterModel.find({ book }, "_id name views");
+  return BookChapterModel.find({ book }, "-content -book");
 }
 
 async function getChapterById(book, chapter) {
@@ -40,7 +40,7 @@ async function getChapterById(book, chapter) {
  * @returns
  */
 async function getBooks(query, sort, limit, skip) {
-  return await BookModel.find(query, "-__v")
+  return BookModel.find(query, "-__v")
     .sort(sort)
     .limit(limit)
     .skip(skip)

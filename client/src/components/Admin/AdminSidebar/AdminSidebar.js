@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import { Row } from "react-bootstrap";
 import { useLocation, useRouteMatch } from "react-router";
 import { Link } from "react-router-dom";
 import "../style.scss";

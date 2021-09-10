@@ -1,0 +1,10 @@
+.selector {
+  display: flex;
+  flex-flow: row;
+  flex-wrap: wrap;
+  gap: 0.8em;
+  .item {
+    // flex: 1 31%;
+    width: 31.33333%;
+  }
+}

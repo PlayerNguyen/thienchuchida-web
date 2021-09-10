@@ -1,0 +1,40 @@
+.editor {
+  &__wrapper {
+    margin: 0 1.2em;
+  }
+
+  &__header {
+    display: flex;
+    flex-flow: row;
+    gap: 1em;
+
+    &--first {
+      flex: 1;
+    }
+
+    &--secondary {
+      flex: 1;
+    }
+  }
+
+  &__thumbnail {
+    cursor: pointer;
+    img {
+      border-radius: 12px;
+      width: 100%;
+      
+    }
+  }
+
+  &__password {
+    margin-top: 1em;
+  }
+
+  &__body {
+    margin-top: 1em;
+  }
+
+  &__chapters {
+    margin-top: 1em;
+  }
+}

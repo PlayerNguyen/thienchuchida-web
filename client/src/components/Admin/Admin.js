@@ -8,6 +8,7 @@ import "./style.scss";
 import { Row, Col } from "react-bootstrap";
 import AdminAside from "./AdminSidebar/AdminSidebar";
 import ResourceManager from "./ResourceManager/ResourceManager";
+import BookManager from "./BookManager/BookManager";
 
 export default function Admin() {
   const [activeMenu, setActiveMenu] = useState(null);
@@ -34,6 +35,9 @@ export default function Admin() {
         {/* A container to contain */}
         <Row className="admin__content">
           <Switch>
+            <AdminRestrictedRoute path={`${path}/quan-ly-truyen`}>
+              <BookManager />
+            </AdminRestrictedRoute>
             <AdminRestrictedRoute path={`${path}/quan-ly-tai-nguyen`}>
               <ResourceManager />
             </AdminRestrictedRoute>

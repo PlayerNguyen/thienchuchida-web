@@ -32,6 +32,10 @@ const bookChapterSchema = new mongoose.Schema({
       return slugHelper.doSlugify(this.name);
     },
   },
+  createdAt: {
+    type: Date,
+    default: Date.now
+  },
   thumbnail: {
     type: String,
     ref: DatabaseConfig.Model.Resource.Name

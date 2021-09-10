@@ -179,6 +179,7 @@ export default function ResourceManager() {
     <div className="resource__wrapper">
       <div className="resource__header">
         <h1 className="title text-dark">Tài nguyên</h1>
+        <h3 className="subtitle text-secondary">Quản lý tài nguyên</h3>
       </div>
       <div className="resource__actionbar">
         <Button onClick={handleOpenUploadModal}>Tải lên</Button>
