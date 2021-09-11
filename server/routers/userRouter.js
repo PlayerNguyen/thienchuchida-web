@@ -1,5 +1,5 @@
 const express = require("express");
-const CookieHelper = require('../helpers/cookieHelper.js');
+const CookieHelper = require("../helpers/cookieHelper.js");
 const {
   signIn,
   doRefreshToken,
@@ -13,48 +13,56 @@ const {
 } = require("../middlewares/AuthMiddleware");
 const router = express.Router();
 
-router.post("/signup", async (req, res) => {
-  const { username, password, email } = req.body;
+router.post("/signup", async (req, res, next) => {
+  try {
+    const { username, password, email } = req.body;
 
-  if (!username || !password || !email) {
-    throw new MiddlewareError("Missing parameters.", 500);
+    if (!username || !password || !email) {
+      throw new MiddlewareError("Missing parameters.", 500);
+    }
+
+    const user = signUp({ username, password, email });
+    res.json({
+      message: "Successfully create account",
+      data: {
+        id: user._id,
+      },
+    });
+  } catch (err) {
+    next(err);
   }
-
-  const user = signUp({ username, password, email });
-  res.json({
-    message: "Successfully create account",
-    data: {
-      id: user._id,
-    },
-  });
 });
 
 router.post("/signin", async (req, res, next) => {
-  const { username, password } = req.body;
-  // Get user agent browser information
-  const userAgent = req.headers["user-agent"] || null;
-  // Get user address
-  const address = req.headers["x-forwarded-for"] || req.socket.remoteAddress;
+  try {
+    const { username, password } = req.body;
+    // Get user agent browser information
+    const userAgent = req.headers["user-agent"] || null;
+    // Get user address
+    const address = req.headers["x-forwarded-for"] || req.socket.remoteAddress;
 
-  // Missing parameters
-  if (!username || !password) {
-    return next(new MiddlewareError("Missing parameters.", 500));
+    // Missing parameters
+    if (!username || !password) {
+      return next(new MiddlewareError("Missing parameters.", 500));
+    }
+
+    const user = await signIn(username, password, userAgent, address);
+    const { response, refreshToken, accessToken } = user;
+
+    CookieHelper.setTokenCookies(res, refreshToken, accessToken);
+
+    res.json({
+      message: "Đăng nhập thành công.",
+      data: {
+        username: response.username,
+        email: response.email,
+        _id: response._id,
+        admin: response.admin,
+      },
+    });
+  } catch (err) {
+    next(err);
   }
-
-  const user = await signIn(username, password, userAgent, address);
-  const { response, refreshToken, accessToken } = user;
-  
-  CookieHelper.setTokenCookies(res, refreshToken, accessToken);
-
-  res.json({
-    message: "Đăng nhập thành công.",
-    data: {
-      username: response.username,
-      email: response.email,
-      _id: response._id,
-      admin: response.admin,
-    },
-  });
 });
 
 router.post("/refresh-token", async (req, res, next) => {
@@ -85,18 +93,26 @@ router.post("/signout", (req, res) => {
   });
 });
 
-router.post("/profile", getAuthorizeSilent, (req, res) => {
-  const { _id, username, admin } = req.currentUser;
+router.post("/profile", getAuthorizeSilent, (req, res, next) => {
+  try {
+    const { _id, username, admin } = req.currentUser;
 
-  res.json({ _id, username, admin });
+    res.json({ _id, username, admin });
+  } catch (err) {
+    next(err);
+  }
 });
 
 /**
  * Return all users account except password
  */
-router.get("/", getAdminAuthorize, async (req, res) => {
-  const accounts = await getAllAccount();
-  res.json({ data: accounts });
+router.get("/", getAdminAuthorize, async (req, res, next) => {
+  try {
+    const accounts = await getAllAccount();
+    res.json({ data: accounts });
+  } catch (err) {
+    next(err);
+  }
 });
 
 module.exports = router;
