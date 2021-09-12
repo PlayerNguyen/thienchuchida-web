@@ -84,7 +84,7 @@ router.get("/:id", async (req, res, next) => {
       throw new MiddlewareError("File not found", 404);
     }
 
-    res.json({ data: doc });
+    res.json({ data: doc, url: { raw: `/resources/${id}/raw` } });
   } catch (err) {
     next(err);
   }

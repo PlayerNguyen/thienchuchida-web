@@ -1,6 +1,7 @@
 import axios from "axios";
 import Config from "../config/server.config";
 import UserService from "../services/UserService";
+import { toast } from "react-toastify";
 
 const axiosInstance = axios.create({
   baseURL: Config.SERVER_API_URL,
@@ -12,8 +13,10 @@ axiosInstance.interceptors.request.use(
     return config;
   },
   (error) => {
-    const { name } = error.response.data.error;
-    console.log(name);
+    if (error.response && error.response.data.error) {
+      const { message } = error.response.data.error;
+      toast.error(message);
+    }
     return Promise.reject(error);
   }
 );
@@ -24,7 +27,7 @@ axiosInstance.interceptors.response.use(
   },
   (error) => {
     if (error.response && error.response.data.error) {
-      const { name } = error.response.data.error;
+      const { message, name } = error.response.data.error;
       // console.log(name)
       if (name === "TokenExpiredError") {
         UserService.getRefreshToken().then((response) => {
@@ -32,6 +35,9 @@ axiosInstance.interceptors.response.use(
         });
         return;
       }
+      if (name === "TokenNotFoundError") {
+        return;
+      } else toast.error(message);
     }
     return Promise.reject(error);
   }

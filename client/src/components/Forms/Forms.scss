@@ -40,7 +40,7 @@
   }
 
   &--label {
-    font-size: medium;
+    font-size: larger;
     margin-bottom: 0.2em;
     color: #000;
   }
@@ -93,6 +93,23 @@
     background: rgb(145, 215, 255);
     border: 0;
     font-weight: 400;
+    transition: cubic-bezier(0.075, 0.82, 0.165, 1) .25s background;
+  }
+
+  &--danger {
+    border: 1px solid red;
+  }   
+  &--success {
+    border: 1px solid seagreen;
+  }   
+
+  &__description {
+    color: #797979 !important;
+  }
+
+  &--disabled, :disabled {
+    background: #797979;
+    color: #d4d4d4;
   }
 }
 
@@ -103,7 +120,7 @@
   }
 }
 
-.formSignIn {
+.formSignIn, .formSignUp {
   flex: 1;
   border-right: 2px solid #d8d8d8 !important;
   @include mobile {

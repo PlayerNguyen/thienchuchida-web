@@ -13,6 +13,7 @@ import Book from "./components/Book/Book";
 import Admin from "./components/Admin/Admin";
 import Profile from "./components/Profile/Profile";
 import AdminRestrictedRoute from "./route/AdminRestrictedRoute";
+import SignUp from "./components/Forms/SignUp";
 
 function App() {
   const dispatch = useDispatch();
@@ -64,6 +65,10 @@ function App() {
             <RestrictedRoute path="/dang-xuat">
               <SignOut />
             </RestrictedRoute>
+
+            <UnauthorizeRoute path="/dang-ky">
+              <SignUp />
+            </UnauthorizeRoute>
 
             <UnauthorizeRoute path="/dang-nhap">
               <SignIn />

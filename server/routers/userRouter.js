@@ -18,14 +18,15 @@ router.post("/signup", async (req, res, next) => {
     const { username, password, email } = req.body;
 
     if (!username || !password || !email) {
-      throw new MiddlewareError("Missing parameters.", 500);
+      return next(new MiddlewareError("Missing parameters.", 500));
     }
 
-    const user = signUp({ username, password, email });
+    const generatedUser = await signUp(username, password, email);
+
     res.json({
-      message: "Successfully create account",
+      message: "Tạo tài khoản thành công.",
       data: {
-        id: user._id,
+        _id: generatedUser._id,
       },
     });
   } catch (err) {
@@ -47,6 +48,7 @@ router.post("/signin", async (req, res, next) => {
     }
 
     const user = await signIn(username, password, userAgent, address);
+    
     const { response, refreshToken, accessToken } = user;
 
     CookieHelper.setTokenCookies(res, refreshToken, accessToken);

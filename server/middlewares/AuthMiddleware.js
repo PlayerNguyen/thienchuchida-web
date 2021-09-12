@@ -57,7 +57,7 @@ async function getAuthorizeSilent(req, res, next) {
     if (!AccessToken) {
       // Not exist refresh token too
       if (!RefreshToken) {
-        throw new MiddlewareError("Unauthorized");
+        throw new TokenNotFoundError("Invalid or not found a token to auth")
       } else {
         const response = await doRefreshToken(RefreshToken);
         const { _id, username, admin } = response;

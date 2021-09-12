@@ -32,9 +32,9 @@ async function generateRefreshToken(user, userAgent, address) {
   if (!user) {
     throw new Error("user not found in token");
   }
-
+  
   // Fields check
-  if (!user.admin || !user.username || !user._id) {
+  if (!user.admin && !user.username && !user._id) {
     throw new Error("check user fields for admin | username | _id");
   }
 

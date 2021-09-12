@@ -11,15 +11,17 @@ import { faEye, faClock, faHeart } from "@fortawesome/free-regular-svg-icons";
 import { faTag } from "@fortawesome/free-solid-svg-icons";
 import { Link } from "react-router-dom";
 import Config from "../../config/server.config";
-import Header from '../Header/Header'
+import Header from "../Header/Header";
 
-function Chapter({data, bookId}) {
+function Chapter({ data, bookId }) {
   const [isLoading, setLoading] = useState(true);
+
   useEffect(() => {
-    BookService.getChapterById(bookId, data._id).then(response => {
-      console.log()
-    })
-  }, [data, bookId])
+    BookService.getChapterById(bookId, data._id).then((response) => {
+      console.log();
+    });
+  }, [data, bookId]);
+
   return (
     <div className="chapter">
       <div className="chapter__thumbnail">
@@ -53,6 +55,7 @@ export default function Book() {
         // Set a book info
         setBookInfo(book);
         setChapters(data.chapters);
+        console.log(book);
       })
       .finally(() => {
         // Set loading to false to render
@@ -83,7 +86,7 @@ export default function Book() {
             <div className="book__thumbnail">
               <img
                 src={
-                  bookInfo
+                  bookInfo && bookInfo.thumbnail
                     ? `${Config.SERVER_API_URL}/${bookInfo.thumbnail.path}`
                     : Config.DEFAULT_THUMBNAIL
                 }
@@ -227,9 +230,10 @@ export default function Book() {
           <div className="chapterbox__outer">
             <h1 className="title title--large">Danh sách các tập</h1>
             <div className="chapterbox">
-            {chapters && chapters.data.map((ele, ind) => {
-                return <Chapter data={ele} key={ind} bookId={bookInfo._id} />
-              })}
+              {chapters &&
+                chapters.data.map((ele, ind) => {
+                  return <Chapter data={ele} key={ind} bookId={bookInfo._id} />;
+                })}
             </div>
           </div>
         </div>

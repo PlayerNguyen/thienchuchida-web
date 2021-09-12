@@ -17,4 +17,4 @@ COPY . .
 
 EXPOSE 3001
 
-CMD [ "yarn", "run", "dev" ]
+CMD [ "yarn", "run", "dev"]

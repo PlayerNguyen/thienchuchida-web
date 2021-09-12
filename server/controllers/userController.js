@@ -1,22 +1,21 @@
 const { MiddlewareError } = require("../errors/MiddlewareError");
 const User = require("../models/UserModel");
 const UserModel = require("../models/UserModel");
-const TokenHelper = require("../helpers/tookenHelper");
-
+const TokenHelper = require("../helpers/tokenHelper");
 
 async function signIn(username, password, userAgent, address) {
   const doc = await User.findOne({ username });
 
   // Username not found
   if (!doc) {
-    throw new MiddlewareError(`Username ${username} not found.`);
+    throw new MiddlewareError(`Không tim thấy tài khoản ${username}.`);
   }
 
   // Password is not match
-  if (!doc.comparePassword(password)) {
-    throw new MiddlewareError("Password is not match.");
+  if (!await doc.comparePassword(password)) {
+    throw new MiddlewareError("Mật khẩu không đúng, vui lòng thử lại");
   }
-
+  
   // Create new refresh token
   const refreshToken = await TokenHelper.generateRefreshToken(
     doc,
@@ -50,7 +49,7 @@ async function doRefreshToken(refreshTokenId) {
   if (!refreshTokenId) {
     throw new MiddlewareError("Refresh token id cannot be null");
   }
-  
+
   const user = await User.findOne({ "tokens._id": refreshTokenId });
 
   // Token not existed
@@ -61,7 +60,6 @@ async function doRefreshToken(refreshTokenId) {
   const item = user.tokens.find((ele) => ele._id.toString() === refreshTokenId);
   const { token } = item;
 
-  
   const data = await TokenHelper.verifyRefreshToken(token);
   const accessToken = await TokenHelper.generateAccessToken(data);
 
@@ -81,11 +79,13 @@ async function doRefreshToken(refreshTokenId) {
  * @returns A promise contains document of user inside
  */
 async function signUp(username, password, email) {
-  const doc = await User.findOne({ username });
+  const existedUser = await User.findOne({ username });
 
   // Existed
-  if (doc) {
-    throw new MiddlewareError("Credential existed.");
+  if (existedUser) {
+    throw new MiddlewareError(
+      "Tên tài khoản của bạn đã có người sử dụng. Hãy chọn tên tài khoản khác."
+    );
   }
 
   const user = new User({ username, password, email });

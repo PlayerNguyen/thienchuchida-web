@@ -12,7 +12,11 @@ const port = process.env.PORT || 3000;
 /**
  * Database initialize
  */
-mongoose.connect(process.env.DATABASE_URL);
+const DATABASE_URL =
+  process.env.NODE_ENV === "DEV"
+    ? process.env.DATABASE_DEV_URL
+    : process.env.DATABASE_URL;
+mongoose.connect(DATABASE_URL);
 mongoose.connection.on("error", (err) => {
   console.log("err", err);
 });
