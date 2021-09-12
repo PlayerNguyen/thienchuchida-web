@@ -3,8 +3,9 @@ import React, { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import ModifyUserModal from "../../Modal/ModifyUser";
 import { v1 } from "uuid";
-import { Button, Table} from "react-bootstrap";
+import { Button, Table } from "react-bootstrap";
 import UserService from "../../../services/UserService";
+import { toast } from "react-toastify";
 
 function AccountManagement() {
   const [users, setUsers] = useState([]);
@@ -12,6 +13,7 @@ function AccountManagement() {
   const [modifyUser, setModifyUser] = useState(null);
   // Random key for modify modal, for new instance every render
   const [randomKey, setRandomKey] = useState(v1());
+  const [loading, setLoading] = useState(false);
 
   const dispatch = useDispatch();
 
@@ -48,11 +50,26 @@ function AccountManagement() {
    * @param {Object} _newUserInfo
    */
   const handleConfirmModifyUser = (_newUserInfo) => {
-    if (!modifyUser) {
-      // Create new user
-    } else {
-      // Modify exist user
+    let action = UserService.postAdminCreateUser; // Create new user
+    const _newData = {
+      ..._newUserInfo,
+    };
+    if (modifyUser) {
+      //Modify exist user
+      action = UserService.putAdminModifyUser;
+      _newData.id = modifyUser.id;
     }
+    action(_newData)
+      .then((data) => {
+        setLoading(false);
+        toast.success(data.message);
+      })
+      .catch((err) => {
+        toast.error(err.response.data);
+      })
+      .finally(() => {
+        setLoading(false);
+      });
   };
 
   const columns = [
@@ -88,7 +105,7 @@ function AccountManagement() {
 
   return (
     <>
-      <Button variant="link" onClick={() => handleOpenModifyModal()}>
+      <Button variant="link" className="w-fit" onClick={() => handleOpenModifyModal()}>
         Thêm tài khoản mới
       </Button>
       <Table>
@@ -123,6 +140,7 @@ function AccountManagement() {
         onClose={handleCloseModifyModal}
         onConfirm={handleConfirmModifyUser}
         key={randomKey}
+        loading={loading}
       />
     </>
   );

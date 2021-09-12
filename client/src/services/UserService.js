@@ -24,6 +24,14 @@ const getAllUsers = () => {
   return axiosInstance.get("/users/");
 };
 
+const postAdminCreateUser = (data) => {
+  return axiosInstance.post("/users", data);
+};
+
+const putAdminModifyUser = (data) => {
+  return axiosInstance.put(`/users/${data.id}`, data);
+};
+
 const UserService = {
   getProfile,
   postSignIn,
@@ -31,5 +39,7 @@ const UserService = {
   postSignOut,
   getAllUsers,
   postSignUp,
+  postAdminCreateUser,
+  putAdminModifyUser,
 };
 export default UserService;

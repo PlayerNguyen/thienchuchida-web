@@ -68,3 +68,9 @@ hr {
     font-size: 30pt !important;
   }
 }
+
+.w {
+  &-fit {
+    width: fit-content !important;
+  }
+}
