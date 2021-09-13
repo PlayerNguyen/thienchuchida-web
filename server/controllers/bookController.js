@@ -45,7 +45,6 @@ async function getBooks(query, sort, limit, skip) {
     .sort(sort)
     .limit(limit)
     .skip(skip)
-    .populate("thumbnail", "-__v")
     .populate("tags", "-__v");
 }
 
