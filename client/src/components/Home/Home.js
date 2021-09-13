@@ -9,6 +9,7 @@ import "moment/locale/vi";
 import { faChevronRight } from "@fortawesome/free-solid-svg-icons";
 import moment from '../../helpers/momentHelper'
 import Header from '../Header/Header'
+import imageHelper from "../../helpers/imageHelper";
 
 function CardItem({ data }) {
   return (
@@ -18,7 +19,7 @@ function CardItem({ data }) {
           <img
             src={
               data.thumbnail
-                ? `${Config.SERVER_API_URL}/${data.thumbnail.path}`
+                ? imageHelper.getRawResourceUrl(data.thumbnail)
                 : // Default size url
                   Config.DEFAULT_THUMBNAIL
             }
