@@ -68,3 +68,8 @@ hr {
     font-size: 30pt !important;
   }
 }
+
+.thumbnail {
+  max-height: 360px;
+  object-fit: cover;
+}

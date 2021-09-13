@@ -30,6 +30,7 @@ export default function BookEditor() {
   const [tags, setTags] = useState([]);
 
   const [title, setTitle] = useState("");
+  const [password, setPassword] = useState("");
   const [description, setDescription] = useState("");
 
   useEffect(() => {
@@ -49,10 +50,6 @@ export default function BookEditor() {
       });
   }, [bookId]);
 
-  const handleTitleChange = (e) => {
-    setTitle(e.target.value);
-  };
-
   // const handleOnTagBlur = (e) => {
   //   // setVisibleTagDialog(false);
   //   // TODO fix close without blur
@@ -60,7 +57,16 @@ export default function BookEditor() {
 
   const handleOnSubmit = (e) => {
     e.preventDefault();
-
+    BookService.updateBook({ _id: bookId, title, description, password })
+      .then((response) => {
+        const { data, message } = response.data;
+        setBookData(data)
+        toast.success(message);
+      })
+      .finally(() => {
+        // Reset password field
+        setPassword("");
+      });
   };
 
   const handleThumbnailChange = (e) => {
@@ -68,7 +74,7 @@ export default function BookEditor() {
     BookService.updateBook({ _id: bookId, thumbnail: e }).then((response) => {
       const { data, message } = response.data;
       setBookData(data);
-      toast.success(message)
+      toast.success(message);
     });
     setVisibleThumbnailSelect(false);
   };
@@ -85,6 +91,9 @@ export default function BookEditor() {
       )}
       {bookData && (
         <>
+          <h1 className="text-secondary" >
+            <Link className="link text-secondary" to={`/truyen/${bookData._id}`}>{bookData.title}</Link>
+          </h1>
           <Form className="editor" onSubmit={handleOnSubmit}>
             <div className="editor__header">
               <Form.Group className="editor__thumbnail editor__header--first">
@@ -110,7 +119,9 @@ export default function BookEditor() {
                   <Form.Control
                     type="text"
                     value={title}
-                    onChange={handleTitleChange}
+                    onChange={({ target }) => {
+                      setTitle(target.value);
+                    }}
                   />
                   <Form.Text className="text-muted">
                     Tiêu đề của truyện, dùng để tìm kiếm.
@@ -118,7 +129,14 @@ export default function BookEditor() {
                 </Form.Group>
                 <Form.Group className="editor__password">
                   <Form.Label>Mật khẩu</Form.Label>
-                  <Form.Control type="password" />
+                  <Form.Control
+                    type="password"
+                    value={password}
+                    onChange={({ target }) => {
+                      setPassword(target.value);
+                    }}
+                  />
+
                   <Form.Text className="text-muted">
                     Thiết lập mật khẩu cho truyện của bạn để giới hạn nội dung
                   </Form.Text>
@@ -187,7 +205,7 @@ export default function BookEditor() {
                     {chapterData &&
                       chapterData.data.map((e, i) => {
                         return (
-                          <tr>
+                          <tr key={i}>
                             <td></td>
                             <td>{e.name}</td>
                             <td>{momentHelper(e.createdAt).fromNow()}</td>

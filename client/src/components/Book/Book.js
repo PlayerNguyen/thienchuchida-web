@@ -12,6 +12,7 @@ import { faTag } from "@fortawesome/free-solid-svg-icons";
 import { Link } from "react-router-dom";
 import Config from "../../config/server.config";
 import Header from "../Header/Header";
+import imageHelper from "../../helpers/imageHelper";
 
 function Chapter({ data, bookId }) {
   const [isLoading, setLoading] = useState(true);
@@ -55,7 +56,7 @@ export default function Book() {
         // Set a book info
         setBookInfo(book);
         setChapters(data.chapters);
-        console.log(book);
+        // console.log(book);
       })
       .finally(() => {
         // Set loading to false to render
@@ -85,9 +86,10 @@ export default function Book() {
             {/* Big thumbnail in left */}
             <div className="book__thumbnail">
               <img
+                className="thumbnail"
                 src={
                   bookInfo && bookInfo.thumbnail
-                    ? `${Config.SERVER_API_URL}/${bookInfo.thumbnail.path}`
+                    ? imageHelper.getRawResourceUrl(bookInfo.thumbnail)
                     : Config.DEFAULT_THUMBNAIL
                 }
                 alt="thumbnail"
