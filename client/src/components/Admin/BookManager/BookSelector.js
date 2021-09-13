@@ -38,7 +38,7 @@ export default function BookSelector({ setCurrentBook }) {
                 <Button
                   variant={`link`}
                 >
-                  <Link to={`${path}/${e.slug}`}>Sửa</Link>
+                  <Link to={`${path}/${e._id}`}>Sửa</Link>
                 </Button>
                 <Button variant={`link`} className="link-danger">
                   Xoá

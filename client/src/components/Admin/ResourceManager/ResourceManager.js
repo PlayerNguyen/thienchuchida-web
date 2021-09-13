@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Card, Pagination, Button, Title } from "react-bootstrap";
-import Config from "../../../config/server.config";
+import { Pagination, Button } from "react-bootstrap";
 import ResourceService from "../../../services/ResourceService";
 import "./ResourceManager.scss";
 import UploadModal from "./UploadModal";
@@ -15,8 +14,6 @@ import ResourceItem from "./ResourceItem";
 
 const PAGE_ITEMS_LIMIT = 12;
 
-// 0 1 2 3 4 5 6 7
-//
 function ResourceFooter({ totalSize, setPage, page }) {
   const [totalPages, setTotalPages] = useState(0);
   const [pages, setPages] = useState(0);

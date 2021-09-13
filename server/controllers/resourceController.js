@@ -11,9 +11,7 @@ const { MiddlewareError } = require("../errors/MiddlewareError");
 async function createNewFile(file, data) {
   const resource = new Resource({
     originalName: file.originalname,
-    fileName: file.filename,
     size: file.size,
-    path: file.path,
     mimetype: file.mimetype,
     data: data,
   });
@@ -60,11 +58,16 @@ async function getAllFiles(sort, limit, skip) {
     .skip(skip ? parseInt(skip) : 0);
 }
 
+async function searchResourceByOriginalName(originalName) {
+  return Resource.find({originalName: new RegExp(originalName)}, "_id");
+}
+
 module.exports = {
   createNewFile,
   findFileMetadata,
   removeFile,
   getAllFiles,
   findFileData,
-  countAllFiles
+  countAllFiles,
+  searchResourceByOriginalName
 };

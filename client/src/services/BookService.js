@@ -26,6 +26,10 @@ async function findTagByName(name) {
   return axiosInstance.get(`/books/tags/tag/${name}/`);
 }
 
+async function updateBook(data) {
+  return axiosInstance.put(`/books/`, data);
+}
+
 const BookService = {
   getLatestUpdateBook,
   getBookBySlug,
@@ -33,5 +37,6 @@ const BookService = {
   getAllBooks,
   getChaptersInBook,
   findTagByName,
+  updateBook,
 };
 export default BookService;
