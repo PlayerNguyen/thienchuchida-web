@@ -69,6 +69,12 @@ hr {
   }
 }
 
+.w {
+  &-fit {
+    width: fit-content !important;
+  }
+}
+
 .thumbnail {
   max-height: 215px;
   object-fit: cover;

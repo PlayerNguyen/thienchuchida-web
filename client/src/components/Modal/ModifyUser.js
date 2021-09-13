@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Modal, Button, Form } from "react-bootstrap";
 import { toast } from "react-toastify";
 
-function ModifyUserModal({ visible, onConfirm, onClose, user = null }) {
+function ModifyUserModal({ visible, onConfirm, onClose, user = null, loading }) {
   const [userInfo, setUserInfo] = useState({
     username: "",
     email: "",
@@ -28,7 +28,7 @@ function ModifyUserModal({ visible, onConfirm, onClose, user = null }) {
   }, [user]);
 
   /**
-   * 
+   *
    * @returns {Boolean}
    */
   const handleCheckAllValidatorsValid = () => {
@@ -185,8 +185,8 @@ function ModifyUserModal({ visible, onConfirm, onClose, user = null }) {
           </Form>
         </Modal.Body>
         <Modal.Footer>
-          <Button variant="primary" onClick={handleConfirmModifyUser}>
-            Xác nhận
+          <Button variant="primary" disabled={loading} onClick={handleConfirmModifyUser}>
+            {loading ? "Loading..." : "Xác nhận"}
           </Button>
           <Button variant="secondary" onClick={onClose}>
             Đóng
