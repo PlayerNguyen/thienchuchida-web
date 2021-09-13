@@ -50,17 +50,12 @@ export default function BookEditor() {
       });
   }, [bookId]);
 
-  // const handleOnTagBlur = (e) => {
-  //   // setVisibleTagDialog(false);
-  //   // TODO fix close without blur
-  // };
-
   const handleOnSubmit = (e) => {
     e.preventDefault();
     BookService.updateBook({ _id: bookId, title, description, password })
       .then((response) => {
         const { data, message } = response.data;
-        setBookData(data)
+        setBookData(data);
         toast.success(message);
       })
       .finally(() => {
@@ -175,6 +170,7 @@ export default function BookEditor() {
                   <Tag
                     name={`Thêm`}
                     onClick={(e) => {
+                      alert("a")
                       setVisibleTagDialog(true);
                     }}
                   />

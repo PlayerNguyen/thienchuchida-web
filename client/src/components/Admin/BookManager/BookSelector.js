@@ -5,12 +5,13 @@ import ServerConfig from "../../../config/server.config";
 import BookService from "../../../services/BookService";
 import { Link, useRouteMatch } from "react-router-dom";
 
-import "./Selector.scss"  
+import "./Selector.scss";
+import imageHelper from "../../../helpers/imageHelper";
 
 export default function BookSelector({ setCurrentBook }) {
   const [books, setBooks] = useState(null);
   // const [page, setPage] = useState(0);
-  const {path} = useRouteMatch()
+  const { path } = useRouteMatch();
 
   useEffect(() => {
     BookService.getAllBooks().then((response) => {
@@ -21,23 +22,29 @@ export default function BookSelector({ setCurrentBook }) {
   }, []);
 
   return (
-    <div className="selector d-flex flex-row flex-wrap flex-wrap" id="book-selector">
+    <div
+      className="selector d-flex flex-row flex-wrap flex-wrap"
+      id="book-selector"
+    >
       {books &&
         books.map((e, i) => {
           return (
             <Card className="item" key={e._id}>
               <Card.Img
                 variant="top"
-                src={e.thumbnail ? e.thumbnail : ServerConfig.DEFAULT_THUMBNAIL}
+                className="thumbnail"
+                src={
+                  e.thumbnail
+                    ? imageHelper.getRawResourceUrl(e.thumbnail)
+                    : ServerConfig.DEFAULT_THUMBNAIL
+                }
               />
               <Card.Body>
                 <Card.Title>{e.title}</Card.Title>
                 <Card.Text>{e.description}</Card.Text>
               </Card.Body>
               <Card.Footer>
-                <Button
-                  variant={`link`}
-                >
+                <Button variant={`link`}>
                   <Link to={`${path}/${e._id}`}>Sửa</Link>
                 </Button>
                 <Button variant={`link`} className="link-danger">
