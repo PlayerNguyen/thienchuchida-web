@@ -3,6 +3,7 @@ const httpServer = require("http").createServer(app);
 const chalk = require("chalk");
 const mongoose = require("mongoose");
 const DatabaseConfig = require("../config/database.config");
+require('dotenv').config();
 /**
  * Collect port from environment or set default port as 3000
  *
