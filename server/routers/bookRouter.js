@@ -7,6 +7,7 @@ const {
   getChaptersInBook,
   addChapter,
   findBook,
+  updateBook,
   getBooksByTag,
   getChapterById,
 } = require("../controllers/bookController");
@@ -21,10 +22,14 @@ const { addBookComment } = require("../controllers/bookCommentsController");
 /**
  * Create a new book
  */
-router.post("/", getAdminAuthorize, async (req, res) => {
-  const { title, description } = req.body;
-  const book = await createNewBook({ title, description });
-  res.json({ data: book, url: {}, message: "Successfully create a book." });
+router.post("/", getAdminAuthorize, async (req, res, next) => {
+  try {
+    const { title, description } = req.body;
+    const book = await createNewBook({ title, description });
+    res.json({ data: book, url: {}, message: "Tạo truyện thành công." });
+  } catch (e) {
+    next(e);
+  }
 });
 
 /**
@@ -43,9 +48,29 @@ router.get("/", async (req, res) => {
 });
 
 /**
- * A chapter router cast
+ * Update a book
  */
-//  router.use("/:bookId", chaptersRouter);
+router.put("/", async (req, res, next) => {
+  try {
+    const { _id, title, description, thumbnail, tags, password } = req.body;
+
+    const updatedBook = await updateBook(
+      _id,
+      title,
+      description,
+      thumbnail,
+      tags,
+      password
+    );
+
+    res.json({
+      message: "Cập nhật truyện thành công.",
+      data: updatedBook,
+    });
+  } catch (err) {
+    next(err);
+  }
+});
 
 /**
  * Get book information with chapters

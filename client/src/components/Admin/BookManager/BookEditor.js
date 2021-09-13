@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Form, Table, Container, Button, Badge } from "react-bootstrap";
+import { Form, Table, Container, Button } from "react-bootstrap";
 import "./Editor.scss";
 import ServerConfig from "../../../config/server.config";
 import { useParams } from "react-router";
@@ -8,6 +8,8 @@ import { Link } from "react-router-dom";
 import momentHelper from "../../../helpers/momentHelper";
 import BookTagSelector from "./BookTagSelector";
 import ResourceSelectModal from "../ResourceManager/ResourceSelectModal";
+import imageHelper from "../../../helpers/imageHelper";
+import { toast } from "react-toastify";
 
 function Tag({ name }) {
   return (
@@ -18,43 +20,58 @@ function Tag({ name }) {
 }
 
 export default function BookEditor() {
-  const { bookSlug } = useParams();
+  const { bookId } = useParams();
 
   const [error, setError] = useState(null);
   const [bookData, setBookData] = useState(null);
   const [chapterData, setChapterData] = useState(null);
-  const [title, setTitle] = useState("");
   const [isVisibleTagDialog, setVisibleTagDialog] = useState(false);
   const [isVisibleThumbnailSelect, setVisibleThumbnailSelect] = useState(false);
   const [tags, setTags] = useState([]);
 
-  // console.log(bookSlug)
+  const [title, setTitle] = useState("");
+  const [description, setDescription] = useState("");
 
   useEffect(() => {
     // Get book by book slug
-    BookService.getBookBySlug(bookSlug)
+    BookService.getBookBySlug(bookId)
       .then((response) => {
         const { data, chapters } = response.data;
         setBookData(data);
-        setTitle(data.title);
         setChapterData(chapters);
+
+        setTitle(data.title);
+        setDescription(data.description);
       })
       .catch((err) => {
         // Not found or error
         setError(err.response);
       });
-  }, [bookSlug]);
+  }, [bookId]);
 
   const handleTitleChange = (e) => {
     setTitle(e.target.value);
   };
 
-  const handleOnTagBlur = (e) => {
-    // setVisibleTagDialog(false);
-    // TODO fix close without blur
+  // const handleOnTagBlur = (e) => {
+  //   // setVisibleTagDialog(false);
+  //   // TODO fix close without blur
+  // };
+
+  const handleOnSubmit = (e) => {
+    e.preventDefault();
+
   };
 
-  const handleOnSubmit = () => {};
+  const handleThumbnailChange = (e) => {
+    // console.log(e);
+    BookService.updateBook({ _id: bookId, thumbnail: e }).then((response) => {
+      const { data, message } = response.data;
+      setBookData(data);
+      toast.success(message)
+    });
+    setVisibleThumbnailSelect(false);
+  };
 
   return (
     <div className="editor__wrapper">
@@ -76,7 +93,15 @@ export default function BookEditor() {
                     setVisibleThumbnailSelect(true);
                   }}
                 >
-                  <img src={ServerConfig.DEFAULT_THUMBNAIL} alt="" />
+                  <img
+                    src={
+                      bookData && bookData.thumbnail
+                        ? imageHelper.getRawResourceUrl(bookData.thumbnail)
+                        : ServerConfig.DEFAULT_THUMBNAIL
+                    }
+                    alt="Chỉnh sửa ảnh bìa"
+                  />
+                  <small>Nhấn vào ảnh bìa để thay đổi</small>
                 </div>
               </Form.Group>
               <div className="editor__header--secondary">
@@ -103,7 +128,13 @@ export default function BookEditor() {
             <div className="editor__body">
               <Form.Group>
                 <Form.Label>Giới thiệu</Form.Label>
-                <Form.Control as="textarea" value={bookData.description} />
+                <Form.Control
+                  as="textarea"
+                  value={description}
+                  onChange={(e) => {
+                    setDescription(e.target.value);
+                  }}
+                />
                 <Form.Text className="text-muted">
                   Giới thiệu về truyện của bạn ở đây
                 </Form.Text>
@@ -186,6 +217,7 @@ export default function BookEditor() {
             close={() => {
               setVisibleThumbnailSelect(false);
             }}
+            onSelect={handleThumbnailChange}
           />
         </>
       )}

@@ -4,7 +4,8 @@ const lodash = require("lodash");
 const { v4: uuid } = require("uuid");
 const BookChapterModel = require("./BookChapterModel");
 const slugHelper = require("../utils/slugHelper");
-const DatabaseConfig = require('../config/database.config')
+const DatabaseConfig = require("../config/database.config");
+const BcryptHelper = require("../helpers/bcryptHelper");
 
 const bookSchema = new mongoose.Schema({
   _id: {
@@ -14,8 +15,12 @@ const bookSchema = new mongoose.Schema({
   title: {
     type: String,
     required: [true, Language.Book.TitleMustNotBeEmpty],
+    unique: true,
   },
   description: {
+    type: String,
+  },
+  password: {
     type: String,
   },
   slug: {
@@ -48,17 +53,40 @@ const bookSchema = new mongoose.Schema({
   tags: [{ type: String, ref: process.env.MODEL_NAME_BOOK_TAGS }],
 });
 
+/**
+ * Rename will edit a slug too
+ */
+bookSchema.pre("save", function (next) {
+  const book = this;
+  book.slug = slugHelper.doSlugify(book.title);
+  next();
+});
+
+/**
+ * Hash a password whenever found a new update
+ */
+bookSchema.pre("save", function (next) {
+  const book = this;
+  if (!book.isModified("password")) {
+    return next();
+  }
+  book.password = BcryptHelper.hash(book.password);
+  next();
+});
+
+/**
+ * Count a total views for a book from chapters
+ */
 bookSchema.post("find", function (results) {
-  results.map((result) => {
-    BookChapterModel.find({ book: result._id }).then((chapters) => {
-      
-      let sum = 0;
-      for (let i in chapters) {
-        const chapter = chapters[i];
-        sum += chapter.views;
-      }
-      result.views = sum;
-    });
+  results.map(async (result) => {
+    const chapters = await BookChapterModel.find({ book: result._id });
+
+    let sum = 0;
+    for (let i in chapters) {
+      const chapter = chapters[i];
+      sum += chapter.views;
+    }
+    result.views = sum;
   });
 });
 

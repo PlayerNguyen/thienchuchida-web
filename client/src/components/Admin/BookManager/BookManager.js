@@ -1,12 +1,10 @@
-import React, { useState } from "react";
+import React from "react";
 import BookEditor from "./BookEditor";
 import "./BookManager.scss";
 import BookSelector from "./BookSelector";
 import { Switch, Route, useRouteMatch } from "react-router-dom";
 
 export default function BookManager() {
-  // const [currentBook, setCurrentBook] = useState(null);
-
   const { path } = useRouteMatch();
 
   return (
@@ -22,7 +20,7 @@ export default function BookManager() {
           <BookEditor />
         )} */}
         <Switch>
-          <Route path={`${path}/:bookSlug`}>
+          <Route path={`${path}/:bookId`}>
             <BookEditor />
           </Route>
           <Route>

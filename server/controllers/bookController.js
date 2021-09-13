@@ -3,6 +3,10 @@ const BookChapterModel = require("../models/BookChapterModel");
 const BookModel = require("../models/BookModel");
 
 async function createNewBook({ title, description }) {
+  const existedBook = await BookModel.findOne({ title });
+  if (existedBook) {
+    throw new MiddlewareError(`Truyện với tiêu đề ${title} đã tồn tại.`);
+  }
   const data = await BookModel.create({ title, description });
   return data;
 }
@@ -60,13 +64,48 @@ async function getBookById(id) {
  * @returns a book whether find or null
  */
 async function findBook(query) {
-  return BookModel.findOne({ $or: [{ _id: query }, { slug: query }] }, "-__v")
-    .populate("tags", "-__v")
-    .populate("thumbnail", "-__v");
+  return BookModel.findOne(
+    { $or: [{ _id: query }, { slug: query }] },
+    "-__v"
+  ).populate("tags", "-__v");
+  // .populate("thumbnail", "-__v");
 }
 
 async function getBooksByTag(tagId) {
   return BookModel.find({ tags: tagId }, "-__v").populate("tags", "-__v");
+}
+
+/**
+ * Update a book by id
+ * @param {*} bookId bookId to search to update
+ * @param {*} title a title of book
+ * @param {*} description a description
+ * @param {*} thumbnail a thumbnail
+ * @param {*} tags a tags
+ * @returns save status of book, document of model
+ */
+async function updateBook(
+  bookId,
+  title,
+  description,
+  thumbnail,
+  tags,
+  password
+) {
+  const book = await BookModel.findOne({ _id: bookId });
+  // Book not exist
+  if (!book) {
+    throw new MiddlewareError(`Không tìm thấy truyện ${bookId}`);
+  }
+  // Set data
+  book.title = title || book.title;
+  book.description = description || book.description;
+  book.thumbnail = thumbnail || book.thumbnail;
+  book.tags = tags || book.tags;
+  if (password !== undefined) book.password = password;
+  book.updatedAt = Date.now();
+  // Update and save
+  return book.save();
 }
 
 module.exports = {
@@ -78,6 +117,6 @@ module.exports = {
   getBooks,
   getBookById,
   getBooksByTag,
-
   findBook,
+  updateBook,
 };

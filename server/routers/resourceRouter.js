@@ -16,6 +16,7 @@ const {
   removeFile,
   getAllFiles,
   countAllFiles,
+  searchResourceByOriginalName,
 } = require("../controllers/resourceController");
 const { MiddlewareError } = require("../errors/MiddlewareError");
 const ResourceHelper = require("../helpers/resourceHelper");
@@ -51,7 +52,11 @@ router.post(
       responseFiles.push(responseFile);
     }
 
-    res.json({ data: responseFiles });
+    res.json({
+      data: Array.from(responseFiles, (file) => {
+        return file._id;
+      }),
+    });
   }
 );
 
@@ -63,18 +68,34 @@ router.get("/", getAdminAuthorize, async (req, res, next) => {
       skip = (page - 1) * limit;
     }
     const files = await getAllFiles(sort, limit, skip);
-    const filesIds = [];
-    for (let i in files) {
-      const fileObject = files[i];
-      filesIds.push(fileObject._id);
-    }
-    res.json({ total_size: await countAllFiles(), data: filesIds });
+
+    res.json({
+      total_size: await countAllFiles(),
+      data: Array.from(files, (v) => {
+        return v._id;
+      }),
+    });
   } catch (err) {
     next(err);
   }
 });
 
-router.get("/:id", async (req, res, next) => {
+router.get("/search", getAdminAuthorize, async (req, res, next) => {
+  try {
+    const { originalName } = req.query;
+    const results = await searchResourceByOriginalName(originalName);
+
+    res.json({
+      data: Array.from(results, (v) => {
+        return v._id;
+      }),
+    });
+  } catch (e) {
+    next(e);
+  }
+});
+
+router.get("/resource/:id", async (req, res, next) => {
   const { id } = req.params;
   try {
     const doc = await findFileMetadata(id, false);
@@ -84,13 +105,13 @@ router.get("/:id", async (req, res, next) => {
       throw new MiddlewareError("File not found", 404);
     }
 
-    res.json({ data: doc, url: { raw: `/resources/${id}/raw` } });
+    res.json({ data: doc, url: { raw: `/resources/resource/${id}/raw` } });
   } catch (err) {
     next(err);
   }
 });
 
-router.get("/:id/raw", getAuthorize, async (req, res, next) => {
+router.get("/resource/:id/raw", getAuthorize, async (req, res, next) => {
   const { id } = req.params;
   try {
     const doc = await findFileData(id);
@@ -107,7 +128,7 @@ router.get("/:id/raw", getAuthorize, async (req, res, next) => {
   }
 });
 
-router.delete("/:id", getAuthorize, async (req, res, next) => {
+router.delete("/resource/:id", getAuthorize, async (req, res, next) => {
   try {
     const { id } = req.params;
     const file = await removeFile(id);

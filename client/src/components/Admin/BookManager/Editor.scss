@@ -19,10 +19,12 @@
 
   &__thumbnail {
     cursor: pointer;
+    object-fit: cover;
     img {
       border-radius: 12px;
       width: 100%;
-      
+      object-fit: cover;
+      max-height: 300px;
     }
   }
 
