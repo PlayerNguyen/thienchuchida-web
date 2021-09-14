@@ -20,7 +20,7 @@ const {
 } = require("../controllers/resourceController");
 const { MiddlewareError } = require("../errors/MiddlewareError");
 const ResourceHelper = require("../helpers/resourceHelper");
-const path = require("path");
+// const path = require("path");
 const { deleteFile } = require("../helpers/resourceHelper");
 
 router.post(
@@ -41,12 +41,12 @@ router.post(
     let responseFiles = [];
     for (let i in files) {
       const file = files[i];
-      const filePath = path.join(path.dirname(__dirname), file.path);
-      const buffer = await ResourceHelper.getBufferFromFile(filePath);
+      // const filePath = path.join(path.dirname(__dirname), file.path);
+      const buffer = await ResourceHelper.getBufferFromFile(file.path);
       // Create a file
       const responseFile = await createNewFile(file, buffer);
       // Then delete the cache file
-      await deleteFile(filePath);
+      await deleteFile(file.path);
       responseFile.data = null;
       // Then push the id into a response file
       responseFiles.push(responseFile);
