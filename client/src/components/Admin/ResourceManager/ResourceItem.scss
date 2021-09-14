@@ -5,17 +5,7 @@
   flex-basis: 30%;
 // width: 30%;
   transition: ease 0.5s;
-
-  &__actionbar {
-    display: flex;
-    flex-flow: row;
-    padding: 12px;
-    background: #eeeeee;
-    > span {
-      flex: 1;
-    }
-  }
-
+  
   &__wrapper {
     display: flex;
     gap: 1em;
@@ -44,5 +34,15 @@
 .thumbnail {
   &--small{
     height: 150px !important;
+  }
+}
+
+.preview{
+  &__wrapper {
+    width: auto;
+  }
+
+  &__image {
+    max-width: 100%; 
   }
 }

@@ -26,7 +26,7 @@ router.post("/", getAdminAuthorize, async (req, res, next) => {
   try {
     const { title, description } = req.body;
     const book = await createNewBook({ title, description });
-    res.json({ data: book, url: {}, message: "Tạo truyện thành công." });
+    res.json({ data: book, message: "Tạo truyện thành công." });
   } catch (e) {
     next(e);
   }
@@ -50,7 +50,7 @@ router.get("/", async (req, res) => {
 /**
  * Update a book
  */
-router.put("/", async (req, res, next) => {
+router.put("/", getAdminAuthorize, async (req, res, next) => {
   try {
     const { _id, title, description, thumbnail, tags, password } = req.body;
 
@@ -96,7 +96,7 @@ router.get("/book/:bookId", async (req, res, next) => {
 /**
  * Post new chapter into a book
  */
-router.post("/book/:bookId/chapters", async (req, res, next) => {
+router.post("/book/:bookId/chapters", getAdminAuthorize, async (req, res, next) => {
   const { bookId } = req.params;
   const { name, content } = req.body;
   const book = await getBookById(bookId);

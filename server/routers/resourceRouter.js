@@ -111,7 +111,7 @@ router.get("/resource/:id", async (req, res, next) => {
   }
 });
 
-router.get("/resource/:id/raw", getAuthorize, async (req, res, next) => {
+router.get("/resource/:id/raw", async (req, res, next) => {
   const { id } = req.params;
   try {
     const doc = await findFileData(id);

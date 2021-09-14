@@ -11,11 +11,23 @@ import ResourceSelectModal from "../ResourceManager/ResourceSelectModal";
 import imageHelper from "../../../helpers/imageHelper";
 import { toast } from "react-toastify";
 
-function Tag({ name }) {
+function Tag({ id, onClick }) {
+  const [data, setData] = useState(null);
+  useEffect(() => {
+    BookService.getBookTag(id).then((response) => {
+      const { data } = response.data;
+      console.log(data);
+      setData(data);
+    });
+  }, [id]);
   return (
-    <div className="tag">
-      <Button variant="outline-dark">{name}</Button>
-    </div>
+    <>
+      {data && (
+        <div className="tag" onClick={onClick}>
+          <Button variant="outline-dark">{data.name}</Button>
+        </div>
+      )}
+    </>
   );
 }
 
@@ -27,8 +39,8 @@ export default function BookEditor() {
   const [chapterData, setChapterData] = useState(null);
   const [isVisibleTagDialog, setVisibleTagDialog] = useState(false);
   const [isVisibleThumbnailSelect, setVisibleThumbnailSelect] = useState(false);
-  const [tags, setTags] = useState([]);
 
+  const [tags, setTags] = useState(null);
   const [title, setTitle] = useState("");
   const [password, setPassword] = useState("");
   const [description, setDescription] = useState("");
@@ -43,6 +55,7 @@ export default function BookEditor() {
 
         setTitle(data.title);
         setDescription(data.description);
+        setTags(data.tags);
       })
       .catch((err) => {
         // Not found or error
@@ -74,6 +87,10 @@ export default function BookEditor() {
     setVisibleThumbnailSelect(false);
   };
 
+  const handleTagSelectorSubmit = (e) => {
+    e.preventDefault();
+  };
+
   return (
     <div className="editor__wrapper">
       {error && error.status === 404 && (
@@ -86,8 +103,13 @@ export default function BookEditor() {
       )}
       {bookData && (
         <>
-          <h1 className="text-secondary" >
-            <Link className="link text-secondary" to={`/truyen/${bookData._id}`}>{bookData.title}</Link>
+          <h1 className="text-secondary">
+            <Link
+              className="link text-secondary"
+              to={`/truyen/${bookData._id}`}
+            >
+              {bookData.title}
+            </Link>
           </h1>
           <Form className="editor" onSubmit={handleOnSubmit}>
             <div className="editor__header">
@@ -152,80 +174,85 @@ export default function BookEditor() {
                   Giới thiệu về truyện của bạn ở đây
                 </Form.Text>
               </Form.Group>
-              <Form.Group>
-                <Form.Label>Thể loại</Form.Label>
-                <div>
-                  <Tag name={`Yaoi`} />
-                  <Tag name={`Yaoi`} />
-                  <Tag name={`Yaoi`} />
-                  <Tag name={`Yaoi`} />
-                  <Tag name={`Yaoi`} />
-                  <Tag name={`Yaoi`} />
-                  <Tag name={`Yaoi`} />
-                  <Tag name={`Yaoi`} />
-                  <Tag name={`Yaoi`} />
-                  <Tag name={`Yaoi`} />
-                  <Tag name={`Yaoi`} />
-                  <Tag name={`Yaoi`} />
-                  <Tag
-                    name={`Thêm`}
-                    onClick={(e) => {
-                      alert("a")
-                      setVisibleTagDialog(true);
-                    }}
-                  />
-                </div>
-                <BookTagSelector show={isVisibleTagDialog} />
-              </Form.Group>
-              <div class="d-flex flex-row-reverse">
+              <div className="d-flex flex-row-reverse">
                 <Button variant="success" type="submit">
                   Lưu
                 </Button>
               </div>
-              <Form.Group className="editor__chapters">
-                <h2>Danh sách các tập</h2>
-                <div className="">
-                  <Button>Thêm truyện</Button>
-                </div>
-                <Table>
-                  <thead>
-                    <tr>
-                      <th>#</th>
-                      <th>Tên tập</th>
-                      <th>Thời gian</th>
-                      <th>Lượt xem</th>
-                      <th></th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {chapterData &&
-                      chapterData.data.map((e, i) => {
-                        return (
-                          <tr key={i}>
-                            <td></td>
-                            <td>{e.name}</td>
-                            <td>{momentHelper(e.createdAt).fromNow()}</td>
-                            <td className="text-secondary align-right">
-                              {e.views}
-                            </td>
-                            <td>
-                              <div>
-                                <Link to="/" className="m-5 link-primary">
-                                  Sửa
-                                </Link>
-                                <Link to="/" className="link-danger">
-                                  Xoá
-                                </Link>
-                              </div>
-                            </td>
-                          </tr>
-                        );
-                      })}
-                  </tbody>
-                </Table>
-              </Form.Group>
             </div>
           </Form>
+
+          <Form onSubmit={handleTagSelectorSubmit}>
+            <div>
+              {tags &&
+                tags.map((e, i) => {
+                  console.log(e);
+                  return <Tag key={i} name={e.name} />;
+                })}
+              <Tag
+                name={`Thêm`}
+                onClick={(e) => {
+                  alert("a");
+                  setVisibleTagDialog(true);
+                }}
+              />
+              <BookTagSelector
+                show={isVisibleTagDialog}
+                tags={tags}
+                onSelect={(e) => {
+                  console.log(e);
+                }}
+                onVisible={() => {
+                  setVisibleTagDialog(false);
+                }}
+              />
+            </div>
+          </Form>
+          <Form>
+            <Form.Group className="editor__chapters">
+              <h2>Danh sách các tập</h2>
+              <div className="">
+                <Button>Thêm truyện</Button>
+              </div>
+              <Table>
+                <thead>
+                  <tr>
+                    <th>#</th>
+                    <th>Tên tập</th>
+                    <th>Thời gian</th>
+                    <th>Lượt xem</th>
+                    <th></th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {chapterData &&
+                    chapterData.data.map((e, i) => {
+                      return (
+                        <tr key={i}>
+                          <td></td>
+                          <td>{e.name}</td>
+                          <td>{momentHelper(e.createdAt).fromNow()}</td>
+                          <td className="text-secondary align-right">
+                            {e.views}
+                          </td>
+                          <td>
+                            <div>
+                              <Link to="/" className="m-5 link-primary">
+                                Sửa
+                              </Link>
+                              <Link to="/" className="link-danger">
+                                Xoá
+                              </Link>
+                            </div>
+                          </td>
+                        </tr>
+                      );
+                    })}
+                </tbody>
+              </Table>
+            </Form.Group>
+          </Form>
+
           <ResourceSelectModal
             visible={isVisibleThumbnailSelect}
             close={() => {

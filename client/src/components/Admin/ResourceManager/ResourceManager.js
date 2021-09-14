@@ -11,6 +11,7 @@ import {
 } from "@fortawesome/free-regular-svg-icons";
 import RemoveModal from "./RemoveModal";
 import ResourceItem from "./ResourceItem";
+import { toast } from "react-toastify";
 
 const PAGE_ITEMS_LIMIT = 12;
 
@@ -89,6 +90,8 @@ export default function ResourceManager() {
   const [totalSize, setTotalSize] = useState(0);
   const [page, setPage] = useState(1);
   const [loading, setLoading] = useState(false);
+  const [startIndex, setStartIndex] = useState(0);
+  const [endIndex, setEndIndex] = useState(0);
 
   const handleToggleSelect = (value) => {
     // Found index in selection, remove it
@@ -106,6 +109,9 @@ export default function ResourceManager() {
   };
 
   const handleOpenRemoveModal = () => {
+    if (selection.length === 0) {
+      return toast.error(`Không có giá trị nào được chọn để xoá.`);
+    }
     setRemoveVisible(true);
   };
 
@@ -118,6 +124,10 @@ export default function ResourceManager() {
    */
   useEffect(() => {
     setLoading(true);
+    const k = (page - 1) * PAGE_ITEMS_LIMIT;
+    // const end = start + PAGE_ITEMS_LIMIT;
+    setStartIndex(k);
+    setEndIndex(k + PAGE_ITEMS_LIMIT);
     ResourceService.getAllResources()
       .then((response) => {
         const { data } = response.data;
@@ -131,11 +141,18 @@ export default function ResourceManager() {
 
   useEffect(() => {
     // Selection update
-
     if (data) {
       setTotalSize(data.length);
     }
   }, [data]);
+
+  const handleSelectAll = () => {
+    const selectItems = data.filter(
+      (_e, i) =>
+        startIndex <= i && i < endIndex && selection.indexOf(_e) === -1
+    );
+    setSelection([...selection, ...selectItems]);
+  };
 
   return (
     <div className="resource__wrapper">
@@ -148,39 +165,43 @@ export default function ResourceManager() {
       </div>
       {data && data.length > 0 ? (
         <>
+          {/* selected interact action bar */}
           <div className="resource__container">
-            {selection.length > 0 && (
-              <div className="resourceitem__actionbar actionbar">
-                <div className="actionbar__block--left">
-                  <span>
-                    <FontAwesomeIcon icon={faCheckSquare} />
-                  </span>
-                  <span>
-                    <b>{selection.length}</b>
-                  </span>
-                </div>
-                <div className="actionbar__block--right">
-                  <span>
-                    <FontAwesomeIcon icon={faEdit} />
-                  </span>
-                  <span onClick={handleOpenRemoveModal}>
-                    <FontAwesomeIcon icon={faTrashAlt} />
-                  </span>
-                </div>
+            {/* {selection.length > 0 && ()} */}
+            <div className="resourceitem__actionbar actionbar">
+              <div className="actionbar__block--left">
+                <span className="button--actionbar" onClick={handleSelectAll}>
+                  <FontAwesomeIcon icon={faCheckSquare} />
+                </span>
+                <span>
+                  <b>
+                    {selection.length === 0 ? "Chưa chọn" : selection.length}
+                  </b>
+                </span>
               </div>
-            )}
+              <div className="actionbar__block--right">
+                <span className="button--actionbar">
+                  <FontAwesomeIcon icon={faEdit} />
+                </span>
+                <span
+                  onClick={handleOpenRemoveModal}
+                  className="button--actionbar"
+                >
+                  <FontAwesomeIcon icon={faTrashAlt} />
+                </span>
+              </div>
+            </div>
             <div className="resourceitem__wrapper">
               {data
                 ? data.map((ele, index) => {
-                    const start = (page - 1) * PAGE_ITEMS_LIMIT;
-                    const end = start + PAGE_ITEMS_LIMIT;
-                    if (start <= index && index < end) {
+                    if (startIndex <= index && index < endIndex) {
                       return (
                         <ResourceItem
                           id={ele}
                           selected={selection.indexOf(ele) !== -1}
                           key={index}
-                          onClick={() => {
+                          minimizeThumbnail={true}
+                          onSelect={() => {
                             handleToggleSelect(ele);
                           }}
                         />

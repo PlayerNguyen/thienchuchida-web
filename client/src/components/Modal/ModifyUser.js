@@ -25,7 +25,7 @@ function ModifyUserModal({ visible, onConfirm, onClose, user = null, loading }) 
       // override init state with existing properties
       setUserInfo({ ...userInfo, ...user });
     }
-  }, [user]);
+  }, [user, userInfo]);
 
   /**
    *

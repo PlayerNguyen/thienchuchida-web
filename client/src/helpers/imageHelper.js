@@ -1,5 +1,4 @@
 import ServerConfig from "../config/server.config";
-import path from "path";
 
 function getRawResourceUrl(id) {
   return (

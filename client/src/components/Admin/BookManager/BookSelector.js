@@ -7,9 +7,13 @@ import { Link, useRouteMatch } from "react-router-dom";
 
 import "./Selector.scss";
 import imageHelper from "../../../helpers/imageHelper";
+import BookCreateModal from "./BookCreateModal";
 
 export default function BookSelector({ setCurrentBook }) {
   const [books, setBooks] = useState(null);
+
+  const [visibleCreateModal, setVisibleCreateModal] = useState(false);
+
   // const [page, setPage] = useState(0);
   const { path } = useRouteMatch();
 
@@ -22,38 +26,52 @@ export default function BookSelector({ setCurrentBook }) {
   }, []);
 
   return (
-    <div
-      className="selector d-flex flex-row flex-wrap flex-wrap"
-      id="book-selector"
-    >
-      {books &&
-        books.map((e, i) => {
-          return (
-            <Card className="item" key={e._id}>
-              <Card.Img
-                variant="top"
-                className="thumbnail"
-                src={
-                  e.thumbnail
-                    ? imageHelper.getRawResourceUrl(e.thumbnail)
-                    : ServerConfig.DEFAULT_THUMBNAIL
-                }
-              />
-              <Card.Body>
-                <Card.Title>{e.title}</Card.Title>
-                <Card.Text>{e.description}</Card.Text>
-              </Card.Body>
-              <Card.Footer>
-                <Button variant={`link`}>
-                  <Link to={`${path}/${e._id}`}>Sửa</Link>
-                </Button>
-                <Button variant={`link`} className="link-danger">
-                  Xoá
-                </Button>
-              </Card.Footer>
-            </Card>
-          );
-        })}
+    <div>
+      {/* Action bar */}
+      <div className="mb-2 mt-2">
+        <Button
+          onClick={() => {
+            // Show create modal
+            setVisibleCreateModal(true);
+          }}
+        >
+          Tạo truyện mới
+        </Button>
+      </div>
+      <div
+        className="selector d-flex flex-row flex-wrap flex-wrap"
+        id="book-selector"
+      >
+        {books &&
+          books.map((e, i) => {
+            return (
+              <Card className="item" key={e._id}>
+                <Card.Img
+                  variant="top"
+                  className="thumbnail"
+                  src={
+                    e.thumbnail
+                      ? imageHelper.getRawResourceUrl(e.thumbnail)
+                      : ServerConfig.DEFAULT_THUMBNAIL
+                  }
+                />
+                <Card.Body>
+                  <Card.Title>{e.title}</Card.Title>
+                  <Card.Text>{e.description}</Card.Text>
+                </Card.Body>
+                <Card.Footer>
+                  <Button variant={`link`}>
+                    <Link to={`${path}/${e._id}`}>Sửa</Link>
+                  </Button>
+                  <Button variant={`link`} className="link-danger">
+                    Xoá
+                  </Button>
+                </Card.Footer>
+              </Card>
+            );
+          })}
+      </div>
+      <BookCreateModal visible={visibleCreateModal} onHide={()=>{setVisibleCreateModal(false)}}/>
     </div>
   );
 }

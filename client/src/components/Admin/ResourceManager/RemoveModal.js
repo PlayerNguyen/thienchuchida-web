@@ -11,9 +11,9 @@ export default function RemoveModal(props) {
   const handleOnClose = () => {
     props.onClose();
   };
-
+  
   const handleRemoveElementData = (id) => {
-    const arr = props.data.filter((e) => e != id)
+    const arr = props.data.filter((e) => e !== id)
     console.log(arr)
     props.setData(arr)
   }

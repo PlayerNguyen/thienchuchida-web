@@ -10,7 +10,7 @@ export default function ResourceItem({
   onClick,
   disableInfo,
   minimizeThumbnail,
-  onSelect
+  onSelect,
 }) {
   const [data, setData] = useState(null);
   const [previewVisible, setPreviewVisible] = useState(false);
@@ -25,8 +25,8 @@ export default function ResourceItem({
   }, [id]);
 
   const close = () => {
-    setPreviewVisible(false)
-  }
+    setPreviewVisible(false);
+  };
 
   return (
     <>
@@ -53,8 +53,17 @@ export default function ResourceItem({
           </Card.Body>
         )}
         <Card.Footer>
-          <Button onClick={() => {setPreviewVisible(true)}} variant="link">Xem</Button>
-          <Button onClick={onSelect} variant="link">Chọn</Button>
+          <Button
+            onClick={() => {
+              setPreviewVisible(true);
+            }}
+            variant="link"
+          >
+            Xem
+          </Button>
+          <Button onClick={onSelect} variant="link">
+            Chọn
+          </Button>
         </Card.Footer>
       </Card>
       <Modal
@@ -70,11 +79,17 @@ export default function ResourceItem({
           </Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          <img src={
-              data
-                ? `${Config.SERVER_API_URL}/resources/resource/${data._id}/raw`
-                : Config.DEFAULT_THUMBNAIL
-            } alt="Preview" />
+          <div className="preview__wrapper">
+            <img
+              src={
+                data
+                  ? `${Config.SERVER_API_URL}/resources/resource/${data._id}/raw`
+                  : Config.DEFAULT_THUMBNAIL
+              }
+              alt="preview"
+              className="preview__image"
+            />
+          </div>
         </Modal.Body>
         <Modal.Footer>
           {/* <Button onClick={props.onHide}>Close</Button> */}

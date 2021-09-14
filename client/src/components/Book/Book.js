@@ -15,7 +15,7 @@ import Header from "../Header/Header";
 import imageHelper from "../../helpers/imageHelper";
 
 function Chapter({ data, bookId }) {
-  const [isLoading, setLoading] = useState(true);
+  // const [isLoading, setLoading] = useState(true);
 
   useEffect(() => {
     BookService.getChapterById(bookId, data._id).then((response) => {
@@ -26,7 +26,7 @@ function Chapter({ data, bookId }) {
   return (
     <div className="chapter">
       <div className="chapter__thumbnail">
-        <img src={Config.DEFAULT_THUMBNAIL} alt="thumbnail chapter s" />
+        <img src={Config.DEFAULT_THUMBNAIL} alt="chapter thumbnail" />
       </div>
       <div className="chapter__footer">
         <div className="chapter__title title">{data && data.name}</div>

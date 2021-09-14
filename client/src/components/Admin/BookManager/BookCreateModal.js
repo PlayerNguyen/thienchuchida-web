@@ -1,0 +1,92 @@
+import React, { useState, useEffect } from "react";
+import { Modal, Button, Form } from "react-bootstrap";
+import { useHistory } from "react-router";
+import { toast } from "react-toastify";
+import BookService from "../../../services/BookService";
+
+export default function BookCreateModal({ visible, onHide }) {
+  const [title, setTitle] = useState("");
+  const [description, setDescription] = useState("");
+  const [password, setPassword] = useState("");
+  const history = useHistory();
+  const [valid, setValid] = useState(false);
+
+  const handleTitleChange = ({ target }) => {
+    setTitle(target.value);
+  };
+
+  const handleDescriptionChange = ({ target }) => {
+    setDescription(target.value);
+  };
+
+  const handlePasswordChange = ({ target }) => {
+    setPassword(target.value);
+  };
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    if (!valid) {
+      toast.error("Hãy nhập tên truyện.");
+      return;
+    }
+    // Start to create
+    handleCreate();
+  };
+
+  const handleCreate = () => {
+    BookService.createBook({ title, description, password }).then(
+      (response) => {
+        const { data, message } = response.data;
+        toast.success(message);
+        history.push(`quan-ly-truyen/${data._id}`);
+      }
+    );
+  };
+
+  useEffect(() => {
+    setValid(title !== "");
+  }, [title]);
+
+  return (
+    <Modal show={visible} onHide={onHide} keyboard={true}>
+      <Modal.Header closeButton>
+        <Modal.Title>Tạo truyện mới</Modal.Title>
+      </Modal.Header>
+      <Modal.Body>
+        <Form onSubmit={handleCreate}>
+          <Form.Group className="mb-3">
+            <Form.Label>Tên truyện</Form.Label>
+            <Form.Control
+              type="text"
+              value={title}
+              onChange={handleTitleChange}
+            />
+          </Form.Group>
+          <Form.Group className="mb-3">
+            <Form.Label>Giới thiệu về truyện</Form.Label>
+            <Form.Control
+              as="textarea"
+              value={description}
+              onChange={handleDescriptionChange}
+            />
+          </Form.Group>
+          <Form.Group className="mb-3">
+            <Form.Label>Mật khẩu</Form.Label>
+            <Form.Control
+              type="password"
+              value={password}
+              onChange={handlePasswordChange}
+            />
+          </Form.Group>
+        </Form>
+      </Modal.Body>
+      <Modal.Footer>
+        <Button variant="danger" onClick={onHide}>
+          Huỷ
+        </Button>
+        <Button variant="primary" onClick={handleCreate} disabled={!valid}>
+          Tạo
+        </Button>
+      </Modal.Footer>
+    </Modal>
+  );
+}

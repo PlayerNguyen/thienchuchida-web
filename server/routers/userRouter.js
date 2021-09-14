@@ -5,6 +5,7 @@ const {
   doRefreshToken,
   signUp,
   getAllAccount,
+  signOut,
 } = require("../controllers/userController");
 const { MiddlewareError } = require("../errors/MiddlewareError");
 const {
@@ -48,7 +49,7 @@ router.post("/signin", async (req, res, next) => {
     }
 
     const user = await signIn(username, password, userAgent, address);
-    
+
     const { response, refreshToken, accessToken } = user;
 
     CookieHelper.setTokenCookies(res, refreshToken, accessToken);
@@ -86,13 +87,20 @@ router.post("/refresh-token", async (req, res, next) => {
   }
 });
 
-router.post("/signout", (req, res) => {
-  res.clearCookie("AccessToken");
-  res.clearCookie("RefreshToken");
-
-  res.json({
-    message: "Successfully sign out",
-  });
+router.post("/signout", async (req, res, next) => {
+  try {
+    // Delete Refresh token existed in the database
+    await signOut(req.cookies.RefreshToken);
+    // Then clear cookies
+    res.clearCookie("AccessToken");
+    res.clearCookie("RefreshToken");
+    // Send a header
+    res.json({
+      message: "Đăng xuất thành công.",
+    });
+  } catch (e) {
+    return next(e);
+  }
 });
 
 router.post("/profile", getAuthorizeSilent, (req, res, next) => {

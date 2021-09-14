@@ -8,7 +8,7 @@ import UserService from "../../../services/UserService";
 import { toast } from "react-toastify";
 
 function AccountManagement() {
-  const [users, setUsers] = useState([]);
+  const [users, setUsers] = useState(null);
   const [isModifyModalVisible, setIsModifyModalVisible] = useState(false);
   const [modifyUser, setModifyUser] = useState(null);
   // Random key for modify modal, for new instance every render
@@ -120,7 +120,7 @@ function AccountManagement() {
           </tr>
         </thead>
         <tbody>
-          {users.map((_user, _idx) => (
+          {users && users.map((_user, _idx) => (
             <tr key={_user._id}>
               <td>{_idx + 1}</td>
               {columns.map((__col) => (

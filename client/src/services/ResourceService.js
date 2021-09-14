@@ -1,7 +1,7 @@
 import axiosInstance from "../helpers/axiosInstance";
 
 async function getAllResources() {
-  return axiosInstance.get(`/resources/?sort=createdAt`);
+  return axiosInstance.get(`/resources/?sort=-createdAt`);
 }
 
 async function searchResourceByName(name) {

@@ -15,7 +15,7 @@ function getChapterById(book, chapterId) {
 }
 
 function getAllBooks() {
-  return axiosInstance.get(`/books/`);
+  return axiosInstance.get(`/books/?&sort=-updatedAt`);
 }
 
 async function getChaptersInBook(bookId) {
@@ -30,6 +30,14 @@ async function updateBook(data) {
   return axiosInstance.put(`/books/`, data);
 }
 
+async function getBookTag(id) {
+  return axiosInstance.get(`/books/tags/tag/${id}`);
+}
+
+async function createBook(data) {
+  return axiosInstance.post(`/books/`, data)
+}
+
 const BookService = {
   getLatestUpdateBook,
   getBookBySlug,
@@ -38,5 +46,7 @@ const BookService = {
   getChaptersInBook,
   findTagByName,
   updateBook,
+  getBookTag,
+  createBook
 };
 export default BookService;

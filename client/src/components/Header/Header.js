@@ -11,6 +11,7 @@ import {
   faSignOutAlt,
   faSignInAlt,
   faUserPlus,
+  faTasks,
   faBars,
 } from "@fortawesome/free-solid-svg-icons";
 import useClickOutsideRef from "../../hooks/useClickOutsideRef";
@@ -35,7 +36,11 @@ function NavDropdown({ title, items }) {
   });
 
   return (
-    <div className="dropdown__outer" onClick={toggleOpen}  data-toggle="collapse">
+    <div
+      className="dropdown__outer"
+      onClick={toggleOpen}
+      data-toggle="collapse"
+    >
       <div className="dropdown__render">
         <span>{title}</span>
         <span className="icon">
@@ -83,12 +88,10 @@ export default function Header() {
   const isSignedIn = useSelector((state) => state.auth.isSignedIn);
   const persistUser = useSelector((state) => state.auth.persistUser);
   const [expand, setExpand] = useState(false);
-  const { width, height } = useWindowSize();
+  const { width } = useWindowSize();
   const expansionMenu = useRef(null);
 
-  useEffect(() => {
-    console.log(width, height);
-  }, [width, height]);
+  const [userInfoItems, setUserInfoItems] = useState([]);
 
   /**
    * Expand an aside left menu
@@ -101,6 +104,32 @@ export default function Header() {
    * On click outside of the expansion menu
    */
   useClickOutsideRef(expansionMenu, setExpand);
+
+  useEffect(() => {
+    if (!isSignedIn) {
+      setUserInfoItems([
+        { url: `/dang-nhap`, text: `Sign in`, icon: faSignInAlt },
+        { url: `/dang-ky`, text: `Sign up`, icon: faUserPlus },
+      ]);
+    } else {
+      let arr = [
+        { url: `/thong-tin`, text: `Thông tin`, icon: faInfo },
+        { url: `/dang-xuat`, text: `Đăng xuất`, icon: faSignOutAlt },
+      ];
+      // Whether user is an admin
+      if (persistUser && persistUser.admin) {
+        arr = [
+          {
+            url: `/admin`,
+            text: `Quản trị`,
+            icon: faTasks,
+          },
+          ...arr,
+        ];
+      }
+      setUserInfoItems(arr);
+    }
+  }, [persistUser, isSignedIn]);
 
   return (
     <div className="header__wrapper">
@@ -139,21 +168,12 @@ export default function Header() {
                 </div>
                 {isSignedIn ? (
                   <NavDropdown
-                    title={persistUser && persistUser.username}
-                    items={[
-                      persistUser &&
-                        persistUser.admin && {
-                          url: `/admin`,
-                          text: `Quản trị`,
-                          icon: faInfo,
-                        },
-                      { url: `/thong-tin`, text: `Thông tin`, icon: faInfo },
-                      {
-                        url: `/dang-xuat`,
-                        text: `Đăng xuất`,
-                        icon: faSignOutAlt,
-                      },
-                    ]}
+                    title={
+                      isSignedIn
+                        ? persistUser && persistUser.username
+                        : `Account`
+                    }
+                    items={userInfoItems}
                   />
                 ) : (
                   <NavDropdown
@@ -194,29 +214,12 @@ export default function Header() {
           </>
         ) : (
           <div className="header-navigation">
-            {isSignedIn ? (
-              <NavDropdown
-                title={persistUser && persistUser.username}
-                items={[
-                  persistUser &&
-                    persistUser.admin && {
-                      url: `/admin`,
-                      text: `Quản trị`,
-                      icon: faInfo,
-                    },
-                  { url: `/thong-tin`, text: `Thông tin`, icon: faInfo },
-                  { url: `/dang-xuat`, text: `Đăng xuất`, icon: faSignOutAlt },
-                ]}
-              />
-            ) : (
-              <NavDropdown
-                title={`Account`}
-                items={[
-                  { url: `/dang-nhap`, text: `Sign in`, icon: faSignInAlt },
-                  { url: `/dang-ky`, text: `Sign up`, icon: faUserPlus },
-                ]}
-              />
-            )}
+            <NavDropdown
+              title={
+                isSignedIn ? persistUser && persistUser.username : `Account`
+              }
+              items={userInfoItems}
+            />
             <NavDropdown
               title={`Services`}
               items={[

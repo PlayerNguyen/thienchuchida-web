@@ -4,7 +4,7 @@ const UserModel = require("../models/UserModel");
 const TokenHelper = require("../helpers/tokenHelper");
 
 async function signIn(username, password, userAgent, address) {
-  const doc = await User.findOne({ username });
+  const doc = await User.findOne({ $or: [{ username }, { email: username }] });
 
   // Username not found
   if (!doc) {
@@ -12,10 +12,10 @@ async function signIn(username, password, userAgent, address) {
   }
 
   // Password is not match
-  if (!await doc.comparePassword(password)) {
+  if (!(await doc.comparePassword(password))) {
     throw new MiddlewareError("Mật khẩu không đúng, vui lòng thử lại");
   }
-  
+
   // Create new refresh token
   const refreshToken = await TokenHelper.generateRefreshToken(
     doc,
@@ -79,12 +79,14 @@ async function doRefreshToken(refreshTokenId) {
  * @returns A promise contains document of user inside
  */
 async function signUp(username, password, email) {
-  const existedUser = await User.findOne({ username });
+  const existedUser = await User.findOne({
+    $or: [{ username: username }, { email: email }],
+  });
 
   // Existed
   if (existedUser) {
     throw new MiddlewareError(
-      "Tên tài khoản của bạn đã có người sử dụng. Hãy chọn tên tài khoản khác."
+      "Tên tài khoản hoặc email của bạn đã có người sử dụng. Hãy chọn tên tài khoản khác."
     );
   }
 
@@ -109,10 +111,23 @@ async function getAllAccount() {
   return UserModel.find({}, "-password -__v -tokens");
 }
 
+async function signOut(refreshToken) {
+  const user = await UserModel.findOne({ "tokens._id": refreshToken });
+  
+  // User not found
+  if (!user) {
+    throw new MiddlewareError("Người dùng đăng xuất không hợp lệ.");
+  }
+
+  user.tokens = user.tokens.filter((token) => token !== refreshToken);
+  return user.save();
+}
+
 module.exports = {
   signIn,
   doRefreshToken,
   signUp,
   isAdmin,
   getAllAccount,
+  signOut,
 };

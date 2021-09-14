@@ -1,24 +1,24 @@
 import React, { useState, useEffect } from "react";
 import "./Forms.scss";
 import UserService from "../../services/UserService";
-import { useHistory } from "react-router-dom";
+import { Link, useHistory } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { setPersistUser, setSignedIn } from "../../app/slices/auth";
 import { toast } from "react-toastify";
+import Header from "../Header/Header";
 
 export default function SignIn() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-  const [responseData, setResponseData] = useState(null);
   const [isValid, setIsValid] = useState(false);
   const history = useHistory();
   const dispatch = useDispatch();
 
-  const handleUsernameChange = (e) => {
-    setUsername(e.target.value);
+  const handleUsernameChange = ({ target }) => {
+    setUsername(target.value);
   };
-  const handlePasswordChange = (e) => {
-    setPassword(e.target.value);
+  const handlePasswordChange = ({ target }) => {
+    setPassword(target.value);
   };
 
   const handleSubmit = (e) => {
@@ -42,35 +42,25 @@ export default function SignIn() {
         // Navigate
         history.push("/");
       })
-      .catch((err) => {
-        toast.error(err.response.data);
-      })
       .finally(() => {
         setPassword("");
       });
   };
 
   useEffect(() => {
-    setIsValid(username !== "" && password !== "");
+    return () => {
+      setIsValid(username !== "" && password !== "");
+    };
   }, [username, password]);
 
   return (
-    <div className="container form--outer ">
+    <div> 
+      <Header/>
+      <div className="container form--outer ">
       <form className="form formSignIn" onSubmit={handleSubmit}>
         <div className="form__header">
           <h1 className="form__header__title">Đăng nhập</h1>
         </div>
-        {responseData && (
-          <div
-            className={`form__response form__response--${
-              responseData.error ? `error` : `success`
-            }`}
-          >
-            {responseData.error
-              ? responseData.error.message
-              : responseData.message}
-          </div>
-        )}
         <div className="form__container">
           <div className="form__container--block">
             <div className="form--label">Email / Tên đăng nhập</div>
@@ -102,7 +92,7 @@ export default function SignIn() {
                   !isValid && `input--disabled`
                 }`}
                 disabled={!isValid}
-                value="Đăng ký"
+                value="Đăng nhập"
               />
             </div>
           </div>
@@ -123,6 +113,7 @@ export default function SignIn() {
           </h1>
         </div>
       </div>
+    </div>
     </div>
   );
 }

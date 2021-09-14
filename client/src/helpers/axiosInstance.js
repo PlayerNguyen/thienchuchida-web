@@ -31,7 +31,8 @@ axiosInstance.interceptors.response.use(
       // console.log(name)
       if (name === "TokenExpiredError") {
         UserService.getRefreshToken().then((response) => {
-          console.log(response.data.message);
+          // console.log(response.data.message);
+          window.location.reload()
         });
         return;
       }

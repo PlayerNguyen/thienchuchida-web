@@ -2,14 +2,25 @@
   &__container {
     margin-top: 2em;
   }
-  &__actionbar{
+  &__actionbar {
     display: flex;
     flex-flow: row-reverse;
   }
 }
 
+.resourceitem {
+  &__actionbar {
+    display: flex;
+    flex-flow: row;
+    // padding: 12px;
+    font-size: 17pt;
+    background: #eeeeee;
+    > span {
+      flex: 1;
+    }
+  }
+}
 .actionbar {
-
   &__block {
     &--left {
       display: flex;
@@ -26,16 +37,19 @@
       display: flex;
       flex-flow: row;
       gap: 1em;
-      span {
-        transition: cubic-bezier(0.075, 0.82, 0.165, 1) .75s;
-        padding: 0.6em 1em;
-        cursor: pointer;
-        // border-radius: 50%;
-        &:hover {
-          // background-color: #d8d8d8;
-          color: cornflowerblue;
-        }
-      }
     }
+    
+    
+  }
+}
+
+.button--actionbar {
+  transition: cubic-bezier(0.075, 0.82, 0.165, 1) 0.75s;
+  padding: 0.6em 1em;
+  cursor: pointer;
+  // border-radius: 50%;
+  &:hover {
+    // background-color: #d8d8d8;
+    color: cornflowerblue;
   }
 }

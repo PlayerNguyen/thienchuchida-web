@@ -1,10 +1,14 @@
-import React, { useEffect, useState } from "react";
-import { Dropdown, Form, FormGroup } from "react-bootstrap";
+import React, { useState, useRef } from "react";
+import { Dropdown, Form } from "react-bootstrap";
 import BookService from "../../../services/BookService";
+import useClickOutsideRef from "../../../hooks/useClickOutsideRef";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faCheck } from "@fortawesome/free-solid-svg-icons";
 
-export default function BookTagSelector({ show }) {
+export default function BookTagSelector({ show, onSelect, onVisible }) {
   const [queryTags, setQueryTags] = useState(null);
   const [searchText, setSearchText] = useState("");
+  const selector = useRef(null);
 
   const handleSearchTextEditChange = (e) => {
     setSearchText(e.target.value);
@@ -23,9 +27,14 @@ export default function BookTagSelector({ show }) {
     }
   };
 
+  /**
+   * Close on click outside
+   */
+  useClickOutsideRef(selector, onVisible);
+
   return (
-    <div className="selector">
-      <Dropdown.Menu show={show} className="p-3">
+    <div className="selector" ref={selector}>
+      <Dropdown.Menu show={show} className="p-3 d-f">
         {/* Search bar */}
         <Form.Group>
           <Form.Control
@@ -40,7 +49,20 @@ export default function BookTagSelector({ show }) {
         {queryTags && searchText !== "" ? (
           queryTags.length !== 0 ? (
             queryTags.map((e, i) => {
-              return <Dropdown.Item key={i}>{e.name}</Dropdown.Item>;
+              return (
+                <Dropdown.Item
+                  key={i}
+                  as="button"
+                  onClick={() => {
+                    onSelect(e);
+                  }}
+                >
+                  <span className="mr-2">
+                    <FontAwesomeIcon icon={faCheck} />
+                  </span>
+                  <span>{e.name}</span>
+                </Dropdown.Item>
+              );
             })
           ) : (
             <Dropdown.Item>

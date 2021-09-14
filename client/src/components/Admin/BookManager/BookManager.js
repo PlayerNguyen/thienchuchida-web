@@ -11,14 +11,8 @@ export default function BookManager() {
     <div className="bookmanager">
       <div className="bookmanager__titlebar">
         <h1 className="title text-dark">Truyện</h1>
-        {/* <h1 className="title text-secondary">Tiếp theo</h1> */}
       </div>
       <div className="bookmanager__main">
-        {/* {!currentBook ? (
-          <BookSelector setCurrentBook={setCurrentBook} />
-        ) : (
-          <BookEditor />
-        )} */}
         <Switch>
           <Route path={`${path}/:bookId`}>
             <BookEditor />
