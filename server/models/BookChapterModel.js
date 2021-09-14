@@ -20,7 +20,7 @@ const bookChapterSchema = new mongoose.Schema({
   },
   content: {
     type: String,
-    required: [true, "`content` cannot be empty"],
+    // required: [true, "`content` cannot be empty"],
   },
   views: {
     type: Number,

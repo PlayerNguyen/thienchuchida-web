@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Pagination, Button } from "react-bootstrap";
+import { Pagination, Button, Row, Col } from "react-bootstrap";
 import ResourceService from "../../../services/ResourceService";
 import "./ResourceManager.scss";
 import UploadModal from "./UploadModal";
@@ -166,9 +166,9 @@ export default function ResourceManager() {
       {data && data.length > 0 ? (
         <>
           {/* selected interact action bar */}
-          <div className="resource__container">
+          <Row className="resource__container">
             {/* {selection.length > 0 && ()} */}
-            <div className="resourceitem__actionbar actionbar">
+            <Col className="resourceitem__actionbar actionbar">
               <div className="actionbar__block--left">
                 <span className="button--actionbar" onClick={handleSelectAll}>
                   <FontAwesomeIcon icon={faCheckSquare} />
@@ -190,8 +190,8 @@ export default function ResourceManager() {
                   <FontAwesomeIcon icon={faTrashAlt} />
                 </span>
               </div>
-            </div>
-            <div className="resourceitem__wrapper">
+            </Col>
+            <Col className="resourceitem__wrapper d-flex flex-wrap" sm={12}>
               {data
                 ? data.map((ele, index) => {
                     if (startIndex <= index && index < endIndex) {
@@ -210,8 +210,8 @@ export default function ResourceManager() {
                     return null;
                   })
                 : null}
-            </div>
-          </div>
+            </Col>
+          </Row>
           {data && !loading ? (
             <div className="resources__footer">
               <ResourceFooter

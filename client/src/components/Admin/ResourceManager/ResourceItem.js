@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Card, Button, Modal } from "react-bootstrap";
+import { Card, Button, Modal, Col, Row } from "react-bootstrap";
 import Config from "../../../config/server.config";
 import ResourceService from "../../../services/ResourceService";
 import "./ResourceItem.scss";
@@ -29,10 +29,11 @@ export default function ResourceItem({
   };
 
   return (
-    <>
+    <Col md={4} sm={12}>
       <Card
         className={`resourceitem ${selected ? `resourceitem--selected` : ``}`}
         onClick={onClick}
+
       >
         <div className="resourceitem__thumbnail">
           <Card.Img
@@ -95,6 +96,6 @@ export default function ResourceItem({
           {/* <Button onClick={props.onHide}>Close</Button> */}
         </Modal.Footer>
       </Modal>
-    </>
+    </Col>
   );
 }

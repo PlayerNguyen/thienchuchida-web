@@ -1,38 +1,39 @@
-import React, { useEffect, useState } from "react";
-import { useLocation, useRouteMatch } from "react-router";
+import React from "react";
+import { useRouteMatch } from "react-router";
 import { Switch } from "react-router-dom/cjs/react-router-dom.min";
 import AdminRestrictedRoute from "../../route/AdminRestrictedRoute";
 import AccountManagement from "./AccountManagement";
 import "./style.scss";
-import { Row, Col } from "react-bootstrap";
+import { Row, Col, Container } from "react-bootstrap";
 import AdminAside from "./AdminSidebar/AdminSidebar";
 import ResourceManager from "./ResourceManager/ResourceManager";
 import BookManager from "./BookManager/BookManager";
 import AdminNavbar from "./AdminNavbar";
 
-
 export default function Admin() {
-  const [activeMenu, setActiveMenu] = useState(null);
+  // const [activeMenu, setActiveMenu] = useState(null);
   const { path } = useRouteMatch();
-  const location = useLocation();
-
-  useEffect(() => {
-    // Inspect effect here
-    const { pathname } = location;
-    setActiveMenu(pathname.replace("/admin/", ""));
-  }, [location]);
 
   return (
-    <div className="admin__wrapper">
-      <Col className="admin__header mb-0 bg-dark">
+    <Container fluid={"sm"} className="admin__wrapper mt-xl-5">
+      <Row sm={12} className="admin__header mb-0 bg-dark">
         <AdminNavbar />
-      </Col>
-      <Col className="admin__container bg-light d-flex">
+      </Row>
+
+      <Row sm={12} className="admin__container bg-light d-flex">
         {/* Aside render here, navigate follows a below link */}
-        <AdminAside />
+        <Col 
+        md={3} sm={12}
+        >
+          <AdminAside />
+        </Col>
 
         {/* A container to contain */}
-        <Row className="admin__content">
+        <Col
+          md={9}
+          sm={12}
+          // className="admin__content"
+        >
           <Switch>
             <AdminRestrictedRoute path={`${path}/quan-ly-truyen`}>
               <BookManager />
@@ -44,8 +45,9 @@ export default function Admin() {
               <AccountManagement />
             </AdminRestrictedRoute>
           </Switch>
-        </Row>
-      </Col>
-    </div>
+        </Col>
+        {/* <Row></Row> */}
+      </Row>
+    </Container>
   );
 }

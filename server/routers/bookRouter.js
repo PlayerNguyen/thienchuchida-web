@@ -96,25 +96,34 @@ router.get("/book/:bookId", async (req, res, next) => {
 /**
  * Post new chapter into a book
  */
-router.post("/book/:bookId/chapters", getAdminAuthorize, async (req, res, next) => {
-  const { bookId } = req.params;
-  const { name, content } = req.body;
-  const book = await getBookById(bookId);
-  // Not found a book
-  if (!book) {
-    return next(
-      new MiddlewareError("Book not found with current id", 404, {
-        id: bookId,
-      })
-    );
-  }
+router.post(
+  "/book/:bookId/chapters",
+  getAdminAuthorize,
+  async (req, res, next) => {
+    try {
+      const { bookId } = req.params;
+      const { name, content } = req.body;
+      const book = await getBookById(bookId);
+      // Not found a book
+      if (!book) {
+        return next(
+          new MiddlewareError("Book not found with current id", 404, {
+            id: bookId,
+          })
+        );
+      }
 
-  // Add chapter
-  const chapter = await addChapter(bookId, name, content);
-  res.json({
-    data: chapter,
-  });
-});
+      // Add chapter
+      const chapter = await addChapter(bookId, name, content);
+      res.json({
+        message: `Đã tạo tập mới cho truyện ${book.title}`,
+        data: chapter,
+      });
+    } catch (e) {
+      next(e);
+    }
+  }
+);
 
 router.get("/book/:bookId/chapters/:chapterId", async (req, res, next) => {
   const { bookId, chapterId } = req.params;

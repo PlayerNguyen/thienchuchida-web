@@ -10,6 +10,7 @@ import BookTagSelector from "./BookTagSelector";
 import ResourceSelectModal from "../ResourceManager/ResourceSelectModal";
 import imageHelper from "../../../helpers/imageHelper";
 import { toast } from "react-toastify";
+import BookChapterCreateModal from "./BookChapterCreateModal";
 
 function Tag({ id, onClick }) {
   const [data, setData] = useState(null);
@@ -39,6 +40,8 @@ export default function BookEditor() {
   const [chapterData, setChapterData] = useState(null);
   const [isVisibleTagDialog, setVisibleTagDialog] = useState(false);
   const [isVisibleThumbnailSelect, setVisibleThumbnailSelect] = useState(false);
+  const [isVisibleBookChapterCreate, setIsVisibleBookChapterCreate] =
+    useState(false);
 
   const [tags, setTags] = useState(null);
   const [title, setTitle] = useState("");
@@ -212,7 +215,13 @@ export default function BookEditor() {
             <Form.Group className="editor__chapters">
               <h2>Danh sách các tập</h2>
               <div className="">
-                <Button>Thêm truyện</Button>
+                <Button
+                  onClick={() => {
+                    setIsVisibleBookChapterCreate(true);
+                  }}
+                >
+                  Thêm tập mới
+                </Button>
               </div>
               <Table>
                 <thead>
@@ -259,6 +268,14 @@ export default function BookEditor() {
               setVisibleThumbnailSelect(false);
             }}
             onSelect={handleThumbnailChange}
+          />
+
+          <BookChapterCreateModal
+            visible={isVisibleBookChapterCreate}
+            onHide={() => {
+              setIsVisibleBookChapterCreate(false);
+            }}
+            bookId={bookId}
           />
         </>
       )}
