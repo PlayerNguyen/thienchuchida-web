@@ -40,6 +40,7 @@ function NavDropdown({ title, items }) {
       className="dropdown__outer"
       onClick={toggleOpen}
       data-toggle="collapse"
+      ref={contentRef}
     >
       <div className="dropdown__render">
         <span>{title}</span>
@@ -58,7 +59,7 @@ function NavDropdown({ title, items }) {
         </span>
       </div>
       {isOpen ? (
-        <div className="dropdown" ref={contentRef}>
+        <div className="dropdown" >
           {items &&
             items.map((ele, index) => {
               return (

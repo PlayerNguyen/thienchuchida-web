@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Form, Table, Container, Button } from "react-bootstrap";
+import { Form, Table, Container, Button, Row, Col } from "react-bootstrap";
 import "./Editor.scss";
 import ServerConfig from "../../../config/server.config";
 import { useParams } from "react-router";
@@ -115,25 +115,31 @@ export default function BookEditor() {
             </Link>
           </h1>
           <Form className="editor" onSubmit={handleOnSubmit}>
-            <div className="editor__header">
-              <Form.Group className="editor__thumbnail editor__header--first">
-                <div
-                  onClick={() => {
-                    setVisibleThumbnailSelect(true);
-                  }}
+            <Row className="editor__header">
+              <Col sm={12} lg={4}>
+                <Form.Group
+                  as={`Col`}
+                  className="editor__thumbnail editor__header--first"
                 >
-                  <img
-                    src={
-                      bookData && bookData.thumbnail
-                        ? imageHelper.getRawResourceUrl(bookData.thumbnail)
-                        : ServerConfig.DEFAULT_THUMBNAIL
-                    }
-                    alt="Chỉnh sửa ảnh bìa"
-                  />
-                  <small>Nhấn vào ảnh bìa để thay đổi</small>
-                </div>
-              </Form.Group>
-              <div className="editor__header--secondary">
+                  <div
+                    onClick={() => {
+                      setVisibleThumbnailSelect(true);
+                    }}
+                  >
+                    <img
+                      src={
+                        bookData && bookData.thumbnail
+                          ? imageHelper.getRawResourceUrl(bookData.thumbnail)
+                          : ServerConfig.DEFAULT_THUMBNAIL
+                      }
+                      alt="Chỉnh sửa ảnh bìa"
+                    />
+                    <small>Nhấn vào ảnh bìa để thay đổi</small>
+                  </div>
+                </Form.Group>
+              </Col>
+
+              <Col sm={12} lg={8} className="editor__header--secondary">
                 <Form.Group className="editor__title">
                   <Form.Label>Tiêu đề</Form.Label>
                   <Form.Control
@@ -161,8 +167,8 @@ export default function BookEditor() {
                     Thiết lập mật khẩu cho truyện của bạn để giới hạn nội dung
                   </Form.Text>
                 </Form.Group>
-              </div>
-            </div>
+              </Col>
+            </Row>
             <div className="editor__body">
               <Form.Group>
                 <Form.Label>Giới thiệu</Form.Label>

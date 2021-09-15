@@ -120,6 +120,7 @@ router.get("/resource/:id/raw", async (req, res, next) => {
     if (!doc) {
       throw new MiddlewareError("File not found", 404);
     }
+    
     // Set a header to mimetype and send file
     res.setHeader("Content-Type", doc.mimetype);
     res.send(doc.data);
