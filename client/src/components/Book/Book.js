@@ -9,22 +9,16 @@ import "./Book.scss";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEye, faClock, faHeart } from "@fortawesome/free-regular-svg-icons";
 import { faTag } from "@fortawesome/free-solid-svg-icons";
-import { Link } from "react-router-dom";
+import { Link, useRouteMatch } from "react-router-dom";
 import Config from "../../config/server.config";
 import Header from "../Header/Header";
 import imageHelper from "../../helpers/imageHelper";
 
 function Chapter({ data, bookId }) {
-  // const [isLoading, setLoading] = useState(true);
-
-  useEffect(() => {
-    BookService.getChapterById(bookId, data._id).then((response) => {
-      console.log();
-    });
-  }, [data, bookId]);
+  const { url } = useRouteMatch();
 
   return (
-    <div className="chapter">
+    <Link className="chapter" to={`${url}/${data && data._id}`}>
       <div className="chapter__thumbnail">
         <img src={Config.DEFAULT_THUMBNAIL} alt="chapter thumbnail" />
       </div>
@@ -35,7 +29,7 @@ function Chapter({ data, bookId }) {
           <span>{data && data.views}</span>
         </div>
       </div>
-    </div>
+    </Link>
   );
 }
 
@@ -47,6 +41,7 @@ export default function Book() {
   const history = useHistory();
 
   useEffect(() => {
+
     BookService.getBookBySlug(slug)
       .then(({ data }) => {
         const book = data.data;
@@ -56,6 +51,7 @@ export default function Book() {
         // Set a book info
         setBookInfo(book);
         setChapters(data.chapters);
+        // document.title = `${book.title} | Thiên Chu Chi Dạ`;
         // console.log(book);
       })
       .finally(() => {
@@ -226,8 +222,6 @@ export default function Book() {
               </div>
             </div>
           </div>
-
-          {/* <hr /> */}
 
           <div className="chapterbox__outer">
             <h1 className="title title--large">Danh sách các tập</h1>

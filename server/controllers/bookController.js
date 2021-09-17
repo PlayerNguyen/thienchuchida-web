@@ -107,7 +107,14 @@ async function updateBook(
   return book.save();
 }
 
-module.exports = {
+async function setUpdatedTimeToNow(bookId) {
+  const book = await BookModel.findOne({ _id: bookId });
+  book.updatedAt = Date.now();
+
+  return book.save();
+}
+
+const BookController = {
   createNewBook,
   addChapter,
   addResourceChapter,
@@ -118,4 +125,7 @@ module.exports = {
   getBooksByTag,
   findBook,
   updateBook,
+  setUpdatedTimeToNow,
 };
+
+module.exports = BookController;

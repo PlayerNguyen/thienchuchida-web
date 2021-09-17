@@ -44,7 +44,6 @@ function App() {
         ) : (
           <Switch>
             <AdminRestrictedRoute path="/admin">
-              {/* Inspect admin app here */}
               <Admin />
             </AdminRestrictedRoute>
 

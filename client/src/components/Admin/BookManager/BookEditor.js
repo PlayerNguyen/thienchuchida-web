@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Form, Table, Container, Button, Row, Col } from "react-bootstrap";
 import "./Editor.scss";
 import ServerConfig from "../../../config/server.config";
-import { useParams } from "react-router";
+import { useParams, useRouteMatch } from "react-router";
 import BookService from "../../../services/BookService";
 import { Link } from "react-router-dom";
 import momentHelper from "../../../helpers/momentHelper";
@@ -17,7 +17,7 @@ function Tag({ id, onClick }) {
   useEffect(() => {
     BookService.getBookTag(id).then((response) => {
       const { data } = response.data;
-      console.log(data);
+      // console.log(data);
       setData(data);
     });
   }, [id]);
@@ -42,11 +42,12 @@ export default function BookEditor() {
   const [isVisibleThumbnailSelect, setVisibleThumbnailSelect] = useState(false);
   const [isVisibleBookChapterCreate, setIsVisibleBookChapterCreate] =
     useState(false);
-
+  // const [loading, setLoading] = useState(false);
   const [tags, setTags] = useState(null);
   const [title, setTitle] = useState("");
   const [password, setPassword] = useState("");
   const [description, setDescription] = useState("");
+  const { url } = useRouteMatch();
 
   useEffect(() => {
     // Get book by book slug
@@ -64,6 +65,12 @@ export default function BookEditor() {
         // Not found or error
         setError(err.response);
       });
+
+    return () => {
+      setTitle("");
+      setBookData(null);
+      setChapterData(null);
+    };
   }, [bookId]);
 
   const handleOnSubmit = (e) => {
@@ -81,7 +88,6 @@ export default function BookEditor() {
   };
 
   const handleThumbnailChange = (e) => {
-    // console.log(e);
     BookService.updateBook({ _id: bookId, thumbnail: e }).then((response) => {
       const { data, message } = response.data;
       setBookData(data);
@@ -116,9 +122,9 @@ export default function BookEditor() {
           </h1>
           <Form className="editor" onSubmit={handleOnSubmit}>
             <Row className="editor__header">
-              <Col sm={12} lg={4}>
+              <Col sm={12} lg={6}>
                 <Form.Group
-                  as={`Col`}
+                  // as={`Col`}
                   className="editor__thumbnail editor__header--first"
                 >
                   <div
@@ -229,10 +235,9 @@ export default function BookEditor() {
                   Thêm tập mới
                 </Button>
               </div>
-              <Table>
+              <Table responsive>
                 <thead>
                   <tr>
-                    <th>#</th>
                     <th>Tên tập</th>
                     <th>Thời gian</th>
                     <th>Lượt xem</th>
@@ -244,21 +249,15 @@ export default function BookEditor() {
                     chapterData.data.map((e, i) => {
                       return (
                         <tr key={i}>
-                          <td></td>
                           <td>{e.name}</td>
                           <td>{momentHelper(e.createdAt).fromNow()}</td>
                           <td className="text-secondary align-right">
                             {e.views}
                           </td>
                           <td>
-                            <div>
-                              <Link to="/" className="m-5 link-primary">
-                                Sửa
-                              </Link>
-                              <Link to="/" className="link-danger">
-                                Xoá
-                              </Link>
-                            </div>
+                            <Button variant="link" href={`${url}/${e._id}/`}>
+                              Chỉnh sửa
+                            </Button>
                           </td>
                         </tr>
                       );
@@ -274,6 +273,7 @@ export default function BookEditor() {
               setVisibleThumbnailSelect(false);
             }}
             onSelect={handleThumbnailChange}
+            title={"Chọn ảnh bìa"}
           />
 
           <BookChapterCreateModal

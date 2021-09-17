@@ -3,6 +3,7 @@ import { Card, Button, Modal, Col, Row } from "react-bootstrap";
 import Config from "../../../config/server.config";
 import ResourceService from "../../../services/ResourceService";
 import "./ResourceItem.scss";
+import ResourcePreviewModal from "./ResourcePreviewModal";
 
 export default function ResourceItem({
   id,
@@ -24,7 +25,7 @@ export default function ResourceItem({
       .catch(() => {});
   }, [id]);
 
-  const close = () => {
+  const handleClosePreview = () => {
     setPreviewVisible(false);
   };
 
@@ -33,7 +34,6 @@ export default function ResourceItem({
       <Card
         className={`resourceitem ${selected ? `resourceitem--selected` : ``}`}
         onClick={onClick}
-
       >
         <div className="resourceitem__thumbnail">
           <Card.Img
@@ -67,35 +67,11 @@ export default function ResourceItem({
           </Button>
         </Card.Footer>
       </Card>
-      <Modal
-        size="lg"
-        aria-labelledby="contained-modal-title-vcenter"
-        centered
-        show={previewVisible}
-        onHide={close}
-      >
-        <Modal.Header closeButton>
-          <Modal.Title id="contained-modal-title-vcenter">
-            {data && data.originalName}
-          </Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
-          <div className="preview__wrapper">
-            <img
-              src={
-                data
-                  ? `${Config.SERVER_API_URL}/resources/resource/${data._id}/raw`
-                  : Config.DEFAULT_THUMBNAIL
-              }
-              alt="preview"
-              className="preview__image"
-            />
-          </div>
-        </Modal.Body>
-        <Modal.Footer>
-          {/* <Button onClick={props.onHide}>Close</Button> */}
-        </Modal.Footer>
-      </Modal>
+      <ResourcePreviewModal
+        data={data}
+        visible={previewVisible}
+        close={handleClosePreview}
+      />
     </Col>
   );
 }

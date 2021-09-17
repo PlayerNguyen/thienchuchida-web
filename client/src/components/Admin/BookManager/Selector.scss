@@ -1,3 +1,4 @@
+@import "Styles/Mixins";
 .selector {
   display: flex;
   flex-flow: row;
@@ -6,5 +7,13 @@
   .item {
     // flex: 1 31%;
     width: 31.33333%;
+
+    @include tablet {
+      width: 48% !important;
+    }
+
+    @include mobile {
+      width: 100% !important;
+    }
   }
 }

@@ -51,7 +51,6 @@ async function doRefreshToken(refreshTokenId) {
   }
 
   const user = await User.findOne({ "tokens._id": refreshTokenId });
-
   // Token not existed
   if (!user) {
     throw new MiddlewareError(`Token is invalid.`, 401);

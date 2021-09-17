@@ -69,10 +69,10 @@ router.post("/signin", async (req, res, next) => {
 });
 
 router.post("/refresh-token", async (req, res, next) => {
-  const { RefreshToken } = req.cookies;
-  const responseRefreshToken = await doRefreshToken(RefreshToken);
-  const { accessToken, refreshToken } = responseRefreshToken;
   try {
+    const { RefreshToken } = req.cookies;
+    const responseRefreshToken = await doRefreshToken(RefreshToken);
+    const { accessToken, refreshToken } = responseRefreshToken;
     CookieHelper.setTokenCookies(res, refreshToken, accessToken);
 
     res.json({

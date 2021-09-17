@@ -10,6 +10,7 @@ const users = require("./routers/userRouter");
 const books = require("./routers/bookRouter");
 const resources = require("./routers/resourceRouter");
 const tags = require("./routers/tagRouter");
+const chapters = require("./routers/chapterRouter");
 const { middlewareError } = require("./utils/errors-handle");
 
 /**
@@ -35,14 +36,13 @@ app.use("/users", users);
 app.use("/books", books);
 app.use("/resources", resources);
 app.use("/tags", tags);
-app.use("/uploads", express.static("uploads"));
+app.use("/chapters", chapters);
 
 /**
  * Closed middleware
  *  to handle errors
  */
 app.use(middlewareError);
-
 
 /**
  * Export express

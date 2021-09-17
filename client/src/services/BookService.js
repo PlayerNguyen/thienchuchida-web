@@ -39,10 +39,14 @@ async function createBook(data) {
 }
 
 async function createNewChapter(bookId, name) {
-  return axiosInstance.post(`/books/book/${bookId}/chapters`, {
+  return axiosInstance.post(`/chapters/`, {
     name: name,
-    content: "",
+    book: bookId,
   });
+}
+
+async function updateChapter(chapterId, data) {
+  return axiosInstance.put(`/chapters/chapter/${chapterId}`, data);
 }
 
 const BookService = {
@@ -56,5 +60,6 @@ const BookService = {
   getBookTag,
   createBook,
   createNewChapter,
+  updateChapter,
 };
 export default BookService;

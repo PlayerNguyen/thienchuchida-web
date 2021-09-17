@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Modal, Form, Pagination } from "react-bootstrap";
+import { Modal, Form, Pagination, Button } from "react-bootstrap";
 import "./ResourceSelectModal.scss";
 import ResourceItem from "./ResourceItem";
 import ResourceService from "../../../services/ResourceService";
@@ -7,7 +7,14 @@ import ResourceService from "../../../services/ResourceService";
 const DATA_OFFSET = 5;
 const PAGE_RANGE_OFFSET = 2;
 
-export default function ResourceSelectModal({ visible, close, onSelect }) {
+export default function ResourceSelectModal({
+  visible,
+  close,
+  onSelect,
+  title,
+  multiple,
+  onMultipleSelect,
+}) {
   const [data, setData] = useState(null);
   const [page, setPage] = useState(1);
   const [totalPage, setTotalPage] = useState(1);
@@ -21,6 +28,8 @@ export default function ResourceSelectModal({ visible, close, onSelect }) {
   const [recentSearchValue, setRecentSearchValue] = useState("");
   const [searching, setSearching] = useState(false);
 
+  const [selectValues, setSelectValues] = useState([]);
+
   useEffect(() => {
     const k = (page - 1) * DATA_OFFSET;
     setStartIndex(k);
@@ -32,11 +41,14 @@ export default function ResourceSelectModal({ visible, close, onSelect }) {
   }, [page]);
 
   useEffect(() => {
+    if (!visible) {
+      return handleCleanup();
+    }
     ResourceService.getAllResources().then((response) => {
       const { data } = response.data;
       setData(data);
     });
-  }, []);
+  }, [visible]);
 
   useEffect(() => {
     if (data != null) {
@@ -46,7 +58,15 @@ export default function ResourceSelectModal({ visible, close, onSelect }) {
   }, [data]);
 
   const handleSelectResource = (e) => {
-    onSelect && onSelect(e)
+    if (!multiple) {
+      onSelect && onSelect(e);
+    } else {
+      setSelectValues(
+        selectValues.indexOf(e) !== -1
+          ? selectValues.filter((e1) => e1 !== e)
+          : [...selectValues, e]
+      );
+    }
   };
 
   const handleExtendLeftPageRange = () => {
@@ -99,6 +119,25 @@ export default function ResourceSelectModal({ visible, close, onSelect }) {
       });
   };
 
+  const handleSelectAll = () => {
+    if (data) {
+      data.forEach((e, i) => {
+        if (startIndex <= i && i <= endIndex) {
+          console.log(e);
+          setSelectValues([...selectValues, e]);
+        }
+      });
+    }
+  };
+
+  const handleCleanup = () => {
+    setData([]);
+    setSelectValues([]);
+    setSearchValue("");
+    setRecentSearchValue("");
+    setTotalPage(1);
+  };
+
   return (
     <Modal
       show={visible}
@@ -109,7 +148,7 @@ export default function ResourceSelectModal({ visible, close, onSelect }) {
     >
       <Modal.Header closeButton>
         <Modal.Title id="contained-modal-title-vcenter">
-          Chọn tài nguyên
+          {title ? title : `Chọn tài nguyên`}
         </Modal.Title>
       </Modal.Header>
       <Modal.Body className="container">
@@ -131,8 +170,11 @@ export default function ResourceSelectModal({ visible, close, onSelect }) {
                     id={e}
                     // disableInfo
                     // onClick={handleSelectResource}
+                    selected={multiple && selectValues.indexOf(e) !== -1}
                     minimizeThumbnail={true}
-                    onSelect={() => {handleSelectResource(e)}}
+                    onSelect={() => {
+                      handleSelectResource(e);
+                    }}
                   />
                 );
               }
@@ -141,6 +183,10 @@ export default function ResourceSelectModal({ visible, close, onSelect }) {
         </div>
       </Modal.Body>
       <Modal.Footer>
+        {multiple && (
+          <span className="text-secondary">Đã chọn {selectValues.length} </span>
+        )}
+
         {data && (
           <Pagination>
             <Pagination.Prev onClick={handlePrev}></Pagination.Prev>
@@ -169,7 +215,20 @@ export default function ResourceSelectModal({ visible, close, onSelect }) {
             <Pagination.Next onClick={handleNext}></Pagination.Next>
           </Pagination>
         )}
-        {/* <Button>Chọn</Button> */}
+
+        {multiple && (
+          <>
+            <Button onClick={handleSelectAll}>Chọn cả trang</Button>
+            <Button
+              onClick={() => {
+                onMultipleSelect && onMultipleSelect(selectValues);
+                // Then clean up
+              }}
+            >
+              Chọn
+            </Button>
+          </>
+        )}
       </Modal.Footer>
     </Modal>
   );
