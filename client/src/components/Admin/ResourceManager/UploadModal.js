@@ -7,6 +7,7 @@ import "./ResourceManager.scss";
 export default function UploadModal(props) {
   const [isValid, setValid] = useState(false);
   const [files, setFiles] = useState(null);
+  const [privated, setPrivate] = useState(false);
   const [isUploading, setIsUploading] = useState();
   const [isError, setIsError] = useState(false);
   const [responseMessage, setResponseMessage] = useState(null);
@@ -22,11 +23,11 @@ export default function UploadModal(props) {
   useEffect(() => {
     if (files) {
       // Check files type whether valid or not
-      for (let i =0; i < files.length; i++) {
+      for (let i = 0; i < files.length; i++) {
         if (!files[i].type.includes("image")) {
           setIsError(true);
-          setResponseMessage("Tệp bạn đã chọn phải là tệp ảnh!")
-          setValid(false);    
+          setResponseMessage("Tệp bạn đã chọn phải là tệp ảnh!");
+          setValid(false);
           return;
         }
       }
@@ -49,6 +50,7 @@ export default function UploadModal(props) {
     fileArray.forEach((file) => {
       formData.append("files", file);
     });
+    formData.append("private", privated)
 
     ResourceService.uploadResources(formData)
       .then((response) => {
@@ -59,14 +61,10 @@ export default function UploadModal(props) {
         setFiles(null);
 
         // Set files to lobby
-        const pushedData = [];
-        for (const key in data) {
-          if (Object.hasOwnProperty.call(data, key)) {
-            const element = data[key];
-            pushedData.push(element._id);
-          }
-        }
-        props.setData([...pushedData, ...props.data]);
+        Promise.all(data).then((values) => {
+          props.setData([...values, ...props.data]);
+        })
+        
         // Then close
         handleOnClose();
       })
@@ -118,7 +116,25 @@ export default function UploadModal(props) {
             <Form.Label>
               <>Chọn tệp hoặc kéo/thả để tải lên</>
             </Form.Label>
-            <Form.Control type="file" multiple onChange={handleChangeFiles} accept="image/*" />
+            <Form.Control
+              type="file"
+              multiple
+              onChange={handleChangeFiles}
+              accept="image/*"
+            />
+          </Form.Group>
+
+          <Form.Group className="mt-5">
+            <Form.Check
+              type="checkbox"
+              label="Tệp riêng tư (chỉ hiển thị khi người dùng đã đăng nhập)"
+              name="private"
+              checked={privated}
+              onChange={() => {
+                setPrivate(!privated)
+              }}
+              disabled={!files}
+            />
           </Form.Group>
         </Form>
         {/* A progress bar when uploading */}

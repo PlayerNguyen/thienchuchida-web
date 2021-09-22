@@ -45,7 +45,7 @@ function NavDropdown({ title, items }) {
       <div className="dropdown__render">
         <span>{title}</span>
         <span className="icon">
-          {width < 480 ? (
+          {width <= 768 ? (
             <>
               {isOpen ? (
                 <FontAwesomeIcon icon={faCaretDown} />
@@ -135,7 +135,7 @@ export default function Header() {
   return (
     <div className="header__wrapper">
       <div className="header__container">
-        {width < 768 && (
+        {width <= 768 && (
           <div className="header__expand" onClick={handleExpand}>
             <FontAwesomeIcon icon={faBars} />
           </div>

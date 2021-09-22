@@ -8,6 +8,7 @@ import { Link, useRouteMatch } from "react-router-dom";
 import "./Selector.scss";
 import imageHelper from "../../../helpers/imageHelper";
 import BookCreateModal from "./BookCreateModal";
+import toastHelper from "../../../helpers/toastHelper";
 
 export default function BookSelector({ setCurrentBook }) {
   const [books, setBooks] = useState(null);
@@ -24,6 +25,17 @@ export default function BookSelector({ setCurrentBook }) {
       setBooks(data);
     });
   }, []);
+
+  /** Remove a book */
+  const handleRemoveBook = (id) => {
+    BookService.deleteBook(id).then((response) => {
+      const { message } = response.data;
+      // Response a message
+      toastHelper.success(message);
+      // Remove renderer
+      setBooks(books.filter((e) => e._id !== id));
+    });
+  };
 
   return (
     <div>
@@ -63,7 +75,13 @@ export default function BookSelector({ setCurrentBook }) {
                   <Button variant={`link`}>
                     <Link to={`${path}/${e._id}`}>Sửa</Link>
                   </Button>
-                  <Button variant={`link`} className="link-danger">
+                  <Button
+                    variant={`link`}
+                    className="link-danger"
+                    onClick={() => {
+                      handleRemoveBook(e._id);
+                    }}
+                  >
                     Xoá
                   </Button>
                 </Card.Footer>
@@ -71,7 +89,12 @@ export default function BookSelector({ setCurrentBook }) {
             );
           })}
       </div>
-      <BookCreateModal visible={visibleCreateModal} onHide={()=>{setVisibleCreateModal(false)}}/>
+      <BookCreateModal
+        visible={visibleCreateModal}
+        onHide={() => {
+          setVisibleCreateModal(false);
+        }}
+      />
     </div>
   );
 }

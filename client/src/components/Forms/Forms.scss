@@ -13,10 +13,15 @@
     display: flex;
     flex-flow: row;
 
+    @include tablet {
+      width: 80%;
+      margin: 6em auto;
+    }
+
     @include mobile {
       width: 90%;
       flex-flow: column;
-      margin: 5em auto;
+      
     }
   }
 

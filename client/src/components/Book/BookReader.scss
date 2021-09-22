@@ -1,0 +1,23 @@
+@import "Styles/Mixins";
+
+.reader {
+  &__body {
+    width: 100%;
+  }
+
+  &__body {
+    // margin: 2em 0;
+    margin-top: 2em;
+    margin-bottom: 2em;
+
+    @include tablet {
+      margin-top: 6em;
+    }
+    
+  }
+
+  &__image {
+    max-width: 100%;
+    width: 100%;
+  }
+}

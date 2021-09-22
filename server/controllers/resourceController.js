@@ -6,14 +6,16 @@ const { MiddlewareError } = require("../errors/MiddlewareError");
  *
  * @param {*} file a properties of this plugin
  * @param {Buffer}  data a buffer to set up
+ * @param {Boolean} private is private or not
  * @returns a promise with doc which was added
  */
-async function createNewFile(file, data) {
+async function createNewFile(file, data, private) {
   const resource = new Resource({
     originalName: file.originalname,
     size: file.size,
     mimetype: file.mimetype,
     data: data,
+    private: private
   });
   return resource.save();
 }
@@ -52,7 +54,7 @@ async function countAllFiles() {
 }
 
 async function getAllFiles(sort, limit, skip) {
-  return Resource.find({}, "_id")
+  return Resource.find({}, "_id -data")
     .sort(sort)
     .limit(limit ? parseInt(limit): 0)
     .skip(skip ? parseInt(skip) : 0);
@@ -69,5 +71,5 @@ module.exports = {
   getAllFiles,
   findFileData,
   countAllFiles,
-  searchResourceByOriginalName
+  searchResourceByOriginalName,
 };

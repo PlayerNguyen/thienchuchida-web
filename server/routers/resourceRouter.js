@@ -22,6 +22,7 @@ const { MiddlewareError } = require("../errors/MiddlewareError");
 const ResourceHelper = require("../helpers/resourceHelper");
 // const path = require("path");
 const { deleteFile } = require("../helpers/resourceHelper");
+const ResourceMiddleware = require("../middlewares/ResourceMiddleware");
 
 router.post(
   "/",
@@ -29,6 +30,7 @@ router.post(
   upload.array("files"),
   async (req, res, next) => {
     const { files } = req;
+    const { private } = req.body;
 
     if (!files) {
       return next(new MiddlewareError("No input files field found"));
@@ -37,25 +39,29 @@ router.post(
     if (files.length <= 0) {
       return next(new MiddlewareError("No input files"));
     }
-
-    let responseFiles = [];
-    for (let i in files) {
-      const file = files[i];
-      // const filePath = path.join(path.dirname(__dirname), file.path);
-      const buffer = await ResourceHelper.getBufferFromFile(file.path);
-      // Create a file
-      const responseFile = await createNewFile(file, buffer);
-      // Then delete the cache file
-      await deleteFile(file.path);
-      responseFile.data = null;
-      // Then push the id into a response file
-      responseFiles.push(responseFile);
-    }
-
-    res.json({
-      data: Array.from(responseFiles, (file) => {
-        return file._id;
-      }),
+ 
+    Promise.all(
+      files.map((file) => {
+        return new Promise((res) => {
+          // const filePath = path.join(path.dirname(__dirname), file.path);
+          ResourceHelper.getBufferFromFile(file.path).then((buffer) => {
+            // Create a file
+            createNewFile(file, buffer, private).then((responseFile) => {
+              // Then delete the cache file
+              deleteFile(file.path).then(() => {
+                responseFile.data = null;
+                res(responseFile);
+              });
+            });
+          });
+        });
+      })
+    ).then((files) => {
+      res.json({
+        data: Array.from(files, (file) => {
+          return file._id;
+        }),
+      });
     });
   }
 );
@@ -111,23 +117,28 @@ router.get("/resource/:id", async (req, res, next) => {
   }
 });
 
-router.get("/resource/:id/raw", async (req, res, next) => {
-  const { id } = req.params;
-  try {
-    const doc = await findFileData(id);
+router.get(
+  "/resource/:id/raw",
+  ResourceMiddleware.requestPrivateAccess,
+  async (req, res, next) => {
+    const { id } = req.params;
+    try {
+      const doc = await findFileData(id);
+      
+      // Not found this file
+      if (!doc) {
+        throw new MiddlewareError("File not found", 404);
+      }
 
-    // Not found this file
-    if (!doc) {
-      throw new MiddlewareError("File not found", 404);
+      // Set a header to mimetype and send file
+      res.setHeader("Content-Type", doc.mimetype);
+      res.send(doc.data);
+      // res.send(await insertTextIntoImage(doc.data, "Haiii"));
+    } catch (err) {
+      next(err);
     }
-    
-    // Set a header to mimetype and send file
-    res.setHeader("Content-Type", doc.mimetype);
-    res.send(doc.data);
-  } catch (err) {
-    next(err);
   }
-});
+);
 
 router.delete("/resource/:id", getAuthorize, async (req, res, next) => {
   try {

@@ -18,7 +18,6 @@ $dropdown__text: rgb(66, 66, 66);
       top: 0;
       width: 100%;
     }
-
   }
 
   &__container {
@@ -41,12 +40,11 @@ $dropdown__text: rgb(66, 66, 66);
   &__expand {
     padding: 1em 1.2em;
     font-size: 15pt;
-
+    color: #fff;
     > * {
       justify-content: center;
       align-items: center;
     }
-
   }
 
   &-logo-section {
@@ -58,7 +56,7 @@ $dropdown__text: rgb(66, 66, 66);
 
       a {
         text-decoration: none;
-        font-size: 48pt;
+        font-size: 42pt;
         font-weight: 700;
         color: $text__color;
         font-family: "Dancing Script", cursive;
@@ -155,7 +153,6 @@ $dropdown__text: rgb(66, 66, 66);
   box-shadow: #d4d4d4 1px 1px 6px;
   color: $dropdown__text !important;
 
-
   @include tablet {
     width: 100%;
     position: relative;
@@ -164,7 +161,7 @@ $dropdown__text: rgb(66, 66, 66);
     background: transparent;
     color: #ffffff !important;
     box-shadow: none !important;
-    animation: slideDown .1s;
+    animation: slideDown 0.1s;
   }
 
   &__outer {
@@ -176,10 +173,10 @@ $dropdown__text: rgb(66, 66, 66);
 
   &__render {
     display: flex;
-    >span{
+    > span {
       flex: 2;
       padding: 12px 0;
-     }
+    }
 
     > .icon {
       margin-left: 12px;

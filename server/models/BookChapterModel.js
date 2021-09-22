@@ -44,6 +44,11 @@ const bookChapterSchema = new mongoose.Schema({
   }
 });
 
+bookChapterSchema.methods.increaseView = function() {
+  this.views = this.views + 1;
+  return this.save();
+}
+
 module.exports = mongoose.model(
   DatabaseConfig.Model.BookChapter.Name,
   bookChapterSchema

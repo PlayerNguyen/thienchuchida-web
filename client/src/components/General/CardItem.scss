@@ -1,0 +1,57 @@
+@import "../styles/Mixins";
+
+.bookcard {
+  // max-width: (100%/4);
+  text-decoration: none;
+  color: #f5f5f5;
+  flex: 1 0 41%;
+  transition: cubic-bezier(0.165, 0.84, 0.44, 1) .5s;
+
+  &:hover {
+    color: #c5c5c5;
+  }
+
+  @include laptop {
+    flex: 1 89%;
+  }
+
+  @include tablet {
+    flex: 1 41%;
+  }
+
+  &__body {
+    &__thumbnail {
+      > img {
+
+    width: 100%;
+    /* max-width: 1010px; */
+    /* max-height: 1280px; */
+    object-fit: cover;
+    height: 300px;
+      }
+    }
+  }
+
+  &__footer {
+    padding: 1.2em;
+    &__title {
+      font-weight: bold;
+      text-decoration: none;
+      color: #fff;
+      font-size: larger;
+    }
+    &__information {
+      display: flex;
+      flex-flow: row;
+      > div {
+        padding: 0.4em 0;
+        display: flex;
+        flex-flow: row;
+        // flex: 1;
+        > span {
+          margin: 0.2em 0.5em;
+        }
+      }
+    }
+  }
+}

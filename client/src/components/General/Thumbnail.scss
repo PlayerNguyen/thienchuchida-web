@@ -1,0 +1,15 @@
+.thumbnail {
+  &__wrapper {
+    overflow: hidden;
+  }
+
+  &__main {
+    > img {
+      object-fit: cover;
+      max-width: 100%;
+      height: auto;
+      width: 100%;
+      max-height: 215px;
+    }
+  }
+}

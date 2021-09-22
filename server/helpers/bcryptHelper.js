@@ -5,5 +5,9 @@ function hash(data) {
   return bcrypt.hashSync(data, salt);
 }
 
-const BcryptHelper = { hash };
+function comparePassword(data, hashed) {
+  return bcrypt.compareSync(data, hashed);
+}
+
+const BcryptHelper = { hash, comparePassword };
 module.exports = BcryptHelper;

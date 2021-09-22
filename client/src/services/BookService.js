@@ -19,7 +19,7 @@ function getAllBooks() {
 }
 
 async function getChaptersInBook(bookId) {
-  return axiosInstance.get(`/books/book/${bookId}/chapters/`);
+  return axiosInstance.get(`/chapters/book/${bookId}`);
 }
 
 async function findTagByName(name) {
@@ -49,6 +49,18 @@ async function updateChapter(chapterId, data) {
   return axiosInstance.put(`/chapters/chapter/${chapterId}`, data);
 }
 
+async function isBookContainsPassword(bookId) {
+  return axiosInstance.post(`/books/has-password`, { book: bookId });
+}
+
+async function getChapterBySlug(book, chapter) {
+  return axiosInstance.get(`/chapters/book/${book}/chapter/${chapter}`);
+}
+
+async function deleteBook(bookId) {
+  return axiosInstance.delete(`/books/book/${bookId}`);
+}
+
 const BookService = {
   getLatestUpdateBook,
   getBookBySlug,
@@ -61,5 +73,8 @@ const BookService = {
   createBook,
   createNewChapter,
   updateChapter,
+  isBookContainsPassword,
+  getChapterBySlug,
+  deleteBook,
 };
 export default BookService;

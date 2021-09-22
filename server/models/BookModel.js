@@ -2,7 +2,6 @@ const mongoose = require("mongoose");
 const Language = require("../languages/language");
 const lodash = require("lodash");
 const { v4: uuid } = require("uuid");
-const BookChapterModel = require("./BookChapterModel");
 const slugHelper = require("../utils/slugHelper");
 const DatabaseConfig = require("../config/database.config");
 const BcryptHelper = require("../helpers/bcryptHelper");
@@ -74,20 +73,8 @@ bookSchema.pre("save", function (next) {
   next();
 });
 
-/**
- * Count a total views for a book from chapters
- */
-bookSchema.post("find", function (results) {
-  results.map(async (result) => {
-    const chapters = await BookChapterModel.find({ book: result._id });
-
-    let sum = 0;
-    for (let i in chapters) {
-      const chapter = chapters[i];
-      sum += chapter.views;
-    }
-    result.views = sum;
-  });
-});
+bookSchema.methods.comparePassword = function (text) {
+  return BcryptHelper.comparePassword(text, this.password);
+};
 
 module.exports = mongoose.model(DatabaseConfig.Model.Book.Name, bookSchema);

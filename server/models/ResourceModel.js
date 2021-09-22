@@ -25,6 +25,10 @@ const resourceSchema = new mongoose.Schema({
   data: {
     type: Buffer,
     required: true
+  },
+  private: {
+    type: Boolean,
+    default: false
   }
 });
 

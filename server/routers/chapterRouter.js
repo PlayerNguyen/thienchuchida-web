@@ -64,4 +64,28 @@ router.put(`/chapter/:chapterId`, getAdminAuthorize, async (req, res, next) => {
   }
 });
 
+router.get(`/book/:bookSlug/chapter/:chapterSlug`, async (req, res, next) => {
+  try {
+    // req;
+    const { bookSlug, chapterSlug } = req.params;
+    const responseChapter = await BookChapterController.getChapterBySlug(
+      bookSlug,
+      chapterSlug
+    );
+    res.json({ data: responseChapter });
+  } catch (err) {
+    next(err);
+  }
+});
+
+// router.get(`/book/:bookId`, async (req, res, next) => {
+//   try {
+//     const { bookId } = req.params;
+//     const chapters = await BookChapterController.getAllChaptersByBook(bookId);
+//     res.json({ data: chapters });
+//   } catch (e) {
+//     next(e);
+//   }
+// });
+
 module.exports = router;

@@ -114,6 +114,29 @@ async function setUpdatedTimeToNow(bookId) {
   return book.save();
 }
 
+async function hasPassword(bookId) {
+  console.log(bookId);
+  const book = await BookModel.findOne({ _id: bookId });
+
+  return book.password !== null || book.password !== undefined;
+}
+
+async function deleteBook(bookId) {
+  return new Promise((res, rej) => {
+    BookModel.findOne({ _id: bookId }).then((doc) => {
+      if (!doc) {
+        return rej(new MiddlewareError("Không tìm thấy truyện này.", 404));
+      }
+
+      BookModel.deleteOne({ _id: bookId }).then(() => {
+        BookChapterModel.deleteMany({ book: bookId }).then(() => {
+          res();
+        });
+      });
+    });
+  });
+}
+
 const BookController = {
   createNewBook,
   addChapter,
@@ -126,6 +149,8 @@ const BookController = {
   findBook,
   updateBook,
   setUpdatedTimeToNow,
+  hasPassword,
+  deleteBook,
 };
 
 module.exports = BookController;

@@ -18,6 +18,7 @@ const {
 const { MiddlewareError } = require("../errors/MiddlewareError");
 const { findSingleTag } = require("../controllers/bookTagController");
 const { addBookComment } = require("../controllers/bookCommentsController");
+const BookController = require("../controllers/bookController");
 
 /**
  * Create a new book
@@ -94,6 +95,18 @@ router.get("/book/:bookId", async (req, res, next) => {
 });
 
 /**
+ * Check whether this book has password or not
+ */
+router.post(`/has-password`, async (req, res, next) => {
+  try {
+    const { book } = req.body;
+    res.json({ data: await BookController.hasPassword(book) });
+  } catch (err) {
+    next(err);
+  }
+});
+
+/**
  * Post new chapter into a book
  */
 router.post(
@@ -135,6 +148,18 @@ router.get("/book/:bookId/chapters/:chapterId", async (req, res, next) => {
   }
 
   res.json({ data: chapter });
+});
+
+router.delete(`/book/:id`, async (req, res, next) => {
+  try {
+    const { id } = req.params;
+    // Deleted this book
+    await BookController.deleteBook(id);
+    // Then response
+    res.json({ message: "Đã xoá các tập truyện và truyện." });
+  } catch (e) {
+    next(e);
+  }
 });
 
 /**

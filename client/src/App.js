@@ -10,6 +10,7 @@ import UnauthorizeRoute from "./route/UnauthorizeRoute";
 import RestrictedRoute from "./route/RestrictedRoute";
 import SignOut from "./components/Forms/SignOut";
 import Book from "./components/Book/Book";
+import BookReader from "./components/Book/BookReader";
 import Admin from "./components/Admin/Admin";
 import Profile from "./components/Profile/Profile";
 import AdminRestrictedRoute from "./route/AdminRestrictedRoute";
@@ -63,9 +64,14 @@ function App() {
               <SignIn />
             </UnauthorizeRoute>
 
-            <Route path="/truyen/:slug">
+            <Route path="/truyen/:bookSlug/:chapterId">
+              <BookReader />
+            </Route>
+            
+            <Route path="/truyen/:bookSlug">
               <Book />
             </Route>
+
 
             <Route path="/" exact>
               <Home />
