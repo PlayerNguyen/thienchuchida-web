@@ -4,6 +4,7 @@ import BookService from "../../../services/BookService";
 import useClickOutsideRef from "../../../hooks/useClickOutsideRef";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCheck } from "@fortawesome/free-solid-svg-icons";
+import TagService from "../../../services/TagService";
 
 export default function BookTagSelector({ show, onSelect, onVisible }) {
   const [queryTags, setQueryTags] = useState(null);
@@ -25,6 +26,12 @@ export default function BookTagSelector({ show, onSelect, onVisible }) {
     if (e.keyCode === 13) {
       searchTag();
     }
+  };
+
+  const handleCreateAndAddTag = () => {
+    TagService.createTag(searchText).then((response) => {
+      console.log(response);
+    });
   };
 
   /**
@@ -65,7 +72,7 @@ export default function BookTagSelector({ show, onSelect, onVisible }) {
               );
             })
           ) : (
-            <Dropdown.Item>
+            <Dropdown.Item onClick={handleCreateAndAddTag}>
               Thêm thẻ <b>{searchText}</b>
             </Dropdown.Item>
           )

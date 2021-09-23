@@ -1,3 +1,4 @@
+const { MiddlewareError } = require("../errors/MiddlewareError");
 const BookTag = require("../models/BookTagsModel");
 
 /**
@@ -11,13 +12,31 @@ async function createNewTag(name) {
 }
 
 async function findSingleTag(data) {
+  const query = new RegExp("^" + data + "$", "i");
   return BookTag.find({
-    $or: [{ name: data }, { _id: data }, { slug: data }],
+    $or: [{ name: query }, { _id: data }, { slug: query }],
   });
+}
+
+async function deleteTag(data) {
+  const query = { $or: [{ _id: data }, { slug: data }, { name: data }] };
+  return BookTag.findOne(query).then((tag) => {
+    if (!tag) {
+      throw new MiddlewareError(`Không tìm thấy thẻ để xoá.`);
+    }
+
+    return BookTag.deleteOne({ _id: tag._id });
+  });
+}
+
+async function getAllTags() {
+  return BookTag.find({}, "-__v");
 }
 
 const BookTagController = {
   createNewTag,
   findSingleTag,
+  deleteTag,
+  getAllTags,
 };
 module.exports = BookTagController;

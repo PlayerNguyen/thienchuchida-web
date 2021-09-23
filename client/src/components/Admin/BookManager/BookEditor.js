@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Form, Table, Container, Button, Row, Col } from "react-bootstrap";
+import { Form, Table, Container, Button, Col } from "react-bootstrap";
 import "./Editor.scss";
 import ServerConfig from "../../../config/server.config";
 import { useParams, useRouteMatch } from "react-router";
@@ -12,20 +12,20 @@ import imageHelper from "../../../helpers/imageHelper";
 import { toast } from "react-toastify";
 import BookChapterCreateModal from "./BookChapterCreateModal";
 
-function Tag({ id, onClick }) {
+function Tag({ id, onClick, name }) {
   const [data, setData] = useState(null);
   useEffect(() => {
     BookService.getBookTag(id).then((response) => {
       const { data } = response.data;
-      // console.log(data);
       setData(data);
     });
   }, [id]);
+
   return (
     <>
       {data && (
         <div className="tag" onClick={onClick}>
-          <Button variant="outline-dark">{data.name}</Button>
+          <Button variant="outline-dark">{name}</Button>
         </div>
       )}
     </>
@@ -122,7 +122,6 @@ export default function BookEditor() {
           </h1>
           <Form className="editor" onSubmit={handleOnSubmit}>
             <div className="editor__header">
-
               <Col sm={12} lg={6}>
                 <Form.Group
                   // as={`Col`}
@@ -175,7 +174,6 @@ export default function BookEditor() {
                   </Form.Text>
                 </Form.Group>
               </Col>
-            
             </div>
             <div className="editor__body">
               <Form.Group>
@@ -206,13 +204,20 @@ export default function BookEditor() {
                   console.log(e);
                   return <Tag key={i} name={e.name} />;
                 })}
-              <Tag
+              {/* <Tag
                 name={`Thêm`}
                 onClick={(e) => {
-                  // alert("a");
                   setVisibleTagDialog(true);
                 }}
-              />
+              /> */}
+              <Button
+                variant={`outline-dark`}
+                onClick={(e) => {
+                  setVisibleTagDialog(true);
+                }}
+              >
+                Thêm thẻ
+              </Button>
               <BookTagSelector
                 show={isVisibleTagDialog}
                 tags={tags}

@@ -1,22 +1,21 @@
 import React, { useState } from "react";
 import { Modal, Button, ProgressBar } from "react-bootstrap";
 import ResourceService from "../../../services/ResourceService";
-import {useHistory } from "react-router-dom"
 
 export default function RemoveModal(props) {
   const [isLoading, setLoading] = useState(false);
   const [progressValue, setProgressValue] = useState(0);
-  const history = useHistory();
+  // const history = useHistory();
 
   const handleOnClose = () => {
     props.onClose();
   };
   
-  const handleRemoveElementData = (id) => {
-    const arr = props.data.filter((e) => e !== id)
-    console.log(arr)
-    props.setData(arr)
-  }
+  // const handleRemoveElementData = (id) => {
+  //   const arr = props.data.filter((e) => e !== id)
+  //   console.log(arr)
+  //   props.setData(arr)
+  // }
 
   const handleOnDelete = async () => {
     setLoading(true);
