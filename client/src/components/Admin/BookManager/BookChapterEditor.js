@@ -1,5 +1,13 @@
 import React, { useEffect, useState } from "react";
-import { Form, Row, Col, Container, InputGroup, Button } from "react-bootstrap";
+import {
+  Form,
+  Row,
+  Col,
+  Container,
+  InputGroup,
+  Button,
+  Modal,
+} from "react-bootstrap";
 import { useParams } from "react-router";
 import BookService from "../../../services/BookService";
 import "./Editor.scss";
@@ -16,6 +24,8 @@ import {
 import ResourceService from "../../../services/ResourceService";
 import toastHelper from "../../../helpers/toastHelper";
 import ResourcePreviewModal from "../ResourceManager/ResourcePreviewModal";
+import { useHistory, useRouteMatch } from "react-router-dom";
+import path from "path";
 
 function ResourceSection({
   id,
@@ -77,6 +87,9 @@ export default function BookChapterEditor() {
   const [visiblePreview, setVisiblePreview] = useState(false);
   const [loading, setLoading] = useState(false);
   const [saving, setSaving] = useState(false);
+  const [visibleDelete, setVisibleDelete] = useState(false);
+  const history = useHistory();
+  const { url } = useRouteMatch();
 
   useEffect(() => {
     setLoading(true);
@@ -134,6 +147,7 @@ export default function BookChapterEditor() {
   const handleDeceaseSelect = (index) => {
     swapItem(resourceSelected, setResourceSelected, index, index + 1);
   };
+
   const swapItem = (array, setArrayFunction, index, index1) => {
     let arr = array;
 
@@ -173,6 +187,23 @@ export default function BookChapterEditor() {
       // Clean up
       setPreviewData(null);
     }, 400);
+  };
+
+  const handleDeleteChapter = () => {
+    BookService.deleteChapter(chapterId).then((response) => {
+      const { message } = response.data;
+      toastHelper.success(message);
+      // Moves backwards
+      history.push(path.dirname(url));
+    });
+  };
+
+  const handleCloseDelete = () => {
+    setVisibleDelete(false);
+  };
+
+  const handleOpenDeletePopup = () => {
+    setVisibleDelete(true);
   };
 
   return (
@@ -267,9 +298,16 @@ export default function BookChapterEditor() {
                 </Col>
               </Form.Group>
               {/* <Button variant="primary">Xem</Button> */}
-              <div className="d-flex flex-row-reverse">
+              {/* Footer */}
+              <div className="d-flex flex-row-reverse gap-2">
+                {/* Change save button */}
                 <Button type="submit" variant="primary" disabled={saving}>
                   {saving ? `Đang lưu...` : `Lưu thay đổi`}
+                </Button>
+
+                {/* Delete button */}
+                <Button variant="danger" onClick={handleOpenDeletePopup}>
+                  Xoá tập
                 </Button>
               </div>
             </Form>
@@ -294,6 +332,24 @@ export default function BookChapterEditor() {
             visible={visiblePreview}
             close={handleOnClosePreview}
           />
+
+          <Modal show={visibleDelete} onHide={handleCloseDelete}>
+            <Modal.Header closeButton>
+              <Modal.Title>Xoá truyện</Modal.Title>
+            </Modal.Header>
+            <Modal.Body>
+              Bạn có chắc chắn muốn xoá tập truyện này? Tập truyện này sẽ bị
+              mất, tuy nhiên dữ liệu sẽ không bị ảnh hưởng.
+            </Modal.Body>
+            <Modal.Footer>
+              <Button variant="primary" onClick={handleCloseDelete}>
+                Huỷ
+              </Button>
+              <Button variant="danger" onClick={handleDeleteChapter}>
+                Xoá
+              </Button>
+            </Modal.Footer>
+          </Modal>
         </Container>
       )}
     </div>

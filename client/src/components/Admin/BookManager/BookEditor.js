@@ -121,7 +121,8 @@ export default function BookEditor() {
             </Link>
           </h1>
           <Form className="editor" onSubmit={handleOnSubmit}>
-            <Row className="editor__header">
+            <div className="editor__header">
+
               <Col sm={12} lg={6}>
                 <Form.Group
                   // as={`Col`}
@@ -174,7 +175,8 @@ export default function BookEditor() {
                   </Form.Text>
                 </Form.Group>
               </Col>
-            </Row>
+            
+            </div>
             <div className="editor__body">
               <Form.Group>
                 <Form.Label>Giới thiệu</Form.Label>
@@ -207,7 +209,7 @@ export default function BookEditor() {
               <Tag
                 name={`Thêm`}
                 onClick={(e) => {
-                  alert("a");
+                  // alert("a");
                   setVisibleTagDialog(true);
                 }}
               />

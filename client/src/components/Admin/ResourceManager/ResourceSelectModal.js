@@ -33,8 +33,8 @@ export default function ResourceSelectModal({
   useEffect(() => {
     const k = (page - 1) * DATA_OFFSET;
     setStartIndex(k);
-    setEndIndex(k + DATA_OFFSET-1);
-    
+    setEndIndex(k + DATA_OFFSET - 1);
+
     // Index of pagination
     setStartIndexPage(page - PAGE_RANGE_OFFSET);
     setEndIndexPage(page + PAGE_RANGE_OFFSET);
@@ -121,23 +121,14 @@ export default function ResourceSelectModal({
 
   const handleSelectAll = () => {
     if (data) {
-      // data.forEach((e, i) => {
-      //   if (startIndex <= i && i <= endIndex) {
-      //     // console.log(e);
-      //     setSelectValues([...selectValues, e]);
-      //   }
-      // });
       Promise.all(data.filter((_, i) => startIndex <= i && i <= endIndex)).then(
         (values) => {
           // console.log("values ", values);
-          setSelectValues([...selectValues, ...values])
+          setSelectValues([...selectValues, ...values]);
         }
       );
     }
   };
-  useEffect(() => {
-    console.log("selectValues ", selectValues);
-  }, [selectValues])
 
   const handleCleanup = () => {
     setData([]);

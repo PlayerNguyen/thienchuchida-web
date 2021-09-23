@@ -61,6 +61,10 @@ async function deleteBook(bookId) {
   return axiosInstance.delete(`/books/book/${bookId}`);
 }
 
+async function deleteChapter(chapterId) {
+  return axiosInstance.delete(`/chapters/chapter/${chapterId}`);
+}
+
 const BookService = {
   getLatestUpdateBook,
   getBookBySlug,
@@ -76,5 +80,6 @@ const BookService = {
   isBookContainsPassword,
   getChapterBySlug,
   deleteBook,
+  deleteChapter,
 };
 export default BookService;
