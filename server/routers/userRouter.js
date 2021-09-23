@@ -6,11 +6,15 @@ const {
   signUp,
   getAllAccount,
   signOut,
+  deleteUser,
+  updateUser,
+  toggleAdmin,
 } = require("../controllers/userController");
 const { MiddlewareError } = require("../errors/MiddlewareError");
 const {
   getAdminAuthorize,
   getAuthorizeSilent,
+  getAuthorize,
 } = require("../middlewares/AuthMiddleware");
 const router = express.Router();
 
@@ -122,6 +126,59 @@ router.get("/", getAdminAuthorize, async (req, res, next) => {
     res.json({ data: accounts });
   } catch (err) {
     next(err);
+  }
+});
+
+router.delete("/:id", getAdminAuthorize, async (req, res, next) => {
+  try {
+    const { id } = req.params;
+    await deleteUser(id);
+    res.json({ message: "Đã xoá người dùng này." });
+  } catch (err) {
+    next(err);
+  }
+});
+
+router.put("/", getAuthorize, async (req, res, next) => {
+  try {
+    const { id, password, avatar, email } = req.body;
+    // Not found a user
+    if (id == null) {
+      throw new MiddlewareError(`Không tìm thấy giá trị id trong body.`);
+    }
+
+    // If current user are not match with id or not an admin
+    const { currentUser } = req;
+    console.log(currentUser);
+    if (currentUser._id !== id) {
+      if (!currentUser.admin) {
+        throw new MiddlewareError(
+          "Bạn không có quyền chỉnh sửa thông tin của người khác!"
+        );
+      }
+    }
+
+    let user = await updateUser(id, { password, avatar, email });
+    res.json({ message: "Cập nhật thành công người dùng.", data: user });
+  } catch (err) {
+    next(err);
+  }
+});
+
+router.post("/admin", getAdminAuthorize, async (req, res, next) => {
+  try {
+    const { id } = req.body;
+    // Toggle admin permissions 
+    const account = await toggleAdmin(id);
+    // response to user
+    res.json({
+      message: account.admin
+        ? "Đã gán quyền quản trị cho người dùng này."
+        : "Đã từ bỏ quyền quản trị của người dùng này.",
+      data: account._id,
+    });
+  } catch (er) {
+    next(er);
   }
 });
 

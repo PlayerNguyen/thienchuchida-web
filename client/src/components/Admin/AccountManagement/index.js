@@ -105,10 +105,14 @@ function AccountManagement() {
 
   return (
     <>
-      <Button variant="link" className="w-fit" onClick={() => handleOpenModifyModal()}>
+      <Button
+        variant="link"
+        className="w-fit"
+        onClick={() => handleOpenModifyModal()}
+      >
         Thêm tài khoản mới
       </Button>
-      <Table>
+      <Table responsive>
         <thead>
           <tr>
             <th>#</th>
@@ -120,18 +124,21 @@ function AccountManagement() {
           </tr>
         </thead>
         <tbody>
-          {users && users.map((_user, _idx) => (
-            <tr key={_user._id}>
-              <td>{_idx + 1}</td>
-              {columns.map((__col) => (
-                <td key={__col.key}>
-                  {__col.render
-                    ? __col.render(__col.dataIndex ? _user[__col.dataIndex] : _user)
-                    : _user[__col.dataIndex]}
-                </td>
-              ))}
-            </tr>
-          ))}
+          {users &&
+            users.map((_user, _idx) => (
+              <tr key={_user._id}>
+                <td>{_idx + 1}</td>
+                {columns.map((__col) => (
+                  <td key={__col.key}>
+                    {__col.render
+                      ? __col.render(
+                          __col.dataIndex ? _user[__col.dataIndex] : _user
+                        )
+                      : _user[__col.dataIndex]}
+                  </td>
+                ))}
+              </tr>
+            ))}
         </tbody>
       </Table>
       <ModifyUserModal

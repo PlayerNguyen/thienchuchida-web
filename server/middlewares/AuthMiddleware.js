@@ -76,8 +76,6 @@ async function getAuthorizeSilent(req, res, next) {
       process.env.ACCESS_TOKEN_SECRET
     );
   
-    console.log(data)
-  
     req.currentUser = data;
     next();
   } catch(err) {

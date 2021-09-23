@@ -112,7 +112,7 @@ async function getAllAccount() {
 
 async function signOut(refreshToken) {
   const user = await UserModel.findOne({ "tokens._id": refreshToken });
-  
+
   // User not found
   if (!user) {
     throw new MiddlewareError("Người dùng đăng xuất không hợp lệ.");
@@ -122,6 +122,42 @@ async function signOut(refreshToken) {
   return user.save();
 }
 
+async function deleteUser(id) {
+  const account = await UserModel.findOne({ _id: id });
+  if (!account) {
+    throw new MiddlewareError(`Không tìm thấy người dùng với id ${id}`);
+  }
+
+  return UserModel.deleteOne({ _id: id });
+}
+
+async function updateUser(id, body) {
+  const doc = await UserModel.findOne({ _id: id }, "-password");
+
+  if (!doc) {
+    throw new MiddlewareError(`Không tìm thấy người dùng với id ${id}`);
+  }
+
+  const { password, email, avatar } = body;
+  if (password) doc.password = password;
+  doc.email = email || doc.email;
+  doc.avatar = avatar || doc.avatar;
+  // Then save all
+  return doc.save();
+}
+
+async function toggleAdmin(id) {
+  const doc = await UserModel.findOne({ _id: id });
+  // not exist
+  if (!doc) {
+    throw new MiddlewareError(`Không tìm thấy người dùng với id ${id}`);
+  }
+  // set admin
+  doc.admin = !doc.admin;
+  // Then save all
+  return doc.save();
+}
+
 module.exports = {
   signIn,
   doRefreshToken,
@@ -129,4 +165,7 @@ module.exports = {
   isAdmin,
   getAllAccount,
   signOut,
+  deleteUser,
+  updateUser,
+    toggleAdmin,
 };
