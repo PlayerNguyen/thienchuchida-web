@@ -23,8 +23,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cookieParser());
 app.use(
   cors({
-    // origin: MiscConfig.cors.whitelist,
-    origin: "http://localhost:3000",
+    origin: process.env.ORIGIN_URL,
     credentials: true,
   })
 );
