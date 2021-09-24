@@ -141,16 +141,16 @@ router.delete("/:id", getAdminAuthorize, async (req, res, next) => {
 
 router.put("/", getAuthorize, async (req, res, next) => {
   try {
-    const { id, password, avatar, email } = req.body;
+    const { _id, password, avatar, email } = req.body;
     // Not found a user
-    if (id == null) {
+    if (_id == null) {
       throw new MiddlewareError(`Không tìm thấy giá trị id trong body.`);
     }
 
     // If current user are not match with id or not an admin
     const { currentUser } = req;
-    console.log(currentUser);
-    if (currentUser._id !== id) {
+    
+    if (currentUser._id !== _id) {
       if (!currentUser.admin) {
         throw new MiddlewareError(
           "Bạn không có quyền chỉnh sửa thông tin của người khác!"
@@ -158,7 +158,7 @@ router.put("/", getAuthorize, async (req, res, next) => {
       }
     }
 
-    let user = await updateUser(id, { password, avatar, email });
+    let user = await updateUser(_id, { password, avatar, email });
     res.json({ message: "Cập nhật thành công người dùng.", data: user });
   } catch (err) {
     next(err);
