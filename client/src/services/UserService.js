@@ -29,7 +29,15 @@ const postAdminCreateUser = (data) => {
 };
 
 const putAdminModifyUser = (data) => {
-  return axiosInstance.put(`/users/${data.id}`, data);
+  return axiosInstance.put(`/users`, data);
+};
+
+const deleteAdminDeleteUser = (id) => {
+  return axiosInstance.delete(`/users/${id}`);
+};
+
+const postAdminToggleUserPermission = (id) => {
+  return axiosInstance.post("/users/admin", { id });
 };
 
 const UserService = {
@@ -41,5 +49,7 @@ const UserService = {
   postSignUp,
   postAdminCreateUser,
   putAdminModifyUser,
+  deleteAdminDeleteUser,
+  postAdminToggleUserPermission,
 };
 export default UserService;

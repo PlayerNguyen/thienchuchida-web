@@ -2,16 +2,23 @@ import React, { useEffect, useState } from "react";
 // import { Row, Col, Table, Checkbox, Space, Button } from "antd";
 import { useDispatch } from "react-redux";
 import ModifyUserModal from "../../Modal/ModifyUser";
+import ConfirmModal from "../../Modal/Confirm";
 import { v1 } from "uuid";
 import { Button, Table } from "react-bootstrap";
 import UserService from "../../../services/UserService";
-import { toast } from "react-toastify";
+import toast from "../../../helpers/toastHelper";
 
 function AccountManagement() {
   const [users, setUsers] = useState(null);
   const [isModifyModalVisible, setIsModifyModalVisible] = useState(false);
   const [modifyUser, setModifyUser] = useState(null);
-  // Random key for modify modal, for new instance every render
+  const [confirmModalInfo, setConfirmModalInfo] = useState({
+    visible: false,
+    title: "",
+    content: "",
+    onConfirm: () => {},
+  });
+  // Random key for modify and confirm modal, for new instance every render
   const [randomKey, setRandomKey] = useState(v1());
   const [loading, setLoading] = useState(false);
 
@@ -35,6 +42,10 @@ function AccountManagement() {
     setIsModifyModalVisible(false);
   };
 
+  const handleCloseConfirmModal = () => {
+    setConfirmModalInfo({ visible: false, title: "", content: "", onConfirm: () => {} });
+  };
+
   /**
    *
    * @param {Object} _modifyUser
@@ -42,6 +53,20 @@ function AccountManagement() {
   const handleOpenModifyModal = (_modifyUser = null) => {
     setModifyUser(_modifyUser);
     setIsModifyModalVisible(true);
+    setRandomKey(v1());
+  };
+
+  /**
+   * Confirm to delete user
+   * @param {Object} _deleteUser
+   */
+  const handleOpenConfirmDeleteUserModal = (_deleteUser) => {
+    setConfirmModalInfo({
+      visible: true,
+      title: "Xoá tài khoản",
+      content: `Bạn có chắc chắn muốn xoá tài khoản '${_deleteUser.username}'?`,
+      onConfirm: () => handleConfirmDeleteUser(_deleteUser._id),
+    });
     setRandomKey(v1());
   };
 
@@ -57,12 +82,65 @@ function AccountManagement() {
     if (modifyUser) {
       //Modify exist user
       action = UserService.putAdminModifyUser;
-      _newData.id = modifyUser.id;
+      _newData._id = modifyUser._id;
     }
+    setLoading(true);
     action(_newData)
-      .then((data) => {
+      .then((resp) => {
+        toast.success(resp.data.message);
+        const newUser = resp.data.data;
+        setUsers(users.map((_user) => (_user._id !== newUser._id ? _user : { ...newUser })));
+        handleCloseModifyModal();
+      })
+      .catch((err) => {
+        toast.error(err.response.data);
+      })
+      .finally(() => {
         setLoading(false);
-        toast.success(data.message);
+      });
+  };
+
+  const handleConfirmDeleteUser = (_id) => {
+    setLoading(true);
+    UserService.deleteAdminDeleteUser(_id)
+      .then((resp) => {
+        toast.success(resp.data.message);
+        setUsers(users.filter((_user) => _user._id !== _id));
+        handleCloseConfirmModal();
+      })
+      .catch((err) => {
+        toast.error(err.response.data);
+      })
+      .finally(() => {
+        setLoading(false);
+      });
+  };
+
+  /**
+   * @param {String} _id
+   * @param {InputEvent} _event
+   */
+  const handleToggleUserPermission = (_user) => {
+    setConfirmModalInfo({
+      visible: true,
+      title: "Thay đổi quyền admin",
+      content: `Bạn có chắc chắn muốn thay đổi quyền admin cho người dùng '${_user.username}'?`,
+      onConfirm: () => handleConfirmToggleUserPermission(_user._id),
+    });
+  };
+
+  const handleConfirmToggleUserPermission = (_id) => {
+    setLoading(true);
+    UserService.postAdminToggleUserPermission(_id)
+      .then((resp) => {
+        toast.success(resp.data.message);
+        setUsers(
+          users.map((_user) => ({
+            ..._user,
+            admin: _user._id === _id ? !_user.admin : _user.admin,
+          }))
+        );
+        handleCloseConfirmModal();
       })
       .catch((err) => {
         toast.error(err.response.data);
@@ -85,9 +163,15 @@ function AccountManagement() {
     },
     {
       title: "Quản trị viên",
-      dataIndex: "admin",
       key: "admin",
-      render: (admin) => <input type="checkbox" readOnly checked={admin} />,
+      render: (record) => (
+        <input
+          type="checkbox"
+          readOnly
+          checked={record.admin}
+          onChange={(e) => handleToggleUserPermission(record, e)}
+        />
+      ),
     },
     {
       title: "#",
@@ -97,7 +181,9 @@ function AccountManagement() {
           <Button variant="link" onClick={() => handleOpenModifyModal(record)}>
             Chỉnh sửa
           </Button>
-          <Button variant="link">Xoá</Button>
+          <Button variant="link" onClick={() => handleOpenConfirmDeleteUserModal(record)}>
+            Xoá
+          </Button>
         </>
       ),
     },
@@ -105,13 +191,9 @@ function AccountManagement() {
 
   return (
     <>
-      <Button
-        variant="link"
-        className="w-fit"
-        onClick={() => handleOpenModifyModal()}
-      >
+      {/* <Button variant="link" className="w-fit" onClick={() => handleOpenModifyModal()}>
         Thêm tài khoản mới
-      </Button>
+      </Button> */}
       <Table responsive>
         <thead>
           <tr>
@@ -131,9 +213,7 @@ function AccountManagement() {
                 {columns.map((__col) => (
                   <td key={__col.key}>
                     {__col.render
-                      ? __col.render(
-                          __col.dataIndex ? _user[__col.dataIndex] : _user
-                        )
+                      ? __col.render(__col.dataIndex ? _user[__col.dataIndex] : _user)
                       : _user[__col.dataIndex]}
                   </td>
                 ))}
@@ -146,7 +226,16 @@ function AccountManagement() {
         visible={isModifyModalVisible}
         onClose={handleCloseModifyModal}
         onConfirm={handleConfirmModifyUser}
-        key={randomKey}
+        key={`${randomKey}mum`}
+        loading={loading}
+      />
+      <ConfirmModal
+        key={`${randomKey}cm`}
+        visible={confirmModalInfo.visible}
+        title={confirmModalInfo.title}
+        content={confirmModalInfo.content}
+        onConfirm={confirmModalInfo.onConfirm}
+        onClose={handleCloseConfirmModal}
         loading={loading}
       />
     </>
