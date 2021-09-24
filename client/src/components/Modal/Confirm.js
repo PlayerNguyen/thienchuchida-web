@@ -1,7 +1,7 @@
 import React from "react";
 import { Button, Modal } from "react-bootstrap";
 
-function ConfirmModal({ visible, onConfirm, onClose, title, content, loading }) {
+function ConfirmModal({ visible, onConfirm, onClose, title, content, loading = false }) {
   return (
     <>
       <Modal show={visible} onHide={onClose}>
