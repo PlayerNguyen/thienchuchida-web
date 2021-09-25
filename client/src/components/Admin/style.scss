@@ -1,6 +1,9 @@
 @import "styles/Mixins";
 
 .admin {
+  &__wrapper {
+    margin-top: -6em !important;
+  }
   &__container,
   &__content {
     padding: 24px;
@@ -14,12 +17,5 @@
       font-family: "Dancing Script", cursive;
       text-shadow: 3px 2px 7px #dbdbdb;
     }
-  }
-}
-
-.app-wrapper {
-  // For mobile
-  @include mobile {
-    padding: 0 !important;
   }
 }

@@ -11,7 +11,6 @@ import {
   Table,
   ButtonGroup,
 } from "react-bootstrap";
-import BookService from "../../../services/BookService";
 import TagService from "../../../services/TagService";
 
 export default function BookTagSelector({ tags, visible, close, onComplete }) {
@@ -186,7 +185,7 @@ export default function BookTagSelector({ tags, visible, close, onComplete }) {
         )}
       </Modal.Body>
       <Modal.Footer>
-        <Button variant="primary">Tạo thẻ</Button>
+        {/* <Button variant="primary">Tạo thẻ</Button> */}
         <Button
           variant="success"
           onClick={() => {

@@ -35,8 +35,7 @@ export default function ResourceItem({
         className={`resourceitem ${selected ? `resourceitem--selected` : ``}`}
         onClick={onClick}
       >
-        <div className="resourceitem__thumbnail">
-          <Card.Img
+        <Card.Img
             src={
               data
                 ? `${Config.SERVER_API_URL}/resources/resource/${data._id}/raw`
@@ -45,7 +44,6 @@ export default function ResourceItem({
             className={`${minimizeThumbnail && `thumbnail--small`}`}
             alt="A thumbnail for resource"
           />
-        </div>
 
         {!disableInfo && (
           <Card.Body>
