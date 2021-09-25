@@ -75,7 +75,7 @@ function AccountManagement() {
    * @param {Object} _newUserInfo
    */
   const handleConfirmModifyUser = (_newUserInfo) => {
-    let action = UserService.postAdminCreateUser; // Create new user
+    let action = UserService.postSignUp; // Create new user
     const _newData = {
       ..._newUserInfo,
     };
@@ -89,7 +89,7 @@ function AccountManagement() {
       .then((resp) => {
         toast.success(resp.data.message);
         const newUser = resp.data.data;
-        setUsers(users.map((_user) => (_user._id !== newUser._id ? _user : { ...newUser })));
+        setUsers([...users.filter((_user) => _user._id !== newUser._id), { ...newUser }]);
         handleCloseModifyModal();
       })
       .catch((err) => {
@@ -191,9 +191,9 @@ function AccountManagement() {
 
   return (
     <>
-      {/* <Button variant="link" className="w-fit" onClick={() => handleOpenModifyModal()}>
+      <Button variant="link" className="w-fit" onClick={() => handleOpenModifyModal()}>
         Thêm tài khoản mới
-      </Button> */}
+      </Button>
       <Table responsive>
         <thead>
           <tr>
