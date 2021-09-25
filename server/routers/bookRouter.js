@@ -77,21 +77,25 @@ router.put("/", getAdminAuthorize, async (req, res, next) => {
  * Get book information with chapters
  */
 router.get("/book/:bookId", async (req, res, next) => {
-  const { bookId } = req.params;
-  const book = await findBook(bookId);
+  try {
+    const { bookId } = req.params;
+    const book = await findBook(bookId);
 
-  if (!book) {
-    return next(new MiddlewareError("Book not found", 404));
+    if (!book) {
+      return next(new MiddlewareError("Book not found", 404));
+    }
+
+    const chapters = await getChaptersInBook(book._id);
+    res.json({
+      data: book,
+      chapters: {
+        total_size: chapters.length,
+        data: chapters,
+      },
+    });
+  } catch (e) {
+    next(e);
   }
-
-  const chapters = await getChaptersInBook(book._id);
-  res.json({
-    data: book,
-    chapters: {
-      total_size: chapters.length,
-      data: chapters,
-    },
-  });
 });
 
 /**

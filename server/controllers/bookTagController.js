@@ -12,7 +12,7 @@ async function createNewTag(name) {
 }
 
 async function findSingleTag(data) {
-  const query = new RegExp("^" + data + "$", "i");
+  const query = new RegExp(data, "i");
   return BookTag.find({
     $or: [{ name: query }, { _id: data }, { slug: query }],
   });

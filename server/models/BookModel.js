@@ -49,7 +49,7 @@ const bookSchema = new mongoose.Schema({
     type: String,
     ref: DatabaseConfig.Model.Author.Name,
   },
-  tags: [{ type: String, ref: process.env.MODEL_NAME_BOOK_TAGS }],
+  tags: [{ type: String, ref: DatabaseConfig.Model.Tags.Name }],
 });
 
 /**

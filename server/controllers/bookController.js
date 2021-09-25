@@ -58,14 +58,15 @@ async function getBookById(id) {
   return BookModel.findOne({ _id: id }, "-__v").populate("tags", "-__v");
 }
 /**
- * Find a book by query
+ * Find a book by query.
+ * 
  * @param {*} query any input
  * @returns a book whether find or null
  */
 async function findBook(query) {
   return BookModel.findOne(
     { $or: [{ _id: query }, { slug: query }] },
-    "-__v"
+    "-__v -password"
   ).populate("tags", "-__v");
   // .populate("thumbnail", "-__v");
 }

@@ -1,5 +1,12 @@
 import React, { useEffect, useState } from "react";
-import { Form, Table, Container, Button, Col } from "react-bootstrap";
+import {
+  Form,
+  Table,
+  Container,
+  Button,
+  Col,
+  ButtonGroup,
+} from "react-bootstrap";
 import "./Editor.scss";
 import ServerConfig from "../../../config/server.config";
 import { useParams, useRouteMatch } from "react-router";
@@ -11,21 +18,18 @@ import ResourceSelectModal from "../ResourceManager/ResourceSelectModal";
 import imageHelper from "../../../helpers/imageHelper";
 import { toast } from "react-toastify";
 import BookChapterCreateModal from "./BookChapterCreateModal";
+import { faTimes } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
-function Tag({ id, onClick, name }) {
-  const [data, setData] = useState(null);
-  useEffect(() => {
-    BookService.getBookTag(id).then((response) => {
-      const { data } = response.data;
-      setData(data);
-    });
-  }, [id]);
 
+function Tag({ id, onClick, data }) {
   return (
     <>
       {data && (
         <div className="tag" onClick={onClick}>
-          <Button variant="outline-dark">{name}</Button>
+          <ButtonGroup aria-label={`Tag ${data && data.name}`}>
+            <Button variant="outline-dark">{data && data.name}</Button>
+          </ButtonGroup>
         </div>
       )}
     </>
@@ -42,10 +46,11 @@ export default function BookEditor() {
   const [isVisibleThumbnailSelect, setVisibleThumbnailSelect] = useState(false);
   const [isVisibleBookChapterCreate, setIsVisibleBookChapterCreate] =
     useState(false);
-  const [tags, setTags] = useState(null);
+  const [tags, setTags] = useState([]);
   const [title, setTitle] = useState("");
   const [password, setPassword] = useState("");
   const [description, setDescription] = useState("");
+
   const { url } = useRouteMatch();
 
   useEffect(() => {
@@ -74,16 +79,28 @@ export default function BookEditor() {
 
   const handleOnSubmit = (e) => {
     e.preventDefault();
-    BookService.updateBook({ _id: bookId, title, description, password })
-      .then((response) => {
-        const { data, message } = response.data;
-        setBookData(data);
-        toast.success(message);
+    Promise.all(
+      tags.map((tag) => {
+        return tag._id;
       })
-      .finally(() => {
-        // Reset password field
-        setPassword("");
-      });
+    ).then((tagIdentifies) => {
+      BookService.updateBook({
+        _id: bookId,
+        title,
+        description,
+        password,
+        tags: tagIdentifies,
+      })
+        .then((response) => {
+          const { data, message } = response.data;
+          setBookData(data);
+          toast.success(message);
+        })
+        .finally(() => {
+          // Reset password field
+          setPassword("");
+        });
+    });
   };
 
   const handleThumbnailChange = (e) => {
@@ -97,6 +114,10 @@ export default function BookEditor() {
 
   const handleTagSelectorSubmit = (e) => {
     e.preventDefault();
+  };
+
+  const handleTagDialogComplete = (selectedTags) => {
+    setTags([...selectedTags])
   };
 
   return (
@@ -200,33 +221,17 @@ export default function BookEditor() {
             <div>
               {tags &&
                 tags.map((e, i) => {
-                  console.log(e);
-                  return <Tag key={i} name={e.name} />;
+                  return <Tag key={i} data={e} />;
                 })}
-              {/* <Tag
-                name={`Thêm`}
-                onClick={(e) => {
-                  setVisibleTagDialog(true);
-                }}
-              /> */}
               <Button
-                variant={`outline-dark`}
+                variant={`dark`}
                 onClick={(e) => {
                   setVisibleTagDialog(true);
                 }}
               >
-                Thêm thẻ
+                Chỉnh sửa thẻ
               </Button>
-              <BookTagSelector
-                show={isVisibleTagDialog}
-                tags={tags}
-                onSelect={(e) => {
-                  console.log(e);
-                }}
-                onVisible={() => {
-                  setVisibleTagDialog(false);
-                }}
-              />
+              
             </div>
           </Form>
           <Form>
@@ -289,6 +294,15 @@ export default function BookEditor() {
             }}
             bookId={bookId}
           />
+
+          <BookTagSelector
+                visible={isVisibleTagDialog}
+                tags={tags}
+                close={() => {
+                  setVisibleTagDialog(false);
+                }}
+                onComplete={handleTagDialogComplete}
+              />
         </>
       )}
     </div>

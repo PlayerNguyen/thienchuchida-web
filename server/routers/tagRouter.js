@@ -11,33 +11,52 @@ const {
 /**
  * Create a new tag
  */
-router.post("/", getAdminAuthorize, (req, res, next) => {
-  const { name } = req.body;
-  BookTagController.findSingleTag(name)
-    .then((tag) => {
-      if (tag) {
-        return res.json({
-          data: {
-            name: tag.name,
-            slug: tag.slug,
-            _id: tag._id,
-          },
-        });
-      }
+router.post("/", getAdminAuthorize, async (req, res, next) => {
+  // const { name } = req.body;
+  // BookTagController.findSingleTag(name)
+  //   .then((tag) => {
+  //     if (tag) {
+  //       return res.json({
+  //         data: {
+  //           name: tag.name,
+  //           slug: tag.slug,
+  //           _id: tag._id,
+  //         },
+  //       });
+  //     }
 
-      BookTagController.createNewTag(name)
-        .then((tag) => {
-          res.json({
-            data: {
-              name: tag.name,
-              slug: tag.slug,
-              _id: tag._id,
-            },
-          });
-        })
-        .catch(next);
-    })
-    .catch(next);
+  //     BookTagController.createNewTag(name)
+  //       .then((tag) => {
+  //         res.json({
+  //           data: {
+  //             name: tag.name,
+  //             slug: tag.slug,
+  //             _id: tag._id,
+  //           },
+  //         });
+  //       })
+  //       .catch(next);
+  //   })
+  //   .catch(next);
+
+  try {
+    const { name } = req.body;
+    const tagExistence = await BookTagController.findSingleTag(name);
+
+    // Existed tag, response to user
+    if (tagExistence.length > 0) {
+      return res.json({
+        message: `Thẻ ${name} đã tồn tại.`,
+        data: tagExistence[0],
+      });
+    }
+
+    // Otherwise, try to create a new tag and then return
+    const generatedTag = await BookTagController.createNewTag(name);
+    res.json({ message: `Đã tạo thành công thẻ ${name}.`, data: generatedTag });
+  } catch (e) {
+    next(e);
+  }
 });
 
 router.get(`/`, async (req, res, next) => {
