@@ -32,6 +32,8 @@ router.post("/signup", async (req, res, next) => {
       message: "Tạo tài khoản thành công.",
       data: {
         _id: generatedUser._id,
+        username: generatedUser.username,
+        email: generatedUser.email,
       },
     });
   } catch (err) {
@@ -149,12 +151,10 @@ router.put("/", getAuthorize, async (req, res, next) => {
 
     // If current user are not match with id or not an admin
     const { currentUser } = req;
-    
+
     if (currentUser._id !== _id) {
       if (!currentUser.admin) {
-        throw new MiddlewareError(
-          "Bạn không có quyền chỉnh sửa thông tin của người khác!"
-        );
+        throw new MiddlewareError("Bạn không có quyền chỉnh sửa thông tin của người khác!");
       }
     }
 
@@ -168,7 +168,7 @@ router.put("/", getAuthorize, async (req, res, next) => {
 router.post("/admin", getAdminAuthorize, async (req, res, next) => {
   try {
     const { id } = req.body;
-    // Toggle admin permissions 
+    // Toggle admin permissions
     const account = await toggleAdmin(id);
     // response to user
     res.json({
