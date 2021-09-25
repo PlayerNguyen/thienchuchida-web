@@ -1,4 +1,4 @@
-$text__color: #fff;
+@import "styles/Mixins";
 
 .admin {
   &__container,
@@ -10,9 +10,16 @@ $text__color: #fff;
     //   background: #000 !important;
     padding: 1.2em;
     &__brand {
-      color: $text__color;
+      color: #fff;
       font-family: "Dancing Script", cursive;
       text-shadow: 3px 2px 7px #dbdbdb;
     }
+  }
+}
+
+.app-wrapper {
+  // For mobile
+  @include mobile {
+    padding: 0 !important;
   }
 }

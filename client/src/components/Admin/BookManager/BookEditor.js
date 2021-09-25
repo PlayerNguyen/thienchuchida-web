@@ -42,7 +42,6 @@ export default function BookEditor() {
   const [isVisibleThumbnailSelect, setVisibleThumbnailSelect] = useState(false);
   const [isVisibleBookChapterCreate, setIsVisibleBookChapterCreate] =
     useState(false);
-  // const [loading, setLoading] = useState(false);
   const [tags, setTags] = useState(null);
   const [title, setTitle] = useState("");
   const [password, setPassword] = useState("");
