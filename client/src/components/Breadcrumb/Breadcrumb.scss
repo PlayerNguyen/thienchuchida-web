@@ -8,18 +8,18 @@
 
   &__container {
     display: flex;
-    flex: row;
-    font-size: large;
+    // flex: row;
+    flex-wrap: wrap;
     padding: 0.2em 0;
-    text-transform: uppercase;
+    // text-transform: uppercase;
 
     > div {
       &:not(:last-child)::after {
         content: '/';
-        margin: 0 12px;
+        margin: 0 6px;
         color: $url__color--secondary;
       }
-      margin-right: 12px;
+      // margin-right: 12px;
     }
   }
 }

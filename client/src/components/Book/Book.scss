@@ -127,8 +127,8 @@
 .book {
   &__container {
     
-    @include tablet {
-      margin-top: 6em !important;
-    }
+    // @include tablet {
+    //   margin-top: 6em !important;
+    // }
   }
 }

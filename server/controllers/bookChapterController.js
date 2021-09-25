@@ -54,7 +54,7 @@ async function getChapterBySlug(book, chapter) {
   const chapterResponse = await BookChapterModel.findOne({
     book: bookCurrentId,
     $or: [{ _id: chapter }, { slug: chapter }],
-  });
+  }).populate("book", "-__v -password");
 
   return chapterResponse;
 }
