@@ -12,6 +12,7 @@ export default function BookReader() {
   const { bookSlug, chapterId } = useParams();
   const [data, setData] = useState(null);
   const [nextChapter, setNextChapter] = useState(null);
+  console.log(data);
 
   useEffect(() => {
     BookService.getChapterBySlug(bookSlug, chapterId).then((response) => {
@@ -34,7 +35,13 @@ export default function BookReader() {
       {/*  This body contains all image inside */}
       <Container className="reader__body">
         {/* Breadcrumb */}
-        <Breadcrumb data={[{ url: "/", value: "Trang chủ" }]} />
+        <Breadcrumb
+          data={[
+            { url: "/", value: "Trang chủ" },
+            { url: "/", value: `${data && data.book.title}` },
+            { url: `/${data && data.slug}`, value: data && data.name },
+          ]}
+        />
         {data &&
           data.content.map((e, i) => {
             return (

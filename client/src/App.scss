@@ -1,14 +1,17 @@
 @import "styles/Color";
+@import "styles/Mixins";
 @import "bootstrap/scss/bootstrap.scss";
 
 .app {
   &-wrapper {
-    background: rgba(0, 0, 0, 0.76);
-    position: absolute;
-    overflow: auto;
-    height: 100%;
-    width: 100%;
-    // box-shadow: inset 0 0 0 2000px #000000ab;
+    position: relative;
+    background: #000000c9 !important;
+    // padding-top: 4em !important;
+    // padding-bottom: 4em !important;
+    @include mobile {
+      padding-top: 6em !important;
+      padding-bottom: 6em !important;
+    }
   }
 }
 
