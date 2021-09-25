@@ -6,14 +6,13 @@ function ModifyUserModal({ visible, onConfirm, onClose, user = null, loading }) 
   const [userInfo, setUserInfo] = useState({
     username: "",
     email: "",
-    admin: false,
     changingPassword: false,
-    currentPassword: "",
     password: "",
     confirmPassword: "",
   });
   const [validator, setValidator] = useState({
     passwordMatch: true,
+    passwordMatchMessage: "Mật khẩu không trùng khớp",
   });
   // state of interacting with inputs
   const [inputState, setInputState] = useState({
@@ -23,9 +22,9 @@ function ModifyUserModal({ visible, onConfirm, onClose, user = null, loading }) 
   useEffect(() => {
     if (user) {
       // override init state with existing properties
-      setUserInfo({ ...userInfo, ...user });
+      setUserInfo((_userInfo) => ({ ..._userInfo, ...user }));
     }
-  }, [user, userInfo]);
+  }, [user]);
 
   /**
    *
@@ -33,20 +32,20 @@ function ModifyUserModal({ visible, onConfirm, onClose, user = null, loading }) 
    */
   const handleCheckAllValidatorsValid = () => {
     let isInputValid = true;
-    Object.entries(validator).forEach((_key, _value) => {
-      if (!_value) {
-        isInputValid = false;
+    Object.keys(validator).forEach((_key) => {
+      if (!validator[_key]) {
+        throw validator[`${_key}Messagee`];
       }
     });
     return isInputValid;
   };
 
   const handleConfirmModifyUser = () => {
-    const isInputValid = handleCheckAllValidatorsValid();
-    if (isInputValid) {
+    try {
+      handleCheckAllValidatorsValid();
       onConfirm(userInfo);
-    } else {
-      toast.error("Dữ liệu không hợp lệ! Vui lòng kiểm tra lại.");
+    } catch (e) {
+      toast.error(e);
     }
   };
 
@@ -57,15 +56,6 @@ function ModifyUserModal({ visible, onConfirm, onClose, user = null, loading }) 
   const handleChangeUserInfo = (property) => (e) => {
     const { value } = e.target;
     setUserInfo({ ...userInfo, [property]: value });
-  };
-
-  /**
-   *
-   * @param {HtmlEvent} e
-   */
-  const handleChangeUserRole = (e) => {
-    const { checked } = e.target;
-    setUserInfo({ ...userInfo, admin: checked });
   };
 
   const handleAllowChangePassword = () => {
@@ -110,6 +100,7 @@ function ModifyUserModal({ visible, onConfirm, onClose, user = null, loading }) 
                 name="username"
                 placeholder="Nhập tên đăng nhập"
                 onChange={handleChangeUserInfo("username")}
+                disabled={Boolean(user)}
               />
             </Form.Group>
             <Form.Group className="mb-3">
@@ -122,15 +113,6 @@ function ModifyUserModal({ visible, onConfirm, onClose, user = null, loading }) 
                 onChange={handleChangeUserInfo("email")}
               />
             </Form.Group>
-            <Form.Group className="mb-3">
-              <Form.Check
-                checked={userInfo.admin}
-                name="admin"
-                type="checkbox"
-                label="Quản trị viên"
-                onChange={handleChangeUserRole}
-              />
-            </Form.Group>
             {user && (
               <Form.Group className="mb-3">
                 <Button variant="link" onClick={handleAllowChangePassword}>
@@ -140,17 +122,6 @@ function ModifyUserModal({ visible, onConfirm, onClose, user = null, loading }) 
             )}
             {(!user || userInfo.changingPassword) && (
               <>
-                {userInfo.changingPassword && (
-                  <Form.Group className="mb-3">
-                    <Form.Label>Mật khẩu hiện tại</Form.Label>
-                    <Form.Control
-                      value={userInfo.currentPassword}
-                      name="currentPassword"
-                      type="password"
-                      onChange={handleChangeUserInfo("currentPassword")}
-                    />
-                  </Form.Group>
-                )}
                 <Form.Group className="mb-3">
                   <Form.Label>Mật khẩu {userInfo.changingPassword && "mới"}</Form.Label>
                   <Form.Control
