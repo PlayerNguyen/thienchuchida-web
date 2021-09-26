@@ -18,14 +18,23 @@ const {
 } = require("../middlewares/AuthMiddleware");
 const router = express.Router();
 
+/**
+ * Register new account api.
+ */
 router.post("/signup", async (req, res, next) => {
   try {
-    const { username, password, email } = req.body;
+    const { username, display, password, email } = req.body;
 
-    if (!username || !password || !email) {
-      return next(new MiddlewareError("Missing parameters.", 500));
+    if (!username || !password || !email || !display) {
+      return next(
+        new MiddlewareError(
+          "Thiếu dữ liệu nhập vào, vui lòng nhập đủ dữ liệu cần thiết",
+          500
+        )
+      );
     }
-
+    
+    // Invokes create new user method
     const generatedUser = await signUp(username, password, email);
 
     res.json({
@@ -154,7 +163,9 @@ router.put("/", getAuthorize, async (req, res, next) => {
 
     if (currentUser._id !== _id) {
       if (!currentUser.admin) {
-        throw new MiddlewareError("Bạn không có quyền chỉnh sửa thông tin của người khác!");
+        throw new MiddlewareError(
+          "Bạn không có quyền chỉnh sửa thông tin của người khác!"
+        );
       }
     }
 
