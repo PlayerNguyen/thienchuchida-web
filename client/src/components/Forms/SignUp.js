@@ -2,7 +2,6 @@ import React, { useState, useEffect } from "react";
 import "./Forms.scss";
 import UserService from "../../services/UserService";
 import { useHistory } from "react-router-dom";
-import { useDispatch } from "react-redux";
 import { toast } from "react-toastify";
 import MiscConfig from "../../config/misc.config";
 import Header from "../Header/Header";
@@ -12,12 +11,11 @@ export default function SignUp() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [repassword, setRepassword] = useState("");
-  const [responseData, setResponseData] = useState(null);
   const [isPasswordValid, setPasswordValid] = useState(false);
   const [isRepasswordValid, setIsRepasswordValid] = useState(false);
   const [isValid, setIsValid] = useState(false);
   const history = useHistory();
-  const dispatch = useDispatch();
+  // const dispatch = useDispatch();
 
   const handleUsernameChange = (e) => {
     setUsername(e.target.value);
@@ -88,17 +86,6 @@ export default function SignUp() {
           <div className="form__header">
             <h1 className="form__header__title">Đăng ký</h1>
           </div>
-          {responseData && (
-            <div
-              className={`form__response form__response--${
-                responseData.error ? `error` : `success`
-              }`}
-            >
-              {responseData.error
-                ? responseData.error.message
-                : responseData.message}
-            </div>
-          )}
           <div className="form__container">
             <div className="form__container--block">
               <div className="form--label">Tên đăng nhập</div>

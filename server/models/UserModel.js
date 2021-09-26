@@ -9,12 +9,12 @@ const userSchema = new mongoose.Schema({
   },
   username: {
     type: String,
-    required: [true, "The username field cannot be empty."],
+    required: [true, "Tên đăng nhập không được để trống."],
     unique: true,
   },
   password: {
     type: String,
-    required: [true, "The password field cannot be empty."],
+    required: [true, "Mật khẩu không được để trống."],
   },
   email: {
     type: String,

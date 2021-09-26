@@ -7,15 +7,12 @@ import BookService from "../../services/BookService";
 import Breadcrumb from "../Breadcrumb/Breadcrumb";
 import "./Book.scss";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faEye, faClock, faHeart } from "@fortawesome/free-regular-svg-icons";
-import { faTag } from "@fortawesome/free-solid-svg-icons";
+import { faEye, faClock } from "@fortawesome/free-regular-svg-icons";
 import { Link, useRouteMatch } from "react-router-dom";
-import Config from "../../config/server.config";
 import Header from "../Header/Header";
-import imageHelper from "../../helpers/imageHelper";
 import Thumbnail from "../General/Thumbnail";
 import { Container, Row, Col } from "react-bootstrap";
-import momentHelper from '../../helpers/momentHelper'
+import momentHelper from "../../helpers/momentHelper";
 
 function Chapter({ data, bookId }) {
   const { url } = useRouteMatch();
@@ -26,29 +23,35 @@ function Chapter({ data, bookId }) {
         {/* Thumbnail */}
         <Col>
           <Thumbnail
-            src={imageHelper.getRawResourceUrl(data && data.thumbnail)}
+            id={data.thumbnail}
             alt={`Chapter ${data && data._id} thumbnail`}
           />
         </Col>
         {/* Chapter info */}
         <Col>
-          <Col>
-            <h3 className="mt-2 fw-bold text-light ">{data && data.name}</h3>
-          </Col>
+          <Row>
+            <Col>
+              <h3 className="mt-2 fw-bold text-light ">{data && data.name}</h3>
+            </Col>
+          </Row>
           {/* Views statistic */}
-          <Col>
-            <span className="text-light p-2">
-              <FontAwesomeIcon icon={faEye} />
-            </span>
-            <span className="text-light p-2">{data.views}</span>
-          </Col>
-          {/* Last updated */}
-          <Col>
-            <span className="text-light p-2">
-              <FontAwesomeIcon icon={faClock} />
-            </span>
-            <span className="text-light p-2">{momentHelper(data.updatedAt).fromNow(false)}</span>
-          </Col>
+          <Row className="text-secondary">
+            <Col>
+              <span className="text-light p-2">
+                <FontAwesomeIcon icon={faEye} />
+              </span>
+              <span className="text-light p-2">{data.views}</span>
+            </Col>
+            {/* Last updated */}
+            <Col>
+              <span className="text-light p-2">
+                <FontAwesomeIcon icon={faClock} />
+              </span>
+              <span className="text-light p-2">
+                {momentHelper(data.updatedAt).fromNow(true)}
+              </span>
+            </Col>
+          </Row>
         </Col>
       </Link>
     </Col>
@@ -102,11 +105,7 @@ export default function Book() {
               <Col sm={12} md={6}>
                 <Thumbnail
                   className="thumbnail"
-                  src={
-                    bookInfo && bookInfo.thumbnail
-                      ? imageHelper.getRawResourceUrl(bookInfo.thumbnail)
-                      : Config.DEFAULT_THUMBNAIL
-                  }
+                  id={bookInfo && bookInfo.thumbnail}
                   alt="thumbnail"
                 />
               </Col>
@@ -129,15 +128,17 @@ export default function Book() {
                     <p className="text-light fw-bold">Thẻ</p>
                   </Col>
                   <Col sm={6} md={9} lg={10}>
-                    {bookInfo &&
-                      bookInfo.tags &&
+                    {bookInfo && bookInfo.tags && bookInfo.tags.length > 0 ? (
                       bookInfo.tags.map((tag) => {
                         return (
                           <span className="text-light m-2" key={tag._id}>
                             {tag.name}
                           </span>
                         );
-                      })}
+                      })
+                    ) : (
+                      <div className="text-light">Không có thẻ</div>
+                    )}
                   </Col>
                 </Row>
               </Col>
@@ -149,11 +150,18 @@ export default function Book() {
                 <h1 className="text-light fw-bold">Tập truyện</h1>
               </Col>
               <Row className="mt-3" sm={12}>
-                {chapters &&
-                  chapters.data &&
+                {chapters && chapters.data && chapters.data.length > 0 ? (
                   chapters.data.map((e) => {
                     return <Chapter data={e} key={e._id} />;
-                  })}
+                  })
+                ) : (
+                  <Container className="text-center text-light p-5">
+                    <h1>
+                      Hiện tại chưa có truyện nào được cập nhật, hãy thử quay
+                      lại sau.
+                    </h1>
+                  </Container>
+                )}
               </Row>
             </Row>
           </>

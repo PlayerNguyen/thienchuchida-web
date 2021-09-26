@@ -15,12 +15,17 @@ import Admin from "./components/Admin/Admin";
 import Profile from "./components/Profile/Profile";
 import AdminRestrictedRoute from "./route/AdminRestrictedRoute";
 import SignUp from "./components/Forms/SignUp";
+import useDisableRightClick from "./hooks/useDisableRightClick";
 
 function App() {
   const dispatch = useDispatch();
   const [isWaiting, setIsWaiting] = useState(true);
 
+  // Disable right click
+  useDisableRightClick();
+
   useEffect(() => {
+    // Set cute title for this app
     document.title = "Thiên Chu Chi Dạ";
     // Check whether user is logged in yet via cookie
     UserService.getProfile()
@@ -67,11 +72,10 @@ function App() {
             <Route path="/truyen/:bookSlug/:chapterId">
               <BookReader />
             </Route>
-            
+
             <Route path="/truyen/:bookSlug">
               <Book />
             </Route>
-
 
             <Route path="/" exact>
               <Home />

@@ -2,7 +2,9 @@
 
 .admin {
   &__wrapper {
-    margin-top: -6em !important;
+    @include tablet {
+      margin-top: -6em !important;
+    }
   }
   &__container,
   &__content {

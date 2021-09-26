@@ -26,6 +26,7 @@ import toastHelper from "../../../helpers/toastHelper";
 import ResourcePreviewModal from "../ResourceManager/ResourcePreviewModal";
 import { useHistory, useRouteMatch } from "react-router-dom";
 import path from "path";
+import ResourceImage from "../ResourceManager/ResourceImage";
 
 function ResourceSection({
   id,
@@ -39,7 +40,6 @@ function ResourceSection({
   const [data, setData] = useState(null);
   const [originalName, setOriginalName] = useState("");
   useEffect(() => {
-    // console.log("id: ", id);
     ResourceService.getResourceMetadata(id).then((response) => {
       const { data } = response.data;
       setData(data);
@@ -229,14 +229,7 @@ export default function BookChapterEditor() {
               }}
             >
               <Col sm={12} md={10} lg={8} xl={6}>
-                <img
-                  src={
-                    thumbnailData
-                      ? imageHelper.getRawResourceUrl(thumbnailData._id)
-                      : ServerConfig.DEFAULT_THUMBNAIL
-                  }
-                  alt="Chỉnh sửa ảnh bìa"
-                />
+                <ResourceImage id={chapterData.thumbnail._id} alt="Chỉnh sửa ảnh bìa" />
               </Col>
               <Col>
                 <small>Nhấn vào ảnh bìa để thay đổi</small>

@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from "react";
-import { Modal, Form, Pagination, Button } from "react-bootstrap";
+import { Modal, Form, Pagination, Button, Container, Row } from "react-bootstrap";
 import "./ResourceSelectModal.scss";
 import ResourceItem from "./ResourceItem";
 import ResourceService from "../../../services/ResourceService";
 
-const DATA_OFFSET = 6;
+const DATA_OFFSET = 8;
 const PAGE_RANGE_OFFSET = 2;
 
 export default function ResourceSelectModal({
@@ -53,7 +53,7 @@ export default function ResourceSelectModal({
   useEffect(() => {
     if (data != null) {
       const dataLength = data.length;
-      setTotalPage(Math.floor(dataLength / DATA_OFFSET));
+      setTotalPage(Math.ceil(dataLength / DATA_OFFSET));
     }
   }, [data]);
 
@@ -123,7 +123,6 @@ export default function ResourceSelectModal({
     if (data) {
       Promise.all(data.filter((_, i) => startIndex <= i && i <= endIndex)).then(
         (values) => {
-          // console.log("values ", values);
           setSelectValues([...selectValues, ...values]);
         }
       );
@@ -160,8 +159,9 @@ export default function ResourceSelectModal({
             placeholder={`Tìm kiếm tên ảnh, ...`}
           />
         </Form>
-        <div className="d-flex flex-wrap ">
-          {data &&
+        <Container fluid>
+          <Row>
+            {data &&
             data.map((e, i) => {
               if (startIndex <= i && i <= endIndex) {
                 return (
@@ -180,7 +180,8 @@ export default function ResourceSelectModal({
               }
               return null;
             })}
-        </div>
+          </Row>
+        </Container>
       </Modal.Body>
       <Modal.Footer>
         {multiple && (

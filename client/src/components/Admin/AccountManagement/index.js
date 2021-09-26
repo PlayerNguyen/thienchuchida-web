@@ -92,9 +92,6 @@ function AccountManagement() {
         setUsers([...users.filter((_user) => _user._id !== newUser._id), { ...newUser }]);
         handleCloseModifyModal();
       })
-      .catch((err) => {
-        toast.error(err.response.data);
-      })
       .finally(() => {
         setLoading(false);
       });
@@ -107,9 +104,6 @@ function AccountManagement() {
         toast.success(resp.data.message);
         setUsers(users.filter((_user) => _user._id !== _id));
         handleCloseConfirmModal();
-      })
-      .catch((err) => {
-        toast.error(err.response.data);
       })
       .finally(() => {
         setLoading(false);
@@ -141,9 +135,6 @@ function AccountManagement() {
           }))
         );
         handleCloseConfirmModal();
-      })
-      .catch((err) => {
-        toast.error(err.response.data);
       })
       .finally(() => {
         setLoading(false);
@@ -181,9 +172,10 @@ function AccountManagement() {
           <Button variant="link" onClick={() => handleOpenModifyModal(record)}>
             Chỉnh sửa
           </Button>
-          <Button variant="link" onClick={() => handleOpenConfirmDeleteUserModal(record)}>
+          {/* Merge to edit modal */}
+          {/* <Button variant="link" onClick={() => handleOpenConfirmDeleteUserModal(record)}>
             Xoá
-          </Button>
+          </Button> */}
         </>
       ),
     },
@@ -194,7 +186,7 @@ function AccountManagement() {
       <Button variant="link" className="w-fit" onClick={() => handleOpenModifyModal()}>
         Thêm tài khoản mới
       </Button>
-      <Table responsive>
+      <Table responsive bordered striped>
         <thead>
           <tr>
             <th>#</th>

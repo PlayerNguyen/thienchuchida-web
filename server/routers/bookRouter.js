@@ -154,7 +154,7 @@ router.get("/book/:bookId/chapters/:chapterId", async (req, res, next) => {
   res.json({ data: chapter });
 });
 
-router.delete(`/book/:id`, async (req, res, next) => {
+router.delete(`/book/:id`, getAdminAuthorize, async (req, res, next) => {
   try {
     const { id } = req.params;
     // Deleted this book

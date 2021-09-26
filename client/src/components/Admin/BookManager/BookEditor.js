@@ -20,7 +20,8 @@ import { toast } from "react-toastify";
 import BookChapterCreateModal from "./BookChapterCreateModal";
 import { faTimes } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-
+import ResourceItem from "../ResourceManager/ResourceItem";
+import ResourceImage from "../ResourceManager/ResourceImage";
 
 function Tag({ id, onClick, data }) {
   return (
@@ -117,7 +118,7 @@ export default function BookEditor() {
   };
 
   const handleTagDialogComplete = (selectedTags) => {
-    setTags([...selectedTags])
+    setTags([...selectedTags]);
   };
 
   return (
@@ -152,14 +153,7 @@ export default function BookEditor() {
                       setVisibleThumbnailSelect(true);
                     }}
                   >
-                    <img
-                      src={
-                        bookData && bookData.thumbnail
-                          ? imageHelper.getRawResourceUrl(bookData.thumbnail)
-                          : ServerConfig.DEFAULT_THUMBNAIL
-                      }
-                      alt="Chỉnh sửa ảnh bìa"
-                    />
+                    <ResourceImage id={bookData.thumbnail} />
                     <small>Nhấn vào ảnh bìa để thay đổi</small>
                   </div>
                 </Form.Group>
@@ -231,7 +225,6 @@ export default function BookEditor() {
               >
                 Chỉnh sửa thẻ
               </Button>
-              
             </div>
           </Form>
           <Form>
@@ -296,13 +289,13 @@ export default function BookEditor() {
           />
 
           <BookTagSelector
-                visible={isVisibleTagDialog}
-                tags={tags}
-                close={() => {
-                  setVisibleTagDialog(false);
-                }}
-                onComplete={handleTagDialogComplete}
-              />
+            visible={isVisibleTagDialog}
+            tags={tags}
+            close={() => {
+              setVisibleTagDialog(false);
+            }}
+            onComplete={handleTagDialogComplete}
+          />
         </>
       )}
     </div>

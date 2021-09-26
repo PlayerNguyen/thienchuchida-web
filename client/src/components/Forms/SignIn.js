@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import "./Forms.scss";
 import UserService from "../../services/UserService";
-import { Link, useHistory } from "react-router-dom";
+import { useHistory } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { setPersistUser, setSignedIn } from "../../app/slices/auth";
 import { toast } from "react-toastify";

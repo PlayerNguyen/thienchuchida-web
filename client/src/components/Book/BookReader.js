@@ -4,6 +4,7 @@ import { useParams } from "react-router";
 import { Link } from "react-router-dom";
 import imageHelper from "../../helpers/imageHelper";
 import BookService from "../../services/BookService";
+import ResourceImage from "../Admin/ResourceManager/ResourceImage";
 import Breadcrumb from "../Breadcrumb/Breadcrumb";
 import Header from "../Header/Header";
 import "./BookReader.scss";
@@ -35,24 +36,31 @@ export default function BookReader() {
       {/*  This body contains all image inside */}
       <Container className="reader__body">
         {/* Breadcrumb */}
-        <Breadcrumb
-          data={[
-            { url: "/", value: "Trang chủ" },
-            { url: "/", value: `${data && data.book.title}` },
-            { url: `/${data && data.slug}`, value: data && data.name },
-          ]}
-        />
+        <Row>
+          <Col></Col>
+          <Col sm={12} md={10} lg={8}>
+            <Breadcrumb
+              data={[
+                { url: "/", value: "Trang chủ" },
+                { url: "/", value: `${data && data.book.title}` },
+                { url: `/${data && data.slug}`, value: data && data.name },
+              ]}
+            />
+          </Col>
+          <Col></Col>
+        </Row>
         {data &&
           data.content.map((e, i) => {
             return (
               <Row key={i}>
                 <Col></Col>
                 <Col sm={12} md={10} lg={8}>
-                  <img
+                  {/* <img
                     src={imageHelper.getRawResourceUrl(e)}
                     alt={`resource id ${e}`}
                     className="reader__image"
-                  />
+                  /> */}
+                  <ResourceImage id={e} alt={`${data.name} - ${i}`} />
                 </Col>
                 <Col></Col>
               </Row>
@@ -60,7 +68,7 @@ export default function BookReader() {
           })}
 
         {/* Footer shows the navigation to another episode, things, links,... */}
-        <div className="reader__footer mt-3">
+        <div className="reader__footer pt-3 pb-3">
           <Row>
             <Col></Col>
             <Col className="d-flex flex-row-reverse" sm={12} md={10} lg={8}>
@@ -72,6 +80,15 @@ export default function BookReader() {
             </Col>
             <Col></Col>
           </Row>
+          <Container>
+            {/* Title */}
+            <Row>
+              <Col><h1 className="text-light fw-bold">Truyện liên quan</h1></Col>
+            </Row>
+            <Row>
+
+            </Row>
+          </Container>
         </div>
       </Container>
     </div>

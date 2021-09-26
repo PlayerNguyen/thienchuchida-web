@@ -1,8 +1,8 @@
 import React from "react";
 import { Modal } from "react-bootstrap";
-import Config from "../../../config/server.config";
-export default function ResourcePreviewModal({ data, visible, close }) {
+import ResourceImage from "./ResourceImage";
 
+export default function ResourcePreviewModal({ data, visible, close }) {
   return (
     <>
       <Modal
@@ -13,22 +13,15 @@ export default function ResourcePreviewModal({ data, visible, close }) {
         onHide={close}
       >
         <Modal.Header closeButton>
-          <Modal.Title id="contained-modal-title-vcenter">
+          <Modal.Title
+            id="contained-modal-title-vcenter"
+            className="text-break"
+          >
             {data && data.originalName}
           </Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          <div className="preview__wrapper">
-            <img
-              src={
-                data
-                  ? `${Config.SERVER_API_URL}/resources/resource/${data._id}/raw`
-                  : Config.DEFAULT_THUMBNAIL
-              }
-              alt="preview"
-              className="preview__image"
-            />
-          </div>
+          <ResourceImage id={data && data._id} />
         </Modal.Body>
         <Modal.Footer>
           {/* <Button onClick={props.onHide}>Close</Button> */}

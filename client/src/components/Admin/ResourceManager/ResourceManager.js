@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Pagination, Button, Row, Col } from "react-bootstrap";
+import { Pagination, Button, Row, Col, Container } from "react-bootstrap";
 import ResourceService from "../../../services/ResourceService";
 import "./ResourceManager.scss";
 import UploadModal from "./UploadModal";
@@ -80,13 +80,11 @@ function ResourceFooter({ totalSize, setPage, page }) {
 }
 
 export default function ResourceManager() {
-  /**
-   * Select variables
-   */
   const [selection, setSelection] = useState([]);
+  const [data, setData] = useState(null);
   const [isUploadVisible, setUploadVisible] = useState(false);
   const [isRemoveVisible, setRemoveVisible] = useState(false);
-  const [data, setData] = useState(null);
+  // Page (pagination) utility variables
   const [totalSize, setTotalSize] = useState(0);
   const [page, setPage] = useState(1);
   const [loading, setLoading] = useState(false);
@@ -148,8 +146,7 @@ export default function ResourceManager() {
 
   const handleSelectAll = () => {
     const selectItems = data.filter(
-      (_e, i) =>
-        startIndex <= i && i < endIndex && selection.indexOf(_e) === -1
+      (_e, i) => startIndex <= i && i < endIndex && selection.indexOf(_e) === -1
     );
     setSelection([...selection, ...selectItems]);
   };
@@ -166,7 +163,7 @@ export default function ResourceManager() {
       {data && data.length > 0 ? (
         <>
           {/* selected interact action bar */}
-          <Row className="resource__container">
+          <Container fluid className="resource__container">
             {/* {selection.length > 0 && ()} */}
             <Col className="resourceitem__actionbar actionbar">
               <div className="actionbar__block--left">
@@ -191,7 +188,7 @@ export default function ResourceManager() {
                 </span>
               </div>
             </Col>
-            <Col className="resourceitem__wrapper d-flex flex-wrap" sm={12}>
+            <Row>
               {data
                 ? data.map((ele, index) => {
                     if (startIndex <= index && index < endIndex) {
@@ -210,8 +207,8 @@ export default function ResourceManager() {
                     return null;
                   })
                 : null}
-            </Col>
-          </Row>
+            </Row>
+          </Container>
           {data && !loading ? (
             <div className="resources__footer">
               <ResourceFooter

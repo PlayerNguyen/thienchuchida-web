@@ -14,7 +14,6 @@ import {
 import TagService from "../../../services/TagService";
 
 export default function BookTagSelector({ tags, visible, close, onComplete }) {
-  console.log(tags);
   const [searching, setSearching] = useState(false);
   const [query, setQuery] = useState("");
   const [searchData, setSearchData] = useState(null);

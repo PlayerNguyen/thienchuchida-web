@@ -1,9 +1,13 @@
+import { faArchive, faClock } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React, { useState, useEffect } from "react";
-import { Card, Button, Modal, Col, Row } from "react-bootstrap";
-import Config from "../../../config/server.config";
+import { Card, Button, Col, Row } from "react-bootstrap";
 import ResourceService from "../../../services/ResourceService";
+import ResourceImage from "./ResourceImage";
 import "./ResourceItem.scss";
 import ResourcePreviewModal from "./ResourcePreviewModal";
+import bytes from 'bytes'
+import momentHelper from '../../../helpers/momentHelper'
 
 export default function ResourceItem({
   id,
@@ -30,25 +34,36 @@ export default function ResourceItem({
   };
 
   return (
-    <Col md={4} sm={12}>
+    <Col sm={12} md={6} lg={3} className="mb-2">
       <Card
-        className={`resourceitem ${selected ? `resourceitem--selected` : ``}`}
+        className={`resourceitem w-100 ${
+          selected ? `resourceitem--selected` : ``
+        }`}
         onClick={onClick}
       >
-        <Card.Img
-            src={
-              data
-                ? `${Config.SERVER_API_URL}/resources/resource/${data._id}/raw`
-                : Config.DEFAULT_THUMBNAIL
-            }
-            className={`${minimizeThumbnail && `thumbnail--small`}`}
-            alt="A thumbnail for resource"
-          />
+        <ResourceImage
+          id={data && data._id}
+          height={minimizeThumbnail ? "150px" : "auto"}
+          onClick={() => setPreviewVisible(true)}
+        />
 
         {!disableInfo && (
           <Card.Body>
             <Card.Title>{data && data.originalName}</Card.Title>
-            <span>Text</span>
+            <div className="text-secondary">
+              <Row>
+                <Col xs={3}>
+                  <FontAwesomeIcon icon={faArchive} />
+                </Col>
+                <Col xs={9}>{data && bytes(Number(data.size))}</Col>
+              </Row>
+              <Row>
+                <Col xs={3}>
+                  <FontAwesomeIcon icon={faClock} />
+                </Col>
+                <Col xs={9}>{data && momentHelper(data.createdAt).fromNow()}</Col>
+              </Row>
+            </div>
           </Card.Body>
         )}
         <Card.Footer>
@@ -61,7 +76,7 @@ export default function ResourceItem({
             Xem
           </Button>
           <Button onClick={onSelect} variant="link">
-            Chọn
+            {!selected ? `Chọn` : `Huỷ chọn`}
           </Button>
         </Card.Footer>
       </Card>

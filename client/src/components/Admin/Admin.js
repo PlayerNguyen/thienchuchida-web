@@ -44,6 +44,11 @@ export default function Admin() {
             <AdminRestrictedRoute path={`${path}/quan-ly-tai-khoan`}>
               <AccountManagement />
             </AdminRestrictedRoute>
+            <AdminRestrictedRoute path={`${path}/`}>
+              <Container className="text-center p-5">
+                <h1 className='fw-bold'>Hãy chọn một mục để tiếp tục</h1>
+              </Container>
+            </AdminRestrictedRoute>
           </Switch>
         </Col>
         {/* <Row></Row> */}

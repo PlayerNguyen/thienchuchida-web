@@ -3,8 +3,6 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React from "react";
 import { Col } from "react-bootstrap";
 import { Link } from "react-router-dom";
-import Config from "../../config/server.config";
-import imageHelper from "../../helpers/imageHelper";
 import momentHelper from "../../helpers/momentHelper";
 import "./CardItem.scss";
 import Thumbnail from "./Thumbnail";
@@ -14,24 +12,8 @@ export default function CardItem({ data }) {
     <Col md={12} lg={6}>
       <Link className="bookcard" to={`/truyen/${data ? data.slug : null}`}>
         <div className="bookcard__body">
-          {/* <div className="bookcard__body__thumbnail">
-            <img
-              src={
-                data.thumbnail
-                  ? imageHelper.getRawResourceUrl(data.thumbnail)
-                  : Config.DEFAULT_THUMBNAIL
-              }
-              alt="Thumbnail"
-              // className="thumbnail--small"
-            />
-          </div> */}
           <Thumbnail
-            src={
-              data.thumbnail
-                ? imageHelper.getRawResourceUrl(data.thumbnail)
-                : Config.DEFAULT_THUMBNAIL
-                
-            }
+            id={data.thumbnail}
             alt={`thumbnail `}
           />
         </div>

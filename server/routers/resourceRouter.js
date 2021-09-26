@@ -101,7 +101,7 @@ router.get("/search", getAdminAuthorize, async (req, res, next) => {
   }
 });
 
-router.get("/resource/:id", async (req, res, next) => {
+router.get("/resource/metadata/:id", async (req, res, next) => {
   const { id } = req.params;
   try {
     const doc = await findFileMetadata(id, false);
@@ -111,14 +111,14 @@ router.get("/resource/:id", async (req, res, next) => {
       throw new MiddlewareError("File not found", 404);
     }
 
-    res.json({ data: doc, url: { raw: `/resources/resource/${id}/raw` } });
+    res.json({ data: doc, url: { raw: `/resources/resource/raw/${id}` } });
   } catch (err) {
     next(err);
   }
 });
 
 router.get(
-  "/resource/:id/raw",
+  "/resource/raw/:id",
   ResourceMiddleware.requestPrivateAccess,
   async (req, res, next) => {
     const { id } = req.params;
@@ -132,8 +132,7 @@ router.get(
 
       // Set a header to mimetype and send file
       res.setHeader("Content-Type", doc.mimetype);
-      res.send(doc.data);
-      // res.send(await insertTextIntoImage(doc.data, "Haiii"));
+      res.send(doc.data.toString('base64'));
     } catch (err) {
       next(err);
     }

@@ -77,12 +77,12 @@ async function doRefreshToken(refreshTokenId) {
  * @param {*} param0
  * @returns A promise contains document of user inside
  */
-async function signUp(username, password, email) {
+async function signUp(username, display, password, email) {
   const existedUser = await User.findOne({
     $or: [{ username: username }, { email: email }],
   });
 
-  // Existed
+  // Whether exist this user, throw an error
   if (existedUser) {
     throw new MiddlewareError(
       "Tên tài khoản hoặc email của bạn đã có người sử dụng. Hãy chọn tên tài khoản khác."
@@ -167,5 +167,5 @@ module.exports = {
   signOut,
   deleteUser,
   updateUser,
-    toggleAdmin,
+  toggleAdmin,
 };

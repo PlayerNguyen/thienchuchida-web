@@ -19,7 +19,7 @@ async function removeResource(id) {
 }
 
 async function getResourceMetadata(id) {
-  return axiosInstance.get(`/resources/resource/${id}`);
+  return axiosInstance.get(`/resources/resource/metadata/${id}`);
 }
 
 const ResourceService = {
