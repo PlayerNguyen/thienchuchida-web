@@ -7,9 +7,9 @@
     "install:client": "cd client && yarn install ",
     "install:server": "cd server && yarn install ",
     "install": "yarn run install:client && yarn run install:server",
-    "dev": "concurrently -k --prefix=\"{index}: \" \"yarn run dev:client\"  \"npm run dev:server\"",
-    "dev:client": "cd client && yarn start",
-    "dev:server": "cd server && yarn run dev",
+    "dev": "concurrently -k --names \"CLIENT,SERVER\" -c \"green,red\" \"yarn run dev:client\"  \"npm run dev:server\"",
+    "dev:client": "yarn --cwd client run start",
+    "dev:server": "yarn --cwd server run dev",
     "deploy": "cd client && yarn build --production"
   },
   "repository": {
@@ -18,7 +18,6 @@
   },
   "keywords": [],
   "author": "",
-  "license": "",
   "bugs": {
     "url": "https://github.com/PlayerNguyen/thienchuchida-web/issues"
   },
