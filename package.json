@@ -7,7 +7,7 @@
     "install:client": "cd client && yarn install ",
     "install:server": "cd server && yarn install ",
     "install": "yarn run install:client && yarn run install:server",
-    "dev": "concurrently --prefix=\"{index}: \" \"yarn run dev:client\"  \"npm run dev:server\"",
+    "dev": "concurrently -k --prefix=\"{index}: \" \"yarn run dev:client\"  \"npm run dev:server\"",
     "dev:client": "cd client && yarn start",
     "dev:server": "cd server && yarn run dev",
     "deploy": "cd client && yarn build --production"
