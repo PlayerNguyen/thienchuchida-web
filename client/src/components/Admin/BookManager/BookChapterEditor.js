@@ -204,10 +204,6 @@ export default function BookChapterEditor() {
     setVisibleDelete(true);
   };
 
-  const handleBack = () => {
-    history.back()
-  }
-
   return (
     <div className="editor__wrapper">
       {!chapterData ? (
@@ -340,9 +336,6 @@ export default function BookChapterEditor() {
               mất, tuy nhiên dữ liệu sẽ không bị ảnh hưởng.
             </Modal.Body>
             <Modal.Footer>
-              <Button variant="primary" onClick={handleBack}>
-                Trở về chỉnh sửa truyện
-              </Button>
               <Button variant="primary" onClick={handleCloseDelete}>
                 Huỷ
               </Button>

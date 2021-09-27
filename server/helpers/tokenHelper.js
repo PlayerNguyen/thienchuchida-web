@@ -6,17 +6,20 @@ async function generateAccessToken(user) {
     throw new Error("user not found in token");
   }
 
+  const { admin, username, _id, display } = user;
   // Fields check
-  if (user.admin === undefined && !user.username && !user._id) {
-    throw new Error("check user fields for admin | username | _id");
-  }
+  // if (user.admin === undefined && !user.username && !user._id && !user.display) {
+  // }
+  if (admin === undefined || !username || !_id || !display)
+    throw new Error("check user fields for admin | username | _id | display");
 
   // Do sign token
   const signedToken = jwt.sign(
     {
-      admin: user.admin,
-      username: user.username,
-      _id: user._id,
+      admin,
+      username,
+      _id,
+      display,
     },
     process.env.ACCESS_TOKEN_SECRET,
     {
@@ -33,18 +36,21 @@ async function generateRefreshToken(user, userAgent, address) {
   if (!user) {
     throw new Error("user not found in token");
   }
-
+  const { admin, username, _id, display } = user;
   // Fields check
-  if (user.admin === undefined && !user.username && !user._id) {
-    throw new Error("check user fields for admin | username | _id");
-  }
+  // if (user.admin === undefined && !user.username && !user._id) {
+  //   throw new Error("check user fields for admin | username | _id");
+  // }
+  if (admin === undefined || !username || !_id || !display)
+    throw new Error("check user fields for admin | username | _id | display");
 
   // Do sign token
   const signedToken = jwt.sign(
     {
-      admin: user.admin,
-      username: user.username,
-      _id: user._id,
+      admin,
+      username,
+      _id,
+      display,
       userAgent,
       address,
     },

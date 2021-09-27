@@ -53,12 +53,7 @@ export default function BookReader() {
             return (
               <Row key={i}>
                 <Col></Col>
-                <Col sm={12} md={10} lg={8}>
-                  {/* <img
-                    src={imageHelper.getRawResourceUrl(e)}
-                    alt={`resource id ${e}`}
-                    className="reader__image"
-                  /> */}
+                <Col sm={12} md={10} lg={8} className="p-0">
                   <ResourceImage id={e} alt={`${data.name} - ${i}`} />
                 </Col>
                 <Col></Col>

@@ -16,10 +16,12 @@ import Profile from "./components/Profile/Profile";
 import AdminRestrictedRoute from "./route/AdminRestrictedRoute";
 import SignUp from "./components/Forms/SignUp";
 import useDisableRightClick from "./hooks/useDisableRightClick";
+import { Container } from "react-bootstrap";
 
 function App() {
   const dispatch = useDispatch();
   const [isWaiting, setIsWaiting] = useState(true);
+  const [networkError, setNetworkError] = useState(false);
 
   // Disable right click
   useDisableRightClick();
@@ -33,7 +35,12 @@ function App() {
         dispatch(setSignedIn(true));
         dispatch(setPersistUser(response.data));
       })
-      .catch(() => {
+      .catch((err) => {
+        // Network error
+        if (!err.response) {
+          setNetworkError(true);
+          return;
+        }
         // Failed to sign in
         dispatch(setSignedIn(false));
       })
@@ -46,45 +53,57 @@ function App() {
     <div className="app__wrapper">
       <div className="app__background"></div>
       <div className="app__background__outer"></div>
-      <div className="app__content">
-        {isWaiting ? (
-          <></>
-        ) : (
-          <Switch>
-            <AdminRestrictedRoute path="/admin">
-              <Admin />
-            </AdminRestrictedRoute>
+      {!networkError ? (
+        <div className="app__content">
+          {isWaiting ? (
+            <></>
+          ) : (
+            <Switch>
+              <AdminRestrictedRoute path="/admin">
+                <Admin />
+              </AdminRestrictedRoute>
 
-            <RestrictedRoute path="/thong-tin">
-              <Profile />
-            </RestrictedRoute>
+              <RestrictedRoute path="/thong-tin">
+                <Profile />
+              </RestrictedRoute>
 
-            <RestrictedRoute path="/dang-xuat">
-              <SignOut />
-            </RestrictedRoute>
+              <RestrictedRoute path="/dang-xuat">
+                <SignOut />
+              </RestrictedRoute>
 
-            <UnauthorizeRoute path="/dang-ky">
-              <SignUp />
-            </UnauthorizeRoute>
+              <UnauthorizeRoute path="/dang-ky">
+                <SignUp />
+              </UnauthorizeRoute>
 
-            <UnauthorizeRoute path="/dang-nhap">
-              <SignIn />
-            </UnauthorizeRoute>
+              <UnauthorizeRoute path="/dang-nhap">
+                <SignIn />
+              </UnauthorizeRoute>
 
-            <Route path="/truyen/:bookSlug/:chapterId">
-              <BookReader />
-            </Route>
+              <Route path="/truyen/:bookSlug/:chapterId">
+                <BookReader />
+              </Route>
 
-            <Route path="/truyen/:bookSlug">
-              <Book />
-            </Route>
+              <Route path="/truyen/:bookSlug">
+                <Book />
+              </Route>
 
-            <Route path="/" exact>
-              <Home />
-            </Route>
-          </Switch>
-        )}
-      </div>
+              <Route path="/" exact>
+                <Home />
+              </Route>
+            </Switch>
+          )}
+        </div>
+      ) : (
+        <Container fluid>
+          <div className="text-light text-center pt-5">
+            <h1 className="m-5">
+              Đã có lỗi khi kết nối đến máy chủ. <br />
+              Vui lòng quay lại sau vài phút.
+            </h1>
+            <h1 className="text-monospace fw-light" style={{fontSize: 40}}>T.T</h1>
+          </div>
+        </Container>
+      )}
     </div>
   );
 }

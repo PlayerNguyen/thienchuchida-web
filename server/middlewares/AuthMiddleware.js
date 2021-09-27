@@ -5,20 +5,24 @@ const TokenNotFoundError = require("../errors/TokenNotFoundError");
 const CookieHelper = require("../helpers/cookieHelper");
 
 function getAuthorize(req, res, next) {
-  const { AccessToken } = req.cookies;
-  // No access token, mean unauthorize
-  if (!AccessToken) {
-    throw new TokenNotFoundError("Access token not found.");
+  try {
+    const { AccessToken } = req.cookies;
+    // No access token, mean unauthorize
+    if (!AccessToken) {
+      throw new TokenNotFoundError("Access token not found.");
+    }
+
+    // Validate token
+    const data = jsonwebtoken.verify(
+      AccessToken,
+      process.env.ACCESS_TOKEN_SECRET
+    );
+
+    req.currentUser = data;
+    next();
+  } catch (err) {
+    next(err);
   }
-
-  // Validate token
-  const data = jsonwebtoken.verify(
-    AccessToken,
-    process.env.ACCESS_TOKEN_SECRET
-  );
-
-  req.currentUser = data;
-  next();
 }
 
 async function getAdminAuthorize(req, res, next) {
@@ -57,29 +61,33 @@ async function getAuthorizeSilent(req, res, next) {
     if (!AccessToken) {
       // Not exist refresh token too
       if (!RefreshToken) {
-        throw new TokenNotFoundError("Invalid or not found a token to auth")
+        throw new TokenNotFoundError("Invalid or not found a token to auth");
       } else {
         const response = await doRefreshToken(RefreshToken);
         const { _id, username, admin } = response;
         // console.log(response);
-        CookieHelper.setTokenCookies(res, response.refreshToken, response.accessToken);
-  
+        CookieHelper.setTokenCookies(
+          res,
+          response.refreshToken,
+          response.accessToken
+        );
+
         req.currentUser = { _id, username, admin };
         next();
       }
       return;
     }
-  
+
     // Validate token
     const data = jsonwebtoken.verify(
       AccessToken,
       process.env.ACCESS_TOKEN_SECRET
     );
-  
+
     req.currentUser = data;
     next();
-  } catch(err) {
-    next(err)
+  } catch (err) {
+    next(err);
   }
 }
 

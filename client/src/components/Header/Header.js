@@ -171,7 +171,7 @@ export default function Header() {
                   <NavDropdown
                     title={
                       isSignedIn
-                        ? persistUser && persistUser.username
+                        ? persistUser && persistUser.display
                         : `Account`
                     }
                     items={userInfoItems}

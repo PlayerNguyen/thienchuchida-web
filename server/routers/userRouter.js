@@ -120,9 +120,9 @@ router.post("/signout", async (req, res, next) => {
 
 router.post("/profile", getAuthorizeSilent, (req, res, next) => {
   try {
-    const { _id, username, admin } = req.currentUser;
+    const { _id, username, admin, display } = req.currentUser;
 
-    res.json({ _id, username, admin });
+    res.json({ _id, username, admin, display });
   } catch (err) {
     next(err);
   }
