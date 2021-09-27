@@ -3,22 +3,43 @@
 @import "bootstrap/scss/bootstrap.scss";
 
 .app {
-  &-wrapper {
-    position: relative;
-    background: #000000c9 !important;
-    // padding-top: 4em !important;
-    // padding-bottom: 4em !important;
+  &__wrapper {
+    // position: relative;
+
+    @include mobile {
+      // padding-top: 6em !important;
+      // padding-bottom: 6em !important;
+      // margin-top: 6em !important;
+    }
+  }
+  &__content {
     @include mobile {
       padding-top: 6em !important;
-      padding-bottom: 6em !important;
+    }
+  }
+  &__background {
+    position: fixed;
+    top: 0;
+    left: 0;
+
+    background-color: #000000d7 !important;
+    background: url(assets/Background.png) center fixed;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    width: 100%;
+    height: 100%;
+    z-index: -2;
+
+    &__outer {
+      position: fixed;
+      width: 100%;
+      height: 100%;
+      z-index: -1;
+      background-color: #000000d7 !important;
     }
   }
 }
-
-// .container {
-//   margin: 5em;
-//   padding: 0.8em 3em;
-// }
 
 .link {
   text-decoration: none;

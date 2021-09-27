@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 import { Container, Col, Row, Button } from "react-bootstrap";
 import { useParams } from "react-router";
 import { Link } from "react-router-dom";
-import imageHelper from "../../helpers/imageHelper";
 import BookService from "../../services/BookService";
 import ResourceImage from "../Admin/ResourceManager/ResourceImage";
 import Breadcrumb from "../Breadcrumb/Breadcrumb";

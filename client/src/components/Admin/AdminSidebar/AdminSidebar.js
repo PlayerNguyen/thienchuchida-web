@@ -14,7 +14,6 @@ export default function AdminAside() {
   useEffect(() => {
     // Inspect effect here
     // const { pathname } = location;
-    console.log(pathname);
     setActiveMenu(pathname.replace("/admin/", ""));
   }, [pathname]);
   const menu = [

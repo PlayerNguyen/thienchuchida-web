@@ -22,6 +22,7 @@ export default function BookCreateModal({ visible, onHide }) {
   const handlePasswordChange = ({ target }) => {
     setPassword(target.value);
   };
+
   const handleSubmit = (e) => {
     e.preventDefault();
     if (!valid) {

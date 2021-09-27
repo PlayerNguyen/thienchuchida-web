@@ -11,8 +11,6 @@ import {
 import { useParams } from "react-router";
 import BookService from "../../../services/BookService";
 import "./Editor.scss";
-import ServerConfig from "../../../config/server.config";
-import imageHelper from "../../../helpers/imageHelper";
 import ResourceSelectModal from "../ResourceManager/ResourceSelectModal";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
@@ -206,6 +204,10 @@ export default function BookChapterEditor() {
     setVisibleDelete(true);
   };
 
+  const handleBack = () => {
+    history.back()
+  }
+
   return (
     <div className="editor__wrapper">
       {!chapterData ? (
@@ -229,7 +231,10 @@ export default function BookChapterEditor() {
               }}
             >
               <Col sm={12} md={10} lg={8} xl={6}>
-                <ResourceImage id={chapterData.thumbnail._id} alt="Chỉnh sửa ảnh bìa" />
+                <ResourceImage
+                  id={chapterData && thumbnailData && thumbnailData._id}
+                  alt="Chỉnh sửa ảnh bìa"
+                />
               </Col>
               <Col>
                 <small>Nhấn vào ảnh bìa để thay đổi</small>
@@ -335,6 +340,9 @@ export default function BookChapterEditor() {
               mất, tuy nhiên dữ liệu sẽ không bị ảnh hưởng.
             </Modal.Body>
             <Modal.Footer>
+              <Button variant="primary" onClick={handleBack}>
+                Trở về chỉnh sửa truyện
+              </Button>
               <Button variant="primary" onClick={handleCloseDelete}>
                 Huỷ
               </Button>

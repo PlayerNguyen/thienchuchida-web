@@ -8,19 +8,16 @@ import {
   ButtonGroup,
 } from "react-bootstrap";
 import "./Editor.scss";
-import ServerConfig from "../../../config/server.config";
+
 import { useParams, useRouteMatch } from "react-router";
 import BookService from "../../../services/BookService";
 import { Link } from "react-router-dom";
 import momentHelper from "../../../helpers/momentHelper";
 import BookTagSelector from "./BookTagSelector";
 import ResourceSelectModal from "../ResourceManager/ResourceSelectModal";
-import imageHelper from "../../../helpers/imageHelper";
+
 import { toast } from "react-toastify";
 import BookChapterCreateModal from "./BookChapterCreateModal";
-import { faTimes } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import ResourceItem from "../ResourceManager/ResourceItem";
 import ResourceImage from "../ResourceManager/ResourceImage";
 
 function Tag({ id, onClick, data }) {

@@ -8,8 +8,6 @@ import BookCreateModal from "./BookCreateModal";
 import BookRemoveConfirmModel from "./BookRemoveConfirmModel";
 import ResourceImage from "../ResourceManager/ResourceImage";
 import "./Selector.scss";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faLock } from "@fortawesome/free-solid-svg-icons";
 
 
 export default function BookSelector() {
