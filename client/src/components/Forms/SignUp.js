@@ -8,6 +8,7 @@ import Header from "../Header/Header";
 
 export default function SignUp() {
   const [username, setUsername] = useState("");
+  const [display, setDisplay] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [repassword, setRepassword] = useState("");
@@ -30,6 +31,10 @@ export default function SignUp() {
 
   const handleRepasswordChange = (e) => {
     setRepassword(e.target.value);
+  };
+
+  const handleChangeDisplay = ({ target }) => {
+    setDisplay(target.value);
   };
 
   const handleSubmit = (e) => {
@@ -74,9 +79,13 @@ export default function SignUp() {
 
   useEffect(() => {
     setIsValid(
-      username !== "" && email !== "" && isPasswordValid && isRepasswordValid
+      username !== "" &&
+        email !== "" &&
+        isPasswordValid &&
+        isRepasswordValid &&
+        display !== ""
     );
-  }, [username, email, isPasswordValid, isRepasswordValid]);
+  }, [username, email, isPasswordValid, isRepasswordValid, display]);
 
   return (
     <div>
@@ -86,7 +95,24 @@ export default function SignUp() {
           <div className="form__header">
             <h1 className="form__header__title">Đăng ký</h1>
           </div>
+          {/* display name */}
           <div className="form__container">
+            <div className="form__container--block">
+              <div className="form--label">Tên hiển thị</div>
+              <div className="form__input__outer">
+                <input
+                  type="text"
+                  className="input"
+                  value={display}
+                  onChange={handleChangeDisplay}
+                />
+              </div>
+              <small className="input__description">
+                Dùng để hiển thị khi bạn tương tác với mọi người
+              </small>
+            </div>
+
+            {/* sign up username */}
             <div className="form__container--block">
               <div className="form--label">Tên đăng nhập</div>
               <div className="form__input__outer">
@@ -98,7 +124,7 @@ export default function SignUp() {
                 />
               </div>
             </div>
-
+            {/* email */}
             <div className="form__container--block">
               <div className="form--label">Email</div>
               <div className="form__input__outer">
@@ -110,6 +136,7 @@ export default function SignUp() {
                 />
               </div>
             </div>
+            {/* password */}
             <div className="form__container--block">
               <div className="form--label">Mật khẩu</div>
               <div className="form__input__outer">
@@ -127,6 +154,7 @@ export default function SignUp() {
                 </small>
               </div>
             </div>
+            {/* repassword */}
             <div className="form__container--block">
               <div className="form--label">Nhập lại mật khẩu</div>
               <div className="form__input__outer">
@@ -141,6 +169,7 @@ export default function SignUp() {
                 />
               </div>
             </div>
+            {/* sign up button */}
             <div className="form__container--block">
               <div className="form__input__outer">
                 <input
@@ -154,6 +183,7 @@ export default function SignUp() {
               </div>
             </div>
           </div>
+          
           <div className="form__footer">
             <a className="link link--secondary" href="/dang-nhap">
               Đăng nhập

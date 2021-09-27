@@ -1,0 +1,28 @@
+{
+  "name": "tccd",
+  "version": "1.0.0",
+  "description": "Thien Chu Chi Da Website",
+  "main": "index.js",
+  "scripts": {
+    "install:client": "cd client && yarn install ",
+    "install:server": "cd server && yarn install ",
+    "install": "yarn run install:client && yarn run install:server",
+    "dev": "concurrently \"yarn run dev:client\" \"npm run dev:server\"",
+    "dev:client": "cd client && yarn start",
+    "dev:server": "cd server && yarn run dev"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/PlayerNguyen/thienchuchida-web.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "",
+  "bugs": {
+    "url": "https://github.com/PlayerNguyen/thienchuchida-web/issues"
+  },
+  "homepage": "https://github.com/PlayerNguyen/thienchuchida-web#readme",
+  "dependencies": {
+    "concurrently": "^6.2.1"
+  }
+}

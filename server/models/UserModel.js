@@ -12,6 +12,10 @@ const userSchema = new mongoose.Schema({
     required: [true, "Tên đăng nhập không được để trống."],
     unique: true,
   },
+  display: {
+    type: String,
+    required: [true, "Tên hiển thị không được để trống."]
+  },
   password: {
     type: String,
     required: [true, "Mật khẩu không được để trống."],
