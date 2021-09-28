@@ -1,4 +1,5 @@
 const express = require("express");
+const { increaseView } = require("../controllers/bookChapterController");
 
 const BookChapterController = require("../controllers/bookChapterController");
 const BookController = require("../controllers/bookController");
@@ -67,14 +68,18 @@ router.put(`/chapter/:chapterId`, getAdminAuthorize, async (req, res, next) => {
 router.get(`/book/:bookSlug/chapter/:chapterSlug`, async (req, res, next) => {
   try {
     const { bookSlug, chapterSlug } = req.params;
+    // Get by a slug and book 
     const responseChapter = await BookChapterController.getChapterBySlug(
       bookSlug,
       chapterSlug
     );
+    // Get next chapter for viewer to watch
     const nextChapter = await BookChapterController.getNextChapter(
       responseChapter.book,
       responseChapter._id
     );
+    // Increase a view when visit hit the trigger
+    await increaseView(responseChapter._id);
     res.json({ data: responseChapter, nextChapter: nextChapter });
   } catch (err) {
     next(err);
