@@ -94,6 +94,17 @@ async function deleteChapter(chapterId) {
   return BookChapter.deleteOne({ _id: chapterId });
 }
 
+async function increaseView(chapterId) {
+  return BookChapter.findOne({ _id: chapterId }).then((doc) => {
+    // Chapter id not exist
+    if (!doc) {
+      throw new MiddlewareError("Không tìm thấy tập truyện để tương tác.", 404);
+    }
+    doc.views = doc.views + 1;
+    return doc.save();
+  });
+}
+
 const BookChapterController = {
   getChapterById,
   findAndUpdateChapter,
@@ -102,6 +113,7 @@ const BookChapterController = {
   getAllChaptersByBook,
   getNextChapter,
   deleteChapter,
+  increaseView
 };
 
 module.exports = BookChapterController;
