@@ -25,6 +25,13 @@ export default function ResourceImage({ id, alt, height, ...children }) {
           setLoading(false);
         });
     }
+
+    // Clean up the component
+    return () => {
+      setLoading(false)
+      setContentType(null)
+      setLoading(false)
+    };
   }, [id]);
 
   return (
@@ -40,9 +47,7 @@ export default function ResourceImage({ id, alt, height, ...children }) {
             style={{ height: height }}
           />
         ) : (
-          <div className="text-danger text-center p-5">
-            Ảnh không hợp lệ.
-          </div>
+          <div className="text-danger text-center p-5">Ảnh không hợp lệ.</div>
         )
       ) : (
         <div className="text-danger text-center p-5">

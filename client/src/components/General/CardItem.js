@@ -15,6 +15,7 @@ export default function CardItem({ data }) {
           <Thumbnail
             id={data.thumbnail}
             alt={`thumbnail `}
+            height={'200px'}
           />
         </div>
         <div className="bookcard__footer">

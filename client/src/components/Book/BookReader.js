@@ -12,7 +12,6 @@ export default function BookReader() {
   const { bookSlug, chapterId } = useParams();
   const [data, setData] = useState(null);
   const [nextChapter, setNextChapter] = useState(null);
-  console.log(data);
 
   useEffect(() => {
     BookService.getChapterBySlug(bookSlug, chapterId).then((response) => {

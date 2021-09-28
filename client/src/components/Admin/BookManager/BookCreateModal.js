@@ -10,6 +10,7 @@ export default function BookCreateModal({ visible, onHide }) {
   const [password, setPassword] = useState("");
   const history = useHistory();
   const [valid, setValid] = useState(false);
+  const [creating, setCreating] = useState(false);
 
   const handleTitleChange = ({ target }) => {
     setTitle(target.value);
@@ -34,13 +35,16 @@ export default function BookCreateModal({ visible, onHide }) {
   };
 
   const handleCreate = () => {
-    BookService.createBook({ title, description, password }).then(
-      (response) => {
+    setCreating(true);
+    BookService.createBook({ title, description, password })
+      .then((response) => {
         const { data, message } = response.data;
         toast.success(message);
         history.push(`quan-ly-truyen/${data._id}`);
-      }
-    );
+      })
+      .finally(() => {
+        setCreating(false);
+      });
   };
 
   useEffect(() => {
@@ -84,8 +88,12 @@ export default function BookCreateModal({ visible, onHide }) {
         <Button variant="danger" onClick={onHide}>
           Huỷ
         </Button>
-        <Button variant="primary" onClick={handleCreate} disabled={!valid}>
-          Tạo
+        <Button
+          variant="primary"
+          onClick={handleCreate}
+          disabled={!valid || creating}
+        >
+          {creating ? "Đang tạo..." : `Tạo`}
         </Button>
       </Modal.Footer>
     </Modal>

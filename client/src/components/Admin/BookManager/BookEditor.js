@@ -20,7 +20,7 @@ import { toast } from "react-toastify";
 import BookChapterCreateModal from "./BookChapterCreateModal";
 import ResourceImage from "../ResourceManager/ResourceImage";
 
-function Tag({ id, onClick, data }) {
+function Tag({ onClick, data }) {
   return (
     <>
       {data && (
