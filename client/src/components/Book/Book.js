@@ -25,6 +25,7 @@ function Chapter({ data, bookId }) {
           <Thumbnail
             id={data.thumbnail}
             alt={`Chapter ${data && data._id} thumbnail`}
+            height={`300px`}
           />
         </Col>
         {/* Chapter info */}
@@ -107,6 +108,7 @@ export default function Book() {
                   className="thumbnail"
                   id={bookInfo && bookInfo.thumbnail}
                   alt="thumbnail"
+                  height={`300px`}
                 />
               </Col>
               <Col sm={12} md={6} className="mt-3">
