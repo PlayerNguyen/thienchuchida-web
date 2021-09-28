@@ -26,16 +26,17 @@ axiosInstance.interceptors.response.use(
     return config;
   },
   (error) => {
+    // console.log(error.response);
     if (error.response && error.response.data.error) {
       const { message, name } = error.response.data.error;
       if (name === "TokenExpiredError") {
         UserService.getRefreshToken().then((response) => {
           window.location.reload()
         });
-        return;
+        return Promise.reject(error);
       }
       if (name === "TokenNotFoundError") {
-        return;
+        return Promise.reject(error);
       } else toast.error(message);
     }
     return Promise.reject(error);

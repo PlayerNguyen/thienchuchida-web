@@ -17,6 +17,7 @@ import AdminRestrictedRoute from "./route/AdminRestrictedRoute";
 import SignUp from "./components/Forms/SignUp";
 import useDisableRightClick from "./hooks/useDisableRightClick";
 import { Container } from "react-bootstrap";
+import NotFound from "./components/Error/NotFound";
 
 function App() {
   const dispatch = useDispatch();
@@ -37,10 +38,12 @@ function App() {
       })
       .catch((err) => {
         // Network error
-        if (!err.response) {
+        // console.log(err.response);
+        if (err.response === undefined) {
           setNetworkError(true);
           return;
         }
+
         // Failed to sign in
         dispatch(setSignedIn(false));
       })
@@ -89,6 +92,9 @@ function App() {
 
               <Route path="/" exact>
                 <Home />
+              </Route>
+              <Route>
+                <NotFound />  
               </Route>
             </Switch>
           )}
