@@ -33,9 +33,9 @@ router.post("/signup", async (req, res, next) => {
         )
       );
     }
-    
+
     // Invokes create new user method
-    const generatedUser = await signUp(username, password, email);
+    const generatedUser = await signUp(username, display, password, email);
 
     res.json({
       message: "Tạo tài khoản thành công.",

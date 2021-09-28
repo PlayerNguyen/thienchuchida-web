@@ -52,7 +52,7 @@ export default function SignUp() {
     }
 
     // Sign in
-    UserService.postSignUp({ username, password, email })
+    UserService.postSignUp({ username, password, email, display })
       .then(({ data }) => {
         // If success sign up
         // setResponseData();

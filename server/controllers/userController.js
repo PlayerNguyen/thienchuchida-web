@@ -89,7 +89,7 @@ async function signUp(username, display, password, email) {
     );
   }
 
-  const user = new User({ username, password, email });
+  const user = new User({ username, password, email, display });
   return user.save();
 }
 
