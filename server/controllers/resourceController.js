@@ -15,7 +15,7 @@ async function createNewFile(file, data, private) {
     size: file.size,
     mimetype: file.mimetype,
     data: data,
-    private: private
+    private: private,
   });
   return resource.save();
 }
@@ -56,12 +56,12 @@ async function countAllFiles() {
 async function getAllFiles(sort, limit, skip) {
   return Resource.find({}, "_id -data")
     .sort(sort)
-    .limit(limit ? parseInt(limit): 0)
+    .limit(limit ? parseInt(limit) : 0)
     .skip(skip ? parseInt(skip) : 0);
 }
 
 async function searchResourceByOriginalName(originalName) {
-  return Resource.find({originalName: new RegExp(originalName)}, "_id");
+  return Resource.find({ originalName: new RegExp(originalName) }, "_id");
 }
 
 module.exports = {

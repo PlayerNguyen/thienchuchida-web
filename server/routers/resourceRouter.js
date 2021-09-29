@@ -23,6 +23,7 @@ const ResourceHelper = require("../helpers/resourceHelper");
 // const path = require("path");
 const { deleteFile } = require("../helpers/resourceHelper");
 const ResourceMiddleware = require("../middlewares/ResourceMiddleware");
+const { compressImage } = require("../utils/imagePreProcess");
 
 router.post(
   "/",
@@ -39,20 +40,24 @@ router.post(
     if (files.length <= 0) {
       return next(new MiddlewareError("No input files"));
     }
- 
+
     Promise.all(
       files.map((file) => {
         return new Promise((res) => {
-          // const filePath = path.join(path.dirname(__dirname), file.path);
-          ResourceHelper.getBufferFromFile(file.path).then((buffer) => {
-            // Create a file
-            createNewFile(file, buffer, private).then((responseFile) => {
-              // Then delete the cache file
-              deleteFile(file.path).then(() => {
-                responseFile.data = null;
-                res(responseFile);
-              });
-            });
+          ResourceHelper.getBufferFromFile(file.path).then(async (buffer) => {
+            // Minify the size of buffer by compress it
+            compressImage(buffer).then((compressedBuffer) => {
+              // Create a file
+              createNewFile(file, compressedBuffer, private).then(
+                (responseFile) => {
+                  // Then delete the cache file
+                  deleteFile(file.path).then(() => {
+                    responseFile.data = null;
+                    res(responseFile);
+                  });
+                }
+              );
+            })
           });
         });
       })
@@ -124,7 +129,7 @@ router.get(
     const { id } = req.params;
     try {
       const doc = await findFileData(id);
-      
+
       // Not found this file
       if (!doc) {
         throw new MiddlewareError("File not found", 404);
@@ -132,7 +137,7 @@ router.get(
 
       // Set a header to mimetype and send file
       res.setHeader("Content-Type", doc.mimetype);
-      res.send(doc.data.toString('base64'));
+      res.send(doc.data.toString("base64"));
     } catch (err) {
       next(err);
     }

@@ -5,8 +5,8 @@
   "main": "bin/www",
   "scripts": {
     "test": "jest --runInBand --detectOpenHandles --forceExit",
-    "dev": "nodemon -r dotenv/config .",
-    "start": "node -r dotenv/config ."
+    "dev": "NODE_ENV=development nodemon -r dotenv/config .",
+    "start": "NODE_ENV=production node -r dotenv/config ."
   },
   "author": "",
   "dependencies": {

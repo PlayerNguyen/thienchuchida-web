@@ -2,8 +2,8 @@ const app = require("../app");
 const httpServer = require("http").createServer(app);
 const chalk = require("chalk");
 const mongoose = require("mongoose");
-const DatabaseConfig = require("../config/database.config");
-require('dotenv').config();
+// const DatabaseConfig = require("../config/database.config");
+require("dotenv").config();
 /**
  * Collect port from environment or set default port as 3000
  *
@@ -14,17 +14,17 @@ const port = process.env.PORT || 3000;
  * Database initialize
  */
 const DATABASE_URL =
-  process.env.NODE_ENV === "DEV"
+  process.env.NODE_ENV === "development"
     ? process.env.DATABASE_DEV_URL
     : process.env.DATABASE_URL;
 mongoose.connect(DATABASE_URL);
 mongoose.connection.on("error", (err) => {
   console.log("err", err);
 });
+
 mongoose.connection.on("connected", () => {
   console.log(`💾  ${chalk.greenBright(`Mongoose is connected`)}`);
 });
-setTimeout(() => {}, DatabaseConfig.ConnectionDelay);
 
 /**
  * Listen to the server
@@ -32,4 +32,5 @@ setTimeout(() => {}, DatabaseConfig.ConnectionDelay);
 httpServer.listen(port, () => {
   console.log(chalk.blue(`⚙ Listening at port ${port}`));
   console.log(chalk.gray(`|- 🌐  http://localhost:${port}/`));
+  console.log(chalk.gray(`|- ⚙  Running as ${process.env.NODE_ENV} node env`));
 });

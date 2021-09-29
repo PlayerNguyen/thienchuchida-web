@@ -16,7 +16,7 @@ const { middlewareError } = require("./utils/errors-handle");
 /**
  * Middleware settings here
  */
-app.use(morgan("dev"));
+app.use(morgan(process.env.NODE_ENV === "production" ? "combined" : "dev"));
 app.use(express.static("public"));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -27,7 +27,7 @@ app.use(
     credentials: true,
   })
 );
-app.use(compression({ level: -1 }));
+app.use(compression({ level: 9 }));
 /**
  * Initialize stuffs
  */

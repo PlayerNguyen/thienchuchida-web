@@ -11,6 +11,9 @@ const MiscConfig = {
       maxAge: ms("7d"),
     },
   },
+  compress: {
+    quality: 50,
+  },
 };
 
 module.exports = MiscConfig;
