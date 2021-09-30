@@ -36,8 +36,12 @@ function App() {
     // Check whether user is logged in yet via cookie
     UserService.getProfile()
       .then((response) => {
-        dispatch(setSignedIn(true));
-        dispatch(setPersistUser(response.data));
+        const { error } = response.data;
+        if (!error) {
+          dispatch(setPersistUser(response.data));
+          return;
+        }
+        dispatch(setSignedIn(!error));
       })
       .catch((err) => {
         // Network error

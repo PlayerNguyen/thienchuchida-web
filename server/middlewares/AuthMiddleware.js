@@ -3,21 +3,20 @@ const { isAdmin, doRefreshToken } = require("../controllers/userController");
 const { MiddlewareError } = require("../errors/MiddlewareError");
 const TokenNotFoundError = require("../errors/TokenNotFoundError");
 const CookieHelper = require("../helpers/cookieHelper");
+const { verifyAccessToken } = require("../helpers/tokenHelper");
 
 function getAuthorize(req, res, next) {
   try {
     const { AccessToken } = req.cookies;
     // No access token, mean unauthorize
     if (!AccessToken) {
-      throw new TokenNotFoundError("Access token not found.");
+      throw new TokenNotFoundError(
+        "Bạn chưa đăng nhập để tiếp tục thực hiện việc này."
+      );
     }
 
-    // Validate token
-    const data = jsonwebtoken.verify(
-      AccessToken,
-      process.env.ACCESS_TOKEN_SECRET
-    );
-
+    // Verify a token and export data for next stage
+    const data = verifyAccessToken(AccessToken);
     req.currentUser = data;
     next();
   } catch (err) {
@@ -61,28 +60,32 @@ async function getAuthorizeSilent(req, res, next) {
     if (!AccessToken) {
       // Not exist refresh token too
       if (!RefreshToken) {
-        throw new TokenNotFoundError("Invalid or not found a token to auth");
+        res.json({
+          error: {
+            message: "Người dùng chưa đăng nhập",
+            code: "ERR_UNAUTHORIZE",
+          },
+        });
       } else {
+        // Refresh an old access token
         const response = await doRefreshToken(RefreshToken);
-        const { _id, username, admin } = response;
-        // console.log(response);
+        const { _id, username, admin, display } = response;
+
+        // Set cookie to client side
         CookieHelper.setTokenCookies(
           res,
           response.refreshToken,
           response.accessToken
         );
 
-        req.currentUser = { _id, username, admin };
+        req.currentUser = { _id, username, admin, display };
         next();
       }
       return;
     }
 
     // Validate token
-    const data = jsonwebtoken.verify(
-      AccessToken,
-      process.env.ACCESS_TOKEN_SECRET
-    );
+    const data = verifyAccessToken(AccessToken);
 
     req.currentUser = data;
     next();
