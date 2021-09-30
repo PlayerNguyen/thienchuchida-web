@@ -18,6 +18,7 @@ import SignUp from "./components/Forms/SignUp";
 import useDisableRightClick from "./hooks/useDisableRightClick";
 import { Container } from "react-bootstrap";
 import NotFound from "./components/Error/NotFound";
+import Loading from "./components/Loading/Loading";
 
 function App() {
   const dispatch = useDispatch();
@@ -28,6 +29,8 @@ function App() {
   useDisableRightClick();
 
   useEffect(() => {
+    // Wait for an app to response
+    setIsWaiting(true);
     // Set cute title for this app
     document.title = "Thiên Chu Chi Dạ";
     // Check whether user is logged in yet via cookie
@@ -56,7 +59,9 @@ function App() {
     <div className="app__wrapper">
       <div className="app__background"></div>
       <div className="app__background__outer"></div>
-      {!networkError ? (
+      {isWaiting ? (
+        <Loading />
+      ) : !networkError ? (
         <div className="app__content">
           {isWaiting ? (
             <></>
@@ -94,7 +99,7 @@ function App() {
                 <Home />
               </Route>
               <Route>
-                <NotFound />  
+                <NotFound />
               </Route>
             </Switch>
           )}
@@ -106,7 +111,9 @@ function App() {
               Đã có lỗi khi kết nối đến máy chủ. <br />
               Vui lòng quay lại sau vài phút.
             </h1>
-            <h1 className="text-monospace fw-light" style={{fontSize: 40}}>T.T</h1>
+            <h1 className="text-monospace fw-light" style={{ fontSize: 40 }}>
+              T.T
+            </h1>
           </div>
         </Container>
       )}

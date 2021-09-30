@@ -13,6 +13,7 @@ import Header from "../Header/Header";
 import Thumbnail from "../General/Thumbnail";
 import { Container, Row, Col } from "react-bootstrap";
 import momentHelper from "../../helpers/momentHelper";
+import Loading from "../Loading/Loading";
 
 function Chapter({ data, bookId }) {
   const { url } = useRouteMatch();
@@ -168,7 +169,7 @@ export default function Book() {
             </Row>
           </>
         ) : (
-          <h1 className="text-light text-center">Đang tải nội dung...</h1>
+          <Loading />
         )}
       </Container>
     </div>

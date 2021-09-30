@@ -12,6 +12,8 @@ import {
 import RemoveModal from "./RemoveModal";
 import ResourceItem from "./ResourceItem";
 import { toast } from "react-toastify";
+import Loading from "../../Loading/Loading";
+import LazyLoad from "react-lazyload";
 
 const PAGE_ITEMS_LIMIT = 12;
 
@@ -123,7 +125,6 @@ export default function ResourceManager() {
   useEffect(() => {
     setLoading(true);
     const k = (page - 1) * PAGE_ITEMS_LIMIT;
-    // const end = start + PAGE_ITEMS_LIMIT;
     setStartIndex(k);
     setEndIndex(k + PAGE_ITEMS_LIMIT);
     ResourceService.getAllResources()
@@ -152,96 +153,113 @@ export default function ResourceManager() {
   };
 
   return (
-    <div className="resource__wrapper">
-      <div className="resource__header">
-        <h1 className="title text-dark">Tài nguyên</h1>
-        <h3 className="subtitle text-secondary">Quản lý tài nguyên</h3>
-      </div>
-      <div className="resource__actionbar">
-        <Button onClick={handleOpenUploadModal}>Tải lên</Button>
-      </div>
-      {data && data.length > 0 ? (
-        <>
-          {/* selected interact action bar */}
-          <Container fluid className="resource__container">
-            {/* {selection.length > 0 && ()} */}
-            <Col className="resourceitem__actionbar actionbar">
-              <div className="actionbar__block--left">
-                <span className="button--actionbar" onClick={handleSelectAll}>
-                  <FontAwesomeIcon icon={faCheckSquare} />
-                </span>
-                <span>
-                  <b>
-                    {selection.length === 0 ? "Chưa chọn" : selection.length}
-                  </b>
-                </span>
-              </div>
-              <div className="actionbar__block--right">
-                <span className="button--actionbar">
-                  <FontAwesomeIcon icon={faEdit} />
-                </span>
-                <span
-                  onClick={handleOpenRemoveModal}
-                  className="button--actionbar"
-                >
-                  <FontAwesomeIcon icon={faTrashAlt} />
-                </span>
-              </div>
-            </Col>
-            <Row>
-              {data
-                ? data.map((ele, index) => {
-                    if (startIndex <= index && index < endIndex) {
-                      return (
-                        <ResourceItem
-                          id={ele}
-                          selected={selection.indexOf(ele) !== -1}
-                          key={index}
-                          minimizeThumbnail={true}
-                          onSelect={() => {
-                            handleToggleSelect(ele);
-                          }}
-                        />
-                      );
-                    }
-                    return null;
-                  })
-                : null}
-            </Row>
-          </Container>
-          {data && !loading ? (
-            <div className="resources__footer">
-              <ResourceFooter
-                totalSize={totalSize}
-                page={page}
-                setPage={setPage}
-              />
-            </div>
-          ) : null}
-        </>
-      ) : (
-        <div className="resource__container">
-          <h1>
-            Không tìm thấy tài nguyên nào, bạn có thể tải lên tài nguyên mới
-          </h1>
+    <>
+      <div className="resource__wrapper">
+        <div className="resource__header">
+          <h1 className="title text-dark">Tài nguyên</h1>
+          <h3 className="subtitle text-secondary">Quản lý tài nguyên</h3>
         </div>
-      )}
-      {/* Register upload modal */}
-      <UploadModal
-        show={isUploadVisible}
-        onClose={handleCloseUploadModal}
-        setData={setData}
-        data={data}
-      />
-      {/* Register remove modal */}
-      <RemoveModal
-        show={isRemoveVisible}
-        onClose={handleCloseRemoveModal}
-        selection={selection}
-        setSelection={setSelection}
-        setData={setData}
-        data={data}
-      />
-    </div>
+        <div className="resource__actionbar">
+          <Button onClick={handleOpenUploadModal}>Tải lên</Button>
+        </div>
+        {loading ? (
+          <Loading color={`black`} />
+        ) : (
+          <>
+            {data && data.length > 0 ? (
+              <>
+                {/* selected interact action bar */}
+                <Container fluid className="resource__container">
+                  {/* {selection.length > 0 && ()} */}
+                  <Col className="resourceitem__actionbar actionbar">
+                    <div className="actionbar__block--left">
+                      <span
+                        className="button--actionbar"
+                        onClick={handleSelectAll}
+                      >
+                        <FontAwesomeIcon icon={faCheckSquare} />
+                      </span>
+                      <span>
+                        <b>
+                          {selection.length === 0
+                            ? "Chưa chọn"
+                            : selection.length}
+                        </b>
+                      </span>
+                    </div>
+                    <div className="actionbar__block--right">
+                      <span className="button--actionbar">
+                        <FontAwesomeIcon icon={faEdit} />
+                      </span>
+                      <span
+                        onClick={handleOpenRemoveModal}
+                        className="button--actionbar"
+                      >
+                        <FontAwesomeIcon icon={faTrashAlt} />
+                      </span>
+                    </div>
+                  </Col>
+                  <Row>
+                    {data &&
+                      data.map((ele, index) => {
+                        if (startIndex <= index && index < endIndex) {
+                          return (
+                            <LazyLoad
+                              key={index}
+                              placeholder={<Loading color={`black`} />}
+                            >
+                              <ResourceItem
+                                id={ele}
+                                selected={selection.indexOf(ele) !== -1}
+                                minimizeThumbnail={true}
+                                onSelect={() => {
+                                  handleToggleSelect(ele);
+                                }}
+                              />
+                            </LazyLoad>
+                          );
+                        }
+                        return null;
+                      })}
+                  </Row>
+                </Container>
+                {data && !loading ? (
+                  <div className="resources__footer">
+                    <ResourceFooter
+                      totalSize={totalSize}
+                      page={page}
+                      setPage={setPage}
+                    />
+                  </div>
+                ) : null}
+              </>
+            ) : (
+              <div className="resource__container">
+                <h1>
+                  Không tìm thấy tài nguyên nào, bạn có thể tải lên tài nguyên
+                  mới
+                </h1>
+              </div>
+            )}
+          </>
+        )}
+        {/* Register upload modal */}
+        <UploadModal
+          show={isUploadVisible}
+          onClose={handleCloseUploadModal}
+          setData={setData}
+          data={data}
+        />
+        {/* Register remove modal */}
+        <RemoveModal
+          show={isRemoveVisible}
+          onClose={handleCloseRemoveModal}
+          selection={selection}
+          setSelection={setSelection}
+          setData={setData}
+          data={data}
+        />
+      </div>
+    </>
   );
 }

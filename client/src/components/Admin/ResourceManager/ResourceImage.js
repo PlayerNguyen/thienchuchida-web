@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import axiosInstance from "../../../helpers/axiosInstance";
 import imageHelper from "../../../helpers/imageHelper";
+import Loading from "../../Loading/Loading";
 import "./ResourceItem.scss";
 
 export default function ResourceImage({ id, alt, height, ...children }) {
@@ -37,7 +38,7 @@ export default function ResourceImage({ id, alt, height, ...children }) {
   return (
     <div className="w-100" {...children}>
       {loading ? (
-        <div className="text-secondary text-center p-5">Đang tải...</div>
+        <Loading />
       ) : id ? (
         data ? (
           <img

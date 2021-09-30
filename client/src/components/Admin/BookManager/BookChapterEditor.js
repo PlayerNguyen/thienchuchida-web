@@ -45,19 +45,39 @@ function ResourceSection({
     });
   }, [id]);
 
+  const onDragStart = (e, index) => {
+    
+    e.dataTransfer.effectAllowed = "move";
+    e.dataTransfer.setData("text/html", e.target);
+    e.dataTransfer.setDragImage(e.target, 20, 20);
+  };
+
   return (
     <InputGroup className="mb-3">
-      <Form.Control type="text" value={originalName} disabled />
+      {/* File name */}
+      <Form.Control
+        type="text"
+        value={originalName}
+        disabled
+        draggable
+        onDragStart={() => {
+          onDragStart(currentIndex)
+        }}
+        style={{cursor: "grab"}}
+      />
+      {/* Up button */}
       {currentIndex !== 0 && (
         <Button variant="outline-primary" onClick={onAscend}>
           <FontAwesomeIcon icon={faCaretUp} />
         </Button>
       )}
+      {/* Down Button */}
       {currentIndex !== maxIndex - 1 && (
         <Button variant="outline-primary" onClick={onDecease}>
           <FontAwesomeIcon icon={faCaretDown} />
         </Button>
       )}
+      {/* Preview button */}
       <Button
         variant="outline-primary"
         onClick={() => {
@@ -66,6 +86,7 @@ function ResourceSection({
       >
         <FontAwesomeIcon icon={faEye} />
       </Button>
+      {/* Remove butotn */}
       <Button variant="outline-danger" onClick={onRemove}>
         <FontAwesomeIcon icon={faTrashAlt} />
       </Button>

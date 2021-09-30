@@ -6,8 +6,8 @@ import ResourceService from "../../../services/ResourceService";
 import ResourceImage from "./ResourceImage";
 import "./ResourceItem.scss";
 import ResourcePreviewModal from "./ResourcePreviewModal";
-import bytes from 'bytes'
-import momentHelper from '../../../helpers/momentHelper'
+import bytes from "bytes";
+import momentHelper from "../../../helpers/momentHelper";
 
 export default function ResourceItem({
   id,
@@ -21,12 +21,19 @@ export default function ResourceItem({
   const [previewVisible, setPreviewVisible] = useState(false);
 
   useEffect(() => {
+    // Receive the data of current resource
     ResourceService.getResourceMetadata(id)
       .then((res) => {
         const { data } = res.data;
         setData(data);
       })
       .catch(() => {});
+
+    // Clean up not to be lagged
+    return () => {
+      setData(null);
+      setPreviewVisible(false);
+    };
   }, [id]);
 
   const handleClosePreview = () => {
@@ -61,7 +68,9 @@ export default function ResourceItem({
                 <Col xs={3}>
                   <FontAwesomeIcon icon={faClock} />
                 </Col>
-                <Col xs={9}>{data && momentHelper(data.createdAt).fromNow()}</Col>
+                <Col xs={9}>
+                  {data && momentHelper(data.createdAt).fromNow()}
+                </Col>
               </Row>
             </div>
           </Card.Body>

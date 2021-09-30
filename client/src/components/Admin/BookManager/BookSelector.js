@@ -74,7 +74,7 @@ export default function BookSelector() {
                         : ServerConfig.DEFAULT_THUMBNAIL
                     }
                   /> */}
-                  <ResourceImage id={e.thumbnail} />
+                  <ResourceImage id={e.thumbnail} height={300} />
                   <Card.Body>
                     <Card.Title>{e.title}</Card.Title>
                     <Card.Text>{e.description}</Card.Text>
