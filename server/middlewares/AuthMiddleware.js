@@ -29,7 +29,11 @@ async function getAdminAuthorize(req, res, next) {
     const { AccessToken } = req.cookies;
     // No access token, mean unauthorize
     if (!AccessToken) {
-      return next(new TokenNotFoundError("Access token not found."));
+      return next(
+        new TokenNotFoundError(
+          "Bạn chưa đăng nhập để tiếp tục thực hiện việc này."
+        )
+      );
     }
 
     // Validate token
@@ -42,7 +46,9 @@ async function getAdminAuthorize(req, res, next) {
     // User is not an administrator
     if (!admin) {
       return next(
-        new MiddlewareError("Unauthorize access.", 401, { id: data.id })
+        new MiddlewareError("Không có quyền truy cập trang này.", 401, {
+          id: data._id,
+        })
       );
     }
     // Otherwise, continue the task
