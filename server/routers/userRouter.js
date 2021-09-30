@@ -76,6 +76,7 @@ router.post("/signin", async (req, res, next) => {
         email: response.email,
         _id: response._id,
         admin: response.admin,
+        display: response.display,
       },
     });
   } catch (err) {
