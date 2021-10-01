@@ -11,6 +11,7 @@ const books = require("./routers/bookRouter");
 const resources = require("./routers/resourceRouter");
 const tags = require("./routers/tagRouter");
 const chapters = require("./routers/chapterRouter");
+const comments = require("./routers/commentRouter");
 const { middlewareError } = require("./utils/errors-handle");
 
 /**
@@ -36,6 +37,7 @@ app.use("/books", books);
 app.use("/resources", resources);
 app.use("/tags", tags);
 app.use("/chapters", chapters);
+app.use("/comments", comments);
 
 /**
  * Closed middleware

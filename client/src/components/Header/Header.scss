@@ -10,6 +10,7 @@ $dropdown__text: rgb(66, 66, 66);
     display: block;
     // border-bottom: 1px solid rgb(223, 223, 223);
     padding-top: 2em;
+    z-index: 1;
 
     @include tablet {
       padding: 0;

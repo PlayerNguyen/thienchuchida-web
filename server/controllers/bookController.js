@@ -67,7 +67,12 @@ async function findBook(query) {
   return BookModel.findOne(
     { $or: [{ _id: query }, { slug: query }] },
     "-__v -password"
-  ).populate("tags", "-__v");
+  ).populate("tags", "-__v").then((doc) => {
+    if (doc) {
+      doc.views += 1;
+      return doc.save();
+    }
+  });
   // .populate("thumbnail", "-__v");
 }
 

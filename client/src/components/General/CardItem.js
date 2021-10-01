@@ -11,12 +11,9 @@ export default function CardItem({ data }) {
   return (
     <Col md={12} lg={6}>
       <Link className="bookcard" to={`/truyen/${data ? data.slug : null}`}>
-        <div className="bookcard__body">
-          <Thumbnail
-            id={data.thumbnail}
-            alt={`thumbnail `}
-            height={'200px'}
-          />
+        <div className="bookcard__body ">
+          <div className="bookcard__body__thumbnail"></div>
+          <Thumbnail id={data.thumbnail} alt={`thumbnail `} height={"200px"} />
         </div>
         <div className="bookcard__footer">
           <span className="bookcard__footer__title">

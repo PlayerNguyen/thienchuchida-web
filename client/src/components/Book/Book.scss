@@ -1,134 +1,15 @@
 @import "styles/Color";
 @import "styles/Mixins";
 
-// .book {
-//   padding: 1.8em 3em;
-//   margin-top: 100px;
-//   @include mobile {
-//     padding: 1.8em 0;
-//   }
+.comment {
+  &__wrapper {
+    margin-left: 3em;
+    @include mobile {
+      margin-left: 0;
+    }
+  }
 
-//   &__wrapper {
-//     background: $background__color--primary;
-//     margin: 0 !important;
-//     @include mobile {
-//       // padding: 1.8em 1em;
-//     }
-//   }
-
-//   &__header {
-//     margin-bottom: 2em;
-//   }
-
-//   &__body {
-//     display: flex;
-//     flex-flow: row;
-//     margin-bottom: 2em;
-//     gap: 1em;
-//     @include mobile {
-//       flex-flow: column;
-//     }
-//   }
-
-//   &__thumbnail {
-//     flex: 3 1;
-//     align-items: center;
-//     justify-content: center;
-//     padding: 16px;
-//     > img {
-//       // max-width: 300px;
-//       width: 100%;
-//     }
-//   }
-
-//   &__title {
-//     font-size: xx-large;
-//     color: $text__color--primary;
-//   }
-
-//   &__infobox {
-//     overflow: none;
-//     flex: 4;
-//     padding: 1em;
-//   }
-
-//   &__description {
-//     color: $text__color--secondary;
-//     font-size: larger;
-//   }
-
-//   &__status {
-//     margin-top: 12px;
-//     display: flex;
-//     flex-flow: column;
-//     > div {
-//       display: flex;
-//       flex-flow: row;
-//       margin-bottom: 12px;
-//       > * {
-//         margin: 0 12px;
-//         font-size: larger;
-//         color: $text__color--secondary;
-//       }
-//     }
-//   }
-
-//   &__tags {
-//     > div {
-//       // display: inline-block;
-//       // flex-flow: row;
-//       // flex-wrap: wrap;
-//       > * {
-//         margin-bottom: 12px;
-//         // flex: 1 0 21%;
-//         margin-right: 12px;
-//         justify-content: center;
-//         align-items: center;
-//         text-align: center;
-//         display: inline-block;
-//       }
-//     }
-//   }
-// }
-
-// .chapterbox {
-//   display: inline-flex;
-//   flex-flow: row;
-//   gap: 2em;
-//   flex-wrap: wrap;
-
-//   &__outer {
-//     margin-bottom: 1.22em;
-//   }
-// }
-
-// .chapter {
-//   flex: 1 1 320px;
-//   &__thumbnail {
-//     > img {
-//       width: 100%;
-//     }
-//   }
-
-//   &__title {
-//     font-size: larger;
-//     font-weight: bold;
-//     margin-top: 12px;
-//   }
-//   &__views {
-//     display: flex;
-//     flex-flow: row;
-//     > span {
-//       // flex: 1;
-//     }
-//   }
-// }
-
-.book {
-  &__container {
-    
-    // @include tablet {
-    //   // padding-top: 6em !important;
-    // }
+  &__username {
+    margin-right: 1.2em;
   }
 }

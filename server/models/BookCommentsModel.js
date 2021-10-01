@@ -11,7 +11,7 @@ const chapterCommentSchema = new mongoose.Schema({
     ref: DatabaseConfig.Model.User.Name,
     required: [true, "`user` must not be empty"],
   },
-  bookId: {
+  book: {
     type: String,
     ref: DatabaseConfig.Model.Book.Name,
     require: [true, "`bookId` must not be empty"],

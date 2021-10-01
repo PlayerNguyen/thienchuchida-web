@@ -5,7 +5,7 @@
   text-decoration: none;
   color: #f5f5f5;
   flex: 1 0 41%;
-  transition: cubic-bezier(0.165, 0.84, 0.44, 1) .5s;
+  transition: cubic-bezier(0.165, 0.84, 0.44, 1) 0.5s;
 
   &:hover {
     color: #c5c5c5;
@@ -22,18 +22,23 @@
   &__body {
     &__thumbnail {
       > img {
-
-    width: 100%;
-    /* max-width: 1010px; */
-    /* max-height: 1280px; */
-    object-fit: cover;
-    height: 300px;
+        width: 100%;
+        /* max-width: 1010px; */
+        /* max-height: 1280px; */
+        object-fit: cover;
+        height: 300px;
       }
     }
   }
 
   &__footer {
     padding: 1.2em;
+    position: absolute;
+    padding-bottom: -15px;
+    transform: translate(0, -200px);
+    height: 200px;
+    width: 351px;
+    background: rgba(0, 0, 0, 0.445);
     &__title {
       font-weight: bold;
       text-decoration: none;

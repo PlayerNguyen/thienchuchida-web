@@ -29,8 +29,12 @@ mongoose.connection.on("connected", () => {
 /**
  * Listen to the server
  */
-httpServer.listen(port, () => {
-  console.log(chalk.blue(`⚙ Listening at port ${port}`));
-  console.log(chalk.gray(`|- 🌐  http://localhost:${port}/`));
-  console.log(chalk.gray(`|- ⚙  Running as ${process.env.NODE_ENV} node env`));
-});
+setTimeout(() => {
+  httpServer.listen(port, () => {
+    console.log(chalk.blue(`⚙ Listening at port ${port}`));
+    console.log(chalk.gray(`|- 🌐  http://localhost:${port}/`));
+    console.log(
+      chalk.gray(`|- ⚙  Running as ${process.env.NODE_ENV} node env`)
+    );
+  });
+}, 200);

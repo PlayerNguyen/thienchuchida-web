@@ -2,14 +2,9 @@ import React, { useEffect, useState } from "react";
 // import Config from "../../config/server.config";
 import BookService from "../../services/BookService";
 import "./Home.scss";
-// import { Link } from "react-router-dom";
-// import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-// import { faEye, faClock } from "@fortawesome/free-regular-svg-icons";
-// import { faChevronRight } from "@fortawesome/free-solid-svg-icons";
 import Header from "../Header/Header";
 import { Container, Row, Col } from "react-bootstrap";
 import CardItem from "../General/CardItem";
-
 
 export default function Home() {
   const [latest, setLatestUpdate] = useState(null);
@@ -46,7 +41,23 @@ export default function Home() {
           {/* Aside bar */}
           <Col sm={12} md={4}>
             <Row>
-              <h1 className="text-light">Thông báo</h1>
+              <Col>
+                <h1 className="text-light">Thông báo</h1>
+              </Col>
+
+              <Col>
+                <iframe
+                  src="https://www.facebook.com/plugins/page.php?href=https%3A%2F%2Fwww.facebook.com%2Ftccd.thienchuchida&tabs=timeline&width=0&height=0&small_header=false&adapt_container_width=true&hide_cover=false&show_facepile=true&appId=1116623828358912"
+                  width="300"
+                  height="500"
+                  style={{ border: "none", overflow: "hidden" }}
+                  scrolling="no"
+                  frameborder="0"
+                  title={`facebook widget`}
+                  allowfullscreen="true"
+                  allow="autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share"
+                ></iframe>
+              </Col>
             </Row>
           </Col>
         </Row>

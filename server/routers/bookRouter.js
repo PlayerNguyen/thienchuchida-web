@@ -11,13 +11,9 @@ const {
   getBooksByTag,
   getChapterById,
 } = require("../controllers/bookController");
-const {
-  getAdminAuthorize,
-  getAuthorize,
-} = require("../middlewares/AuthMiddleware");
+const { getAdminAuthorize } = require("../middlewares/AuthMiddleware");
 const { MiddlewareError } = require("../errors/MiddlewareError");
 const { findSingleTag } = require("../controllers/bookTagController");
-const { addBookComment } = require("../controllers/bookCommentsController");
 const BookController = require("../controllers/bookController");
 
 /**
@@ -36,16 +32,20 @@ router.post("/", getAdminAuthorize, async (req, res, next) => {
 /**
  * Get all the newest book
  */
-router.get("/", async (req, res) => {
-  const { sort, page, limit, slug } = req.query;
-  const start = page && limit ? (page - 1) * limit : 0;
-  // Get all books and filter it by parameters
-  const doc = await getBooks({}, sort, limit ? parseInt(limit) : 0, start);
-  let result = [...doc];
-  if (slug) {
-    result = result.filter((e) => e.slug === slug);
+router.get("/", async (req, res, next) => {
+  try {
+    const { sort, page, limit, slug } = req.query;
+    const start = page && limit ? (page - 1) * limit : 0;
+    // Get all books and filter it by parameters
+    const doc = await getBooks({}, sort, limit ? parseInt(limit) : 0, start);
+    let result = [...doc];
+    if (slug) {
+      result = result.filter((e) => e.slug === slug);
+    }
+    res.json({ data: result });
+  } catch (err) {
+    next(err);
   }
-  res.json({ data: result });
 });
 
 /**
@@ -82,7 +82,7 @@ router.get("/book/:bookId", async (req, res, next) => {
     const book = await findBook(bookId);
 
     if (!book) {
-      return next(new MiddlewareError("Book not found", 404));
+      return next(new MiddlewareError("Không tìm thấy truyện này", 404));
     }
 
     const chapters = await getChaptersInBook(book._id);
@@ -191,14 +191,15 @@ router.get("/tags/tag/:tag", async (req, res) => {
 
 /**
  * Comment to a book
+ *
  */
-router.post("/comments/:bookId", getAuthorize, async (req, res, next) => {
-  const { content } = req.body;
-  if (!content) {
-    return next(new MiddlewareError("Field `content` not found", 500));
-  }
-  const comment = await addBookComment(content);
-  res.json({ data: comment });
-});
+// router.post("/comments/:bookId", getAuthorize, async (req, res, next) => {
+//   const { content } = req.body;
+//   if (!content) {
+//     return next(new MiddlewareError("Field `content` not found", 500));
+//   }
+//   const comment = await addBookComment(content);
+//   res.json({ data: comment });
+// });
 
 module.exports = router;

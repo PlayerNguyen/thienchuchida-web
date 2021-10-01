@@ -39,9 +39,11 @@ function App() {
         const { error } = response.data;
         if (!error) {
           dispatch(setPersistUser(response.data));
+          dispatch(setSignedIn(true));
           return;
         }
-        dispatch(setSignedIn(!error));
+        // Set user is signed in when not found error
+        dispatch(setSignedIn(false));
       })
       .catch((err) => {
         // Network error
@@ -102,6 +104,7 @@ function App() {
               <Route path="/" exact>
                 <Home />
               </Route>
+
               <Route>
                 <NotFound />
               </Route>

@@ -5,7 +5,7 @@ const TokenNotFoundError = require("../errors/TokenNotFoundError");
 const CookieHelper = require("../helpers/cookieHelper");
 const { verifyAccessToken } = require("../helpers/tokenHelper");
 
-function getAuthorize(req, res, next) {
+async function getAuthorize(req, res, next) {
   try {
     const { AccessToken } = req.cookies;
     // No access token, mean unauthorize
@@ -16,7 +16,7 @@ function getAuthorize(req, res, next) {
     }
 
     // Verify a token and export data for next stage
-    const data = verifyAccessToken(AccessToken);
+    const data = await verifyAccessToken(AccessToken);
     req.currentUser = data;
     next();
   } catch (err) {
@@ -91,7 +91,7 @@ async function getAuthorizeSilent(req, res, next) {
     }
 
     // Validate token
-    const data = verifyAccessToken(AccessToken);
+    const data = await verifyAccessToken(AccessToken);
 
     req.currentUser = data;
     next();
