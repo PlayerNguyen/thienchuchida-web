@@ -22,7 +22,8 @@ const BookController = require("../controllers/bookController");
 router.post("/", getAdminAuthorize, async (req, res, next) => {
   try {
     const { title, description } = req.body;
-    const book = await createNewBook({ title, description });
+    const { _id } = req.currentUser;
+    const book = await createNewBook({ title, description, creator: _id });
     res.json({ data: book, message: "Tạo truyện thành công." });
   } catch (e) {
     next(e);

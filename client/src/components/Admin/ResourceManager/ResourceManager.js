@@ -204,11 +204,7 @@ export default function ResourceManager() {
                       data.map((ele, index) => {
                         if (startIndex <= index && index < endIndex) {
                           return (
-                            <LazyLoad
-                              key={index}
-                              placeholder={<Loading color={`black`} />}
-                            >
-                              <ResourceItem
+                           <ResourceItem
                                 id={ele}
                                 selected={selection.indexOf(ele) !== -1}
                                 minimizeThumbnail={true}
@@ -216,7 +212,6 @@ export default function ResourceManager() {
                                   handleToggleSelect(ele);
                                 }}
                               />
-                            </LazyLoad>
                           );
                         }
                         return null;

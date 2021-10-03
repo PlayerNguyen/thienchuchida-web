@@ -12,7 +12,7 @@ const { MiddlewareError } = require("../errors/MiddlewareError");
 async function createNewFile(file, data, private) {
   const resource = new Resource({
     originalName: file.originalname,
-    size: file.size,
+    size: data.length,
     mimetype: file.mimetype,
     data: data,
     private: private,

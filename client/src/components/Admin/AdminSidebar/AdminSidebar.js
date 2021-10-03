@@ -18,6 +18,10 @@ export default function AdminAside() {
   }, [pathname]);
   const menu = [
     {
+      path: "quan-ly-chung",
+      title: "Quản lý chung",
+    },
+    {
       path: "quan-ly-tai-khoan",
       title: "Quản lý tài khoản",
     },

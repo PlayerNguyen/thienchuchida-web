@@ -5,6 +5,7 @@ import { Switch, Route } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { setPersistUser, setSignedIn } from "./app/slices/auth";
 import UserService from "./services/UserService";
+import SettingServer from "./services/SettingService";
 import SignIn from "./components/Forms/SignIn";
 import UnauthorizeRoute from "./route/UnauthorizeRoute";
 import RestrictedRoute from "./route/RestrictedRoute";
@@ -24,6 +25,7 @@ function App() {
   const dispatch = useDispatch();
   const [isWaiting, setIsWaiting] = useState(true);
   const [networkError, setNetworkError] = useState(false);
+  const [background, setBackground] = useState("");
 
   // Disable right click
   useDisableRightClick();
@@ -61,9 +63,20 @@ function App() {
       });
   }, [dispatch]);
 
+  useEffect(() => {
+    SettingServer.getSetting(`background-url`).then((response) => {
+      const { value } = response.data;
+      // console.log(value);
+      setBackground(value);
+    });
+  }, []);
+
   return (
     <div className="app__wrapper">
-      <div className="app__background"></div>
+      <div
+        className="app__background"
+        style={{ backgroundImage: `url(${background})` }}
+      ></div>
       <div className="app__background__outer"></div>
       {isWaiting ? (
         <Loading />

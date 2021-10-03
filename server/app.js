@@ -12,6 +12,7 @@ const resources = require("./routers/resourceRouter");
 const tags = require("./routers/tagRouter");
 const chapters = require("./routers/chapterRouter");
 const comments = require("./routers/commentRouter");
+const settings = require("./routers/settingRouter");
 const { middlewareError } = require("./utils/errors-handle");
 
 /**
@@ -38,6 +39,7 @@ app.use("/resources", resources);
 app.use("/tags", tags);
 app.use("/chapters", chapters);
 app.use("/comments", comments);
+app.use("/settings", settings);
 
 /**
  * Closed middleware

@@ -1,5 +1,6 @@
 const jimp = require("jimp");
 const MiscConfig = require("../config/misc.config");
+const MiscConfigDefault = require("../config/misc.default");
 
 function insertTextIntoImage(buffer, text) {
   return new Promise((res) => {
@@ -23,16 +24,27 @@ function insertTextIntoImage(buffer, text) {
   });
 }
 
-function compressImage(buffer) {
-  return new Promise((res) => {
-    jimp.read(buffer).then((image) => {
-      // Down-quality this picture
-      res(
-        image
-          .quality(parseInt(MiscConfig.compress.quality))
-          .getBufferAsync(image.getMIME())
-      );
-    });
+function processImage(buffer, crop) {
+  const { x, y, height, width } = crop;
+  console.log(crop);
+  return new Promise((res, rej) => {
+    jimp
+      .read(buffer)
+      .then((image) => {
+        // Down-quality this picture
+        res(
+          image
+            .quality(
+              parseInt(
+                MiscConfig.compress.quality ||
+                  MiscConfigDefault.compress.quality
+              )
+            )
+            .crop(x, y, width, height)
+            .getBufferAsync(image.getMIME())
+        );
+      })
+      .catch(rej);
   });
 }
 
@@ -41,7 +53,7 @@ function compressImage(buffer) {
  */
 const ImagePreprocess = {
   insertTextIntoImage,
-  compressImage,
+  processImage,
 };
 
 module.exports = ImagePreprocess;

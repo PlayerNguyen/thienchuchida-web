@@ -2,6 +2,7 @@ const app = require("../app");
 const httpServer = require("http").createServer(app);
 const chalk = require("chalk");
 const mongoose = require("mongoose");
+const settingController = require("../controllers/settingController");
 // const DatabaseConfig = require("../config/database.config");
 require("dotenv").config();
 /**
@@ -22,8 +23,12 @@ mongoose.connection.on("error", (err) => {
   console.log("err", err);
 });
 
-mongoose.connection.on("connected", () => {
+mongoose.connection.on("connected", async() => {
   console.log(`💾  ${chalk.greenBright(`Mongoose is connected`)}`);
+  /**
+   * Initialize usual settings
+   */
+  await settingController.init("background-url", "Background.png")
 });
 
 /**

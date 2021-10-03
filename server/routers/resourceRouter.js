@@ -1,9 +1,10 @@
 const express = require("express");
 const router = express.Router();
 const multer = require("multer");
-const storage = multer.diskStorage({
-  destination: process.env.UPLOADED_DIRECTORY,
-});
+// const storage = multer.diskStorage({
+//   destination: process.env.UPLOADED_DIRECTORY,
+// });
+const storage = multer.memoryStorage({});
 const upload = multer({ storage: storage });
 const {
   getAuthorize,
@@ -23,11 +24,11 @@ const ResourceHelper = require("../helpers/resourceHelper");
 // const path = require("path");
 const { deleteFile } = require("../helpers/resourceHelper");
 const ResourceMiddleware = require("../middlewares/ResourceMiddleware");
-const { compressImage } = require("../utils/imagePreProcess");
+const { processImage } = require("../utils/imagePreProcess");
 
 router.post(
   "/",
-  getAuthorize,
+  getAdminAuthorize,
   upload.array("files"),
   async (req, res, next) => {
     const { files } = req;
@@ -46,7 +47,7 @@ router.post(
         return new Promise((res) => {
           ResourceHelper.getBufferFromFile(file.path).then(async (buffer) => {
             // Minify the size of buffer by compress it
-            compressImage(buffer).then((compressedBuffer) => {
+            processImage(buffer).then((compressedBuffer) => {
               // Create a file
               createNewFile(file, compressedBuffer, private).then(
                 (responseFile) => {
@@ -57,7 +58,7 @@ router.post(
                   });
                 }
               );
-            })
+            });
           });
         });
       })
@@ -71,7 +72,32 @@ router.post(
   }
 );
 
-router.get("/", getAdminAuthorize, async (req, res, next) => {
+router.post(
+  `/single`,
+  getAdminAuthorize,
+  upload.single("file"),
+  async (req, res, next) => {
+    try {
+      const { file } = req;
+      const { crop } = req.body;
+      // console.log(file);
+      const buffer = file.buffer;
+      console.log("Processing and compressing an uploaded image...");
+      const handledBuffer = await processImage(buffer, JSON.parse(crop));
+      const responseFile = await createNewFile(file, handledBuffer, false);
+      // Response
+      res.json({
+        data: responseFile,
+        message:
+          "Đã tải lên tệp thành công, bạn có thể xem lại tại trang quản lý tài nguyên.",
+      });
+    } catch (err) {
+      next(err);
+    }
+  }
+);
+
+router.get("/", async (req, res, next) => {
   try {
     const { sort, limit, page } = req.query;
     let skip = 0;
@@ -123,7 +149,7 @@ router.get("/resource/metadata/:id", async (req, res, next) => {
 });
 
 router.get(
-  "/resource/raw/:id",
+  "/resource/base64/:id",
   ResourceMiddleware.requestPrivateAccess,
   async (req, res, next) => {
     const { id } = req.params;
@@ -138,6 +164,28 @@ router.get(
       // Set a header to mimetype and send file
       res.setHeader("Content-Type", doc.mimetype);
       res.send(doc.data.toString("base64"));
+    } catch (err) {
+      next(err);
+    }
+  }
+);
+
+router.get(
+  "/resource/raw/:id",
+  ResourceMiddleware.requestPrivateAccess,
+  async (req, res, next) => {
+    const { id } = req.params;
+    try {
+      const doc = await findFileData(id);
+
+      // Not found this file
+      if (!doc) {
+        throw new MiddlewareError("File not found", 404);
+      }
+
+      // Set a header to mimetype and send file
+      res.setHeader("Content-Type", doc.mimetype);
+      res.send(doc.data);
     } catch (err) {
       next(err);
     }

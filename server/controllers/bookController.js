@@ -2,12 +2,12 @@ const { MiddlewareError } = require("../errors/MiddlewareError");
 const BookChapterModel = require("../models/BookChapterModel");
 const BookModel = require("../models/BookModel");
 
-async function createNewBook({ title, description }) {
+async function createNewBook({ title, description, authors, creator }) {
   const existedBook = await BookModel.findOne({ title });
   if (existedBook) {
     throw new MiddlewareError(`Truyện với tiêu đề ${title} đã tồn tại.`);
   }
-  const data = await BookModel.create({ title, description });
+  const data = await BookModel.create({ title, description, authors, creator });
   return data;
 }
 
@@ -45,7 +45,8 @@ async function getBooks(query, sort, limit, skip) {
     .sort(sort)
     .limit(limit)
     .skip(skip)
-    .populate("tags", "-__v");
+    .populate("creator", "display _id username")
+    .populate("tags", "-__v")
 }
 
 /**

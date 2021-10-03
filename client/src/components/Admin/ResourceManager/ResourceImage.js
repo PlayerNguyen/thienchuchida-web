@@ -16,7 +16,7 @@ export default function ResourceImage({ id, alt, height, ...children }) {
 
       // Then load it
       axiosInstance
-        .get(imageHelper.getRawResourceUrl(id))
+        .get(imageHelper.gertBase64ResourceUrl(id))
         .then((response) => {
           const { headers } = response;
           setContentType(headers["content-type"]);
@@ -45,7 +45,7 @@ export default function ResourceImage({ id, alt, height, ...children }) {
             src={`data:${contentType};base64, ${data}`}
             alt={alt || ``}
             className="w-100 img--resource"
-            style={{ height: height }}
+            style={{ maxHeight: height }}
           />
         ) : (
           <div className="text-danger text-center p-5">Ảnh không hợp lệ.</div>

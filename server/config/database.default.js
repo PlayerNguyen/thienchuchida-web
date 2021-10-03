@@ -8,6 +8,7 @@ const DatabaseConfig = {
     BookChapterComment: { Name: "BookChapterComment" },
     Resource: { Name: "Resource" },
     Author: { Name: "Author" },
+    Setting: { Name: "Setting" },
   },
   ConnectionDelay: 6000
 };

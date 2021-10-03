@@ -49,6 +49,10 @@ const bookSchema = new mongoose.Schema({
     type: String,
     ref: DatabaseConfig.Model.Author.Name,
   },
+  creator: {
+    type: String,
+    ref: DatabaseConfig.Model.User.Name,
+  },
   tags: [{ type: String, ref: DatabaseConfig.Model.Tags.Name }],
 });
 

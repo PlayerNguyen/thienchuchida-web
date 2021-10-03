@@ -9,9 +9,9 @@ import ResourceManager from "./ResourceManager/ResourceManager";
 import BookManager from "./BookManager/BookManager";
 import AdminNavbar from "./AdminNavbar";
 import "./style.scss";
+import GeneralManager from "./GeneralManager/GeneralManager";
 
 export default function Admin() {
-  // const [activeMenu, setActiveMenu] = useState(null);
   const { path } = useRouteMatch();
 
   return (
@@ -22,9 +22,7 @@ export default function Admin() {
 
       <Row sm={12} className="admin__container bg-light d-flex">
         {/* Aside render here, navigate follows a below link */}
-        <Col 
-        md={3} sm={12}
-        >
+        <Col md={3} sm={12}>
           <AdminAside />
         </Col>
 
@@ -35,20 +33,28 @@ export default function Admin() {
           // className="admin__content"
         >
           <Switch>
+            <AdminRestrictedRoute path={`${path}/quan-ly-chung`}>
+              <GeneralManager />
+            </AdminRestrictedRoute>
+
             <AdminRestrictedRoute path={`${path}/quan-ly-truyen`}>
               <BookManager />
             </AdminRestrictedRoute>
+
             <AdminRestrictedRoute path={`${path}/quan-ly-tai-nguyen`}>
               <ResourceManager />
             </AdminRestrictedRoute>
+
             <AdminRestrictedRoute path={`${path}/quan-ly-tai-khoan`}>
               <AccountManagement />
             </AdminRestrictedRoute>
+
             <AdminRestrictedRoute path={`${path}/`}>
               <Container className="text-center p-5">
-                <h1 className='fw-bold'>Hãy chọn một mục để tiếp tục</h1>
+                <h1 className="fw-bold">Hãy chọn một mục để tiếp tục</h1>
               </Container>
             </AdminRestrictedRoute>
+
           </Switch>
         </Col>
         {/* <Row></Row> */}

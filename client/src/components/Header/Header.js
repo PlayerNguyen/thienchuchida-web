@@ -135,7 +135,7 @@ export default function Header() {
   return (
     <div className="header__wrapper">
       <div className="header__container">
-        {width <= 768 && (
+        {width <= 816 && (
           <div className="header__expand" onClick={handleExpand}>
             <FontAwesomeIcon icon={faBars} />
           </div>
@@ -148,13 +148,14 @@ export default function Header() {
           </h1>
         </div>
         <div className="header__expand">
-          {/* <FontAwesomeIcon icon={faBars} /> */}
         </div>
-        {/* Using mobile or not */}
-        {width <= MiscConfig.TABLET_SIZE ? (
+
+        {/* Tablet */}
+        {width <= 816 ? (
           <>
             {expand && (
               <div className="header-navigation" ref={expansionMenu}>
+                {/* Close button */}
                 <div
                   onClick={handleExpand}
                   style={{ display: "flex", flexFlow: "row" }}
@@ -199,8 +200,7 @@ export default function Header() {
                   title={`ManhWa`}
                   items={[
                     { url: `/`, text: `On-going` },
-                    { url: `/`, text: `Hoàn` },
-                    { url: `/`, text: `Drop` },
+                    { url: `/`, text: `Done` },
                   ]}
                 />
                 <NavDropdown
@@ -214,7 +214,7 @@ export default function Header() {
             )}
           </>
         ) : (
-          <div className="header-navigation">
+          <div className="header-navigation" >
             <NavDropdown
               title={
                 isSignedIn ? persistUser && persistUser.username : `Account`
@@ -235,8 +235,7 @@ export default function Header() {
               title={`ManhWa`}
               items={[
                 { url: `/`, text: `On-going` },
-                { url: `/`, text: `Hoàn` },
-                { url: `/`, text: `Drop` },
+                { url: `/`, text: `Done` },
               ]}
             />
             <NavDropdown

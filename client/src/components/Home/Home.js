@@ -42,7 +42,7 @@ export default function Home() {
           <Col sm={12} md={4}>
             <Row>
               <Col>
-                <h1 className="text-light">Thông báo</h1>
+                <h1 className="text-light">Bảng tin</h1>
               </Col>
 
               <Col>
@@ -52,9 +52,9 @@ export default function Home() {
                   height="500"
                   style={{ border: "none", overflow: "hidden" }}
                   scrolling="no"
-                  frameborder="0"
+                  frameBorder="0"
                   title={`facebook widget`}
-                  allowfullscreen="true"
+                  allowFullScreen={true}
                   allow="autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share"
                 ></iframe>
               </Col>

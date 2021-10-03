@@ -22,12 +22,19 @@ async function getResourceMetadata(id) {
   return axiosInstance.get(`/resources/resource/metadata/${id}`);
 }
 
+async function uploadSingleResource(formData) {
+  return axiosInstance.post(`/resources/single`, formData, {
+    headers: { "Content-Type": "multipart/form-data" },
+  });
+}
+
 const ResourceService = {
   getAllResources,
   uploadResources,
   removeResource,
   getResourceMetadata,
-  searchResourceByName
+  searchResourceByName,
+  uploadSingleResource
 };
 
 export default ResourceService;
