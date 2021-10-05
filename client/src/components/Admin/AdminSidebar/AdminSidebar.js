@@ -19,19 +19,23 @@ export default function AdminAside() {
   const menu = [
     {
       path: "quan-ly-chung",
-      title: "Quản lý chung",
+      title: "Chung",
     },
     {
       path: "quan-ly-tai-khoan",
-      title: "Quản lý tài khoản",
+      title: "Tài khoản",
     },
     {
       path: "quan-ly-truyen",
-      title: "Quản lý truyện",
+      title: "Truyện",
     },
     {
       path: "quan-ly-tai-nguyen",
-      title: "Quản lý tài nguyên",
+      title: "Tài nguyên",
+    },
+    {
+      path: "quan-ly-bang-tin",
+      title: "Bảng tin",
     },
   ];
 

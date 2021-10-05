@@ -197,7 +197,7 @@ export default function Header() {
                   <Link to="/">Password</Link>
                 </div>
                 <NavDropdown
-                  title={`ManhWa`}
+                  title={`Manhwa`}
                   items={[
                     { url: `/`, text: `On-going` },
                     { url: `/`, text: `Done` },
@@ -232,7 +232,7 @@ export default function Header() {
               <Link to="/">Password</Link>
             </div>
             <NavDropdown
-              title={`ManhWa`}
+              title={`Manhwa`}
               items={[
                 { url: `/`, text: `On-going` },
                 { url: `/`, text: `Done` },

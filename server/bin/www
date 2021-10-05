@@ -29,6 +29,7 @@ mongoose.connection.on("connected", async() => {
    * Initialize usual settings
    */
   await settingController.init("background-url", "Background.png")
+  await settingController.init("slogan", "A miracle is another name of effect")
 });
 
 /**

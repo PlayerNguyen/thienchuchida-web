@@ -7,18 +7,9 @@ const multer = require("multer");
 const storage = multer.memoryStorage({});
 const upload = multer({ storage: storage });
 const {
-  getAuthorize,
   getAdminAuthorize,
 } = require("../middlewares/AuthMiddleware");
-const {
-  createNewFile,
-  findFileMetadata,
-  findFileData,
-  removeFile,
-  getAllFiles,
-  countAllFiles,
-  searchResourceByOriginalName,
-} = require("../controllers/resourceController");
+const ResourceController = require("../controllers/resourceController");
 const { MiddlewareError } = require("../errors/MiddlewareError");
 const ResourceHelper = require("../helpers/resourceHelper");
 // const path = require("path");
@@ -49,7 +40,54 @@ router.post(
             // Minify the size of buffer by compress it
             processImage(buffer).then((compressedBuffer) => {
               // Create a file
-              createNewFile(file, compressedBuffer, private).then(
+              ResourceController.createNewFile(file, compressedBuffer, private).then(
+                (responseFile) => {
+                  // Then delete the cache file
+                  deleteFile(file.path).then(() => {
+                    responseFile.data = null;
+                    res(responseFile);
+                  });
+                }
+              );
+            });
+          });
+        });
+      })
+    ).then((files) => {
+      res.json({
+        data: Array.from(files, (file) => {
+          return file._id;
+        }),
+      });
+    });
+  }
+);
+
+router.post(
+  "/",
+  getAdminAuthorize,
+  upload.array("files"),
+  async (req, res, next) => {
+    const { files } = req;
+    const { private } = req.body;
+
+    if (!files) {
+      return next(new MiddlewareError("No input files field found"));
+    }
+
+    if (files.length <= 0) {
+      return next(new MiddlewareError("No input files"));
+    }
+
+    Promise.all(
+      files.map((file) => {
+        return new Promise((res) => {
+
+          ResourceHelper.getBufferFromFile(file.path).then(async (buffer) => {
+            // Minify the size of buffer by compress it
+            processImage(buffer).then((compressedBuffer) => {
+              // Create a file
+              ResourceController.createNewFile(file, compressedBuffer, private).then(
                 (responseFile) => {
                   // Then delete the cache file
                   deleteFile(file.path).then(() => {
@@ -84,7 +122,7 @@ router.post(
       const buffer = file.buffer;
       console.log("Processing and compressing an uploaded image...");
       const handledBuffer = await processImage(buffer, JSON.parse(crop));
-      const responseFile = await createNewFile(file, handledBuffer, false);
+      const responseFile = await ResourceController.createNewFile(file, handledBuffer, false);
       // Response
       res.json({
         data: responseFile,
@@ -104,10 +142,10 @@ router.get("/", async (req, res, next) => {
     if (limit && page) {
       skip = (page - 1) * limit;
     }
-    const files = await getAllFiles(sort, limit, skip);
+    const files = await ResourceController.getAllFiles(sort, limit, skip);
 
     res.json({
-      total_size: await countAllFiles(),
+      total_size: await ResourceController.countAllFiles(),
       data: Array.from(files, (v) => {
         return v._id;
       }),
@@ -120,7 +158,7 @@ router.get("/", async (req, res, next) => {
 router.get("/search", getAdminAuthorize, async (req, res, next) => {
   try {
     const { originalName } = req.query;
-    const results = await searchResourceByOriginalName(originalName);
+    const results = await ResourceController.searchResourceByOriginalName(originalName);
 
     res.json({
       data: Array.from(results, (v) => {
@@ -135,7 +173,7 @@ router.get("/search", getAdminAuthorize, async (req, res, next) => {
 router.get("/resource/metadata/:id", async (req, res, next) => {
   const { id } = req.params;
   try {
-    const doc = await findFileMetadata(id, false);
+    const doc = await ResourceController.findFileMetadata(id, false);
 
     // Not found this file
     if (!doc) {
@@ -154,7 +192,7 @@ router.get(
   async (req, res, next) => {
     const { id } = req.params;
     try {
-      const doc = await findFileData(id);
+      const doc = await ResourceController.findFileData(id);
 
       // Not found this file
       if (!doc) {
@@ -176,7 +214,7 @@ router.get(
   async (req, res, next) => {
     const { id } = req.params;
     try {
-      const doc = await findFileData(id);
+      const doc = await ResourceController.findFileData(id);
 
       // Not found this file
       if (!doc) {
@@ -192,12 +230,12 @@ router.get(
   }
 );
 
-router.delete("/resource/:id", getAuthorize, async (req, res, next) => {
+router.delete("/resource/:id", getAdminAuthorize, async (req, res, next) => {
   try {
     const { id } = req.params;
-    const file = await removeFile(id);
+    const file = await ResourceController.removeFile(id);
     res.json({
-      message: "Successfully remove file",
+      message: "Đã xoá thành công tài nguyên trên.",
       data: file,
     });
   } catch (err) {

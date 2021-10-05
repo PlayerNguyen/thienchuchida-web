@@ -7,7 +7,6 @@ const router = express.Router();
 router.get("/:key", async (req, res, next) => {
   try {
     const { key } = req.params;
-    console.log(key);
     const doc = await settingController.get(key);
     if (!doc) {
       throw new MiddlewareError(`Không tìm thấy cài đặt này`, 404);

@@ -209,6 +209,7 @@ export default function Book() {
 
   useEffect(() => {
     if (bookInfo) {
+      document.title = `${bookInfo.title} | Thiên Chu Chi Dạ`
       setIsCommentLoading(true);
       // Then fetch comments of this book
       handleFetchComment(bookInfo);

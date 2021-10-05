@@ -10,6 +10,7 @@ import BookManager from "./BookManager/BookManager";
 import AdminNavbar from "./AdminNavbar";
 import "./style.scss";
 import GeneralManager from "./GeneralManager/GeneralManager";
+import NotifyManager from "./NotifyManager/NotifyManager";
 
 export default function Admin() {
   const { path } = useRouteMatch();
@@ -33,6 +34,11 @@ export default function Admin() {
           // className="admin__content"
         >
           <Switch>
+
+           <AdminRestrictedRoute path={`${path}/quan-ly-bang-tin`}>
+              <NotifyManager />
+            </AdminRestrictedRoute>
+            
             <AdminRestrictedRoute path={`${path}/quan-ly-chung`}>
               <GeneralManager />
             </AdminRestrictedRoute>

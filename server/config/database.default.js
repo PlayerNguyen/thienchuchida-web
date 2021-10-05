@@ -9,8 +9,9 @@ const DatabaseConfig = {
     Resource: { Name: "Resource" },
     Author: { Name: "Author" },
     Setting: { Name: "Setting" },
+    Notify: { Name: "Notify" },
   },
-  ConnectionDelay: 6000
+  ConnectionDelay: 6000,
 };
 
 module.exports = DatabaseConfig;

@@ -8,6 +8,28 @@
       padding-top: 0;
     }
   }
+
+  &__slogan {
+    padding: 2em;
+    text-align: center;
+    margin-top: 5em;
+    margin-bottom: 5em;
+
+    @include tablet {
+    padding: 1.2em;
+
+      margin-top: 3em;
+    margin-bottom: 3em;
+    }
+    >h1  {
+      font-size: 30pt !important;
+      font-weight: bold !important;
+
+      @include tablet {
+        font-size: 23pt !important;
+      }
+    }
+  }
 }
 
 .category {
