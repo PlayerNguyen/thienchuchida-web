@@ -105,7 +105,9 @@ function ModifyUserModal({ visible, onConfirm, onClose, user = null, loading }) 
         <Modal.Body>
           <Form>
             <Form.Group className="mb-3">
-              <Form.Label>Tên đăng nhập</Form.Label>
+              <Form.Label>
+                Tên đăng nhập <span className="text-danger">*</span>
+              </Form.Label>
               <Form.Control
                 value={userInfo.username}
                 name="username"
@@ -115,7 +117,7 @@ function ModifyUserModal({ visible, onConfirm, onClose, user = null, loading }) 
               />
             </Form.Group>
             <Form.Group className="mb-3">
-              <Form.Label>Tên hiển thị</Form.Label>
+              <Form.Label>Tên hiển thị <span className="text-danger">*</span></Form.Label>
               <Form.Control
                 value={userInfo.display}
                 name="display"
@@ -124,7 +126,7 @@ function ModifyUserModal({ visible, onConfirm, onClose, user = null, loading }) 
               />
             </Form.Group>
             <Form.Group className="mb-3">
-              <Form.Label>Email</Form.Label>
+              <Form.Label>Email <span className="text-danger">*</span></Form.Label>
               <Form.Control
                 value={userInfo.email}
                 name="email"
@@ -143,7 +145,7 @@ function ModifyUserModal({ visible, onConfirm, onClose, user = null, loading }) 
             {(!user || userInfo.changingPassword) && (
               <>
                 <Form.Group className="mb-3">
-                  <Form.Label>Mật khẩu {userInfo.changingPassword && "mới"}</Form.Label>
+                  <Form.Label>Mật khẩu{userInfo.changingPassword && " mới"} <span className="text-danger">*</span></Form.Label>
                   <Form.Control
                     value={userInfo.password}
                     name="password"
@@ -155,7 +157,7 @@ function ModifyUserModal({ visible, onConfirm, onClose, user = null, loading }) 
                   {!inputState.focusPassword &&
                     !validator.passwordMatch &&
                     (userInfo.password || userInfo.confirmPassword) && (
-                      <Form.Text className="text-bold text-danger">
+                      <Form.Text className="text-danger">
                         Mật khẩu không trùng khớp!
                       </Form.Text>
                     )}
