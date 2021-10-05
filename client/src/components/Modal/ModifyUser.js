@@ -1,10 +1,12 @@
 import React, { useEffect, useState } from "react";
 import { Modal, Button, Form } from "react-bootstrap";
 import { toast } from "react-toastify";
+import validateHelper, { createUserSchema, modifyUserSchema } from "../../helpers/validateHelper";
 
 function ModifyUserModal({ visible, onConfirm, onClose, user = null, loading }) {
   const [userInfo, setUserInfo] = useState({
     username: "",
+    display: "",
     email: "",
     changingPassword: false,
     password: "",
@@ -12,8 +14,11 @@ function ModifyUserModal({ visible, onConfirm, onClose, user = null, loading }) 
   });
   const [validator, setValidator] = useState({
     passwordMatch: true,
-    passwordMatchMessage: "Mật khẩu không trùng khớp",
   });
+  // message when validate error
+  const validatorMessages = {
+    passwordMatch: "Mật khẩu không trùng khớp",
+  };
   // state of interacting with inputs
   const [inputState, setInputState] = useState({
     focusPassword: false,
@@ -34,14 +39,20 @@ function ModifyUserModal({ visible, onConfirm, onClose, user = null, loading }) 
     let isInputValid = true;
     Object.keys(validator).forEach((_key) => {
       if (!validator[_key]) {
-        throw validator[`${_key}Messagee`];
+        throw validatorMessages[_key];
       }
     });
     return isInputValid;
   };
 
-  const handleConfirmModifyUser = () => {
+  const handleConfirmModifyUser = async () => {
     try {
+      let validateSchema = createUserSchema;
+      // Modify user
+      if (user) {
+        validateSchema = modifyUserSchema;
+      }
+      await validateHelper.validateAsync(validateSchema, userInfo);
       handleCheckAllValidatorsValid();
       onConfirm(userInfo);
     } catch (e) {
@@ -94,13 +105,22 @@ function ModifyUserModal({ visible, onConfirm, onClose, user = null, loading }) 
         <Modal.Body>
           <Form>
             <Form.Group className="mb-3">
-              <Form.Label>Username</Form.Label>
+              <Form.Label>Tên đăng nhập</Form.Label>
               <Form.Control
                 value={userInfo.username}
                 name="username"
                 placeholder="Nhập tên đăng nhập"
                 onChange={handleChangeUserInfo("username")}
                 disabled={Boolean(user)}
+              />
+            </Form.Group>
+            <Form.Group className="mb-3">
+              <Form.Label>Tên hiển thị</Form.Label>
+              <Form.Control
+                value={userInfo.display}
+                name="display"
+                placeholder="Nhập tên hiển thị"
+                onChange={handleChangeUserInfo("display")}
               />
             </Form.Group>
             <Form.Group className="mb-3">
