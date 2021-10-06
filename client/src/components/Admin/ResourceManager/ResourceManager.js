@@ -13,7 +13,6 @@ import RemoveModal from "./RemoveModal";
 import ResourceItem from "./ResourceItem";
 import { toast } from "react-toastify";
 import Loading from "../../Loading/Loading";
-import LazyLoad from "react-lazyload";
 
 const PAGE_ITEMS_LIMIT = 12;
 
@@ -208,6 +207,7 @@ export default function ResourceManager() {
                                 id={ele}
                                 selected={selection.indexOf(ele) !== -1}
                                 minimizeThumbnail={true}
+                                key={index}
                                 onSelect={() => {
                                   handleToggleSelect(ele);
                                 }}

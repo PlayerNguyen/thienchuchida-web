@@ -25,24 +25,36 @@ function insertTextIntoImage(buffer, text) {
 }
 
 function processImage(buffer, crop) {
-  const { x, y, height, width } = crop;
-  console.log(crop);
   return new Promise((res, rej) => {
     jimp
       .read(buffer)
       .then((image) => {
         // Down-quality this picture
-        res(
-          image
-            .quality(
-              parseInt(
-                MiscConfig.compress.quality ||
-                  MiscConfigDefault.compress.quality
+        if (crop) {
+          const { x, y, height, width } = crop;
+          console.log(crop);
+          return res(
+            image
+              .quality(
+                parseInt(
+                  MiscConfig.compress.quality ||
+                    MiscConfigDefault.compress.quality
+                )
               )
-            )
-            .crop(x, y, width, height)
-            .getBufferAsync(image.getMIME())
-        );
+              .crop(x, y, width, height)
+              .getBufferAsync(image.getMIME())
+          );
+        }
+        return res(
+            image
+              .quality(
+                parseInt(
+                  MiscConfig.compress.quality ||
+                    MiscConfigDefault.compress.quality
+                )
+              )
+              .getBufferAsync(image.getMIME())
+          );
       })
       .catch(rej);
   });

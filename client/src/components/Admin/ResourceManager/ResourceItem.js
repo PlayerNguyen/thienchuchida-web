@@ -81,10 +81,11 @@ export default function ResourceItem({
               setPreviewVisible(true);
             }}
             variant="link"
+            size="sm"
           >
             Xem
           </Button>
-          <Button onClick={onSelect} variant="link">
+          <Button onClick={onSelect} variant="link" size="sm">
             {!selected ? `Chọn` : `Huỷ chọn`}
           </Button>
         </Card.Footer>

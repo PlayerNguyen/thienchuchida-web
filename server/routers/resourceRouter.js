@@ -1,19 +1,11 @@
 const express = require("express");
 const router = express.Router();
 const multer = require("multer");
-// const storage = multer.diskStorage({
-//   destination: process.env.UPLOADED_DIRECTORY,
-// });
 const storage = multer.memoryStorage({});
 const upload = multer({ storage: storage });
-const {
-  getAdminAuthorize,
-} = require("../middlewares/AuthMiddleware");
+const { getAdminAuthorize } = require("../middlewares/AuthMiddleware");
 const ResourceController = require("../controllers/resourceController");
 const { MiddlewareError } = require("../errors/MiddlewareError");
-const ResourceHelper = require("../helpers/resourceHelper");
-// const path = require("path");
-const { deleteFile } = require("../helpers/resourceHelper");
 const ResourceMiddleware = require("../middlewares/ResourceMiddleware");
 const { processImage } = require("../utils/imagePreProcess");
 
@@ -36,19 +28,21 @@ router.post(
     Promise.all(
       files.map((file) => {
         return new Promise((res) => {
-          ResourceHelper.getBufferFromFile(file.path).then(async (buffer) => {
-            // Minify the size of buffer by compress it
-            processImage(buffer).then((compressedBuffer) => {
-              // Create a file
-              ResourceController.createNewFile(file, compressedBuffer, private).then(
-                (responseFile) => {
-                  // Then delete the cache file
-                  deleteFile(file.path).then(() => {
-                    responseFile.data = null;
-                    res(responseFile);
-                  });
-                }
-              );
+          const { buffer } = file;
+          // Minify the size of buffer by compress it
+          processImage(buffer).then((compressedBuffer) => {
+            // Create a file
+            ResourceController.createNewFile(
+              file,
+              compressedBuffer,
+              private
+            ).then((responseFile) => {
+              // // Then delete the cache file
+              // deleteFile(file.path).then(() => {
+              //   responseFile.data = null;
+              //   res(responseFile);
+              // });
+              res(responseFile)
             });
           });
         });
@@ -63,52 +57,52 @@ router.post(
   }
 );
 
-router.post(
-  "/",
-  getAdminAuthorize,
-  upload.array("files"),
-  async (req, res, next) => {
-    const { files } = req;
-    const { private } = req.body;
+// router.post(
+//   "/",
+//   getAdminAuthorize,
+//   upload.array("files"),
+//   async (req, res, next) => {
+//     const { files } = req;
+//     const { private } = req.body;
 
-    if (!files) {
-      return next(new MiddlewareError("No input files field found"));
-    }
+//     if (!files) {
+//       return next(new MiddlewareError("No input files field found"));
+//     }
 
-    if (files.length <= 0) {
-      return next(new MiddlewareError("No input files"));
-    }
+//     if (files.length <= 0) {
+//       return next(new MiddlewareError("No input files"));
+//     }
 
-    Promise.all(
-      files.map((file) => {
-        return new Promise((res) => {
+//     Promise.all(
+//       files.map((file) => {
+//         return new Promise((res) => {
 
-          ResourceHelper.getBufferFromFile(file.path).then(async (buffer) => {
-            // Minify the size of buffer by compress it
-            processImage(buffer).then((compressedBuffer) => {
-              // Create a file
-              ResourceController.createNewFile(file, compressedBuffer, private).then(
-                (responseFile) => {
-                  // Then delete the cache file
-                  deleteFile(file.path).then(() => {
-                    responseFile.data = null;
-                    res(responseFile);
-                  });
-                }
-              );
-            });
-          });
-        });
-      })
-    ).then((files) => {
-      res.json({
-        data: Array.from(files, (file) => {
-          return file._id;
-        }),
-      });
-    });
-  }
-);
+//           ResourceHelper.getBufferFromFile(file.path).then(async (buffer) => {
+//             // Minify the size of buffer by compress it
+//             processImage(buffer).then((compressedBuffer) => {
+//               // Create a file
+//               ResourceController.createNewFile(file, compressedBuffer, private).then(
+//                 (responseFile) => {
+//                   // Then delete the cache file
+//                   deleteFile(file.path).then(() => {
+//                     responseFile.data = null;
+//                     res(responseFile);
+//                   });
+//                 }
+//               );
+//             });
+//           });
+//         });
+//       })
+//     ).then((files) => {
+//       res.json({
+//         data: Array.from(files, (file) => {
+//           return file._id;
+//         }),
+//       });
+//     });
+//   }
+// );
 
 router.post(
   `/single`,
@@ -122,7 +116,11 @@ router.post(
       const buffer = file.buffer;
       console.log("Processing and compressing an uploaded image...");
       const handledBuffer = await processImage(buffer, JSON.parse(crop));
-      const responseFile = await ResourceController.createNewFile(file, handledBuffer, false);
+      const responseFile = await ResourceController.createNewFile(
+        file,
+        handledBuffer,
+        false
+      );
       // Response
       res.json({
         data: responseFile,
@@ -158,7 +156,9 @@ router.get("/", async (req, res, next) => {
 router.get("/search", getAdminAuthorize, async (req, res, next) => {
   try {
     const { originalName } = req.query;
-    const results = await ResourceController.searchResourceByOriginalName(originalName);
+    const results = await ResourceController.searchResourceByOriginalName(
+      originalName
+    );
 
     res.json({
       data: Array.from(results, (v) => {

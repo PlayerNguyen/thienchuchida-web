@@ -3,11 +3,15 @@
   "version": "1.0.0",
   "description": "Lite template for express.js application",
   "main": "bin/www",
+  "private": true,
   "scripts": {
     "test": "jest --runInBand --detectOpenHandles --forceExit",
     "dev": "NODE_ENV=development nodemon --delay 500ms -r dotenv/config .",
-    "start": "NODE_ENV=production node -r dotenv/config ."
+    "start": "NODE_ENV=production node -r dotenv/config .",
+    "init": "node -r dotenv/config bin/init.js",
+    "init:deploy": "NODE_ENV=production node -r dotenv/config bin/init.js"
   },
+  "license": "MIT",
   "author": "",
   "dependencies": {
     "bcrypt": "^5.0.1",

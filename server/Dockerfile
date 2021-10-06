@@ -1,4 +1,4 @@
-FROM node:12-alpine
+FROM node:12-slim
 
 # Create app directory
 WORKDIR /usr/src/app/server
@@ -17,4 +17,4 @@ COPY . .
 
 EXPOSE 3001
 
-CMD [ "yarn", "run", "dev"]
+CMD [ "yarn", "run", "start"]
