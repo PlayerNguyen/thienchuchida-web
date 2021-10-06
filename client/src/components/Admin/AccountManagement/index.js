@@ -148,6 +148,11 @@ function AccountManagement() {
       key: "username",
     },
     {
+      title: "Tên hiển thị",
+      dataIndex: "display",
+      key: "display",
+    },
+    {
       title: "Email",
       dataIndex: "email",
       key: "email",

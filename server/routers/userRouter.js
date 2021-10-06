@@ -40,9 +40,7 @@ router.post("/signup", async (req, res, next) => {
     res.json({
       message: "Tạo tài khoản thành công.",
       data: {
-        _id: generatedUser._id,
-        username: generatedUser.username,
-        email: generatedUser.email,
+        ...generatedUser["_doc"]
       },
     });
   } catch (err) {
