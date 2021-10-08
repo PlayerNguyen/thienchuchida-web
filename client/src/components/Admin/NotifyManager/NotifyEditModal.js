@@ -5,7 +5,7 @@ import toastHelper from "../../../helpers/toastHelper";
 import NotifyService from "../../../services/NotifyService";
 import DOMPurify from "dompurify";
 
-export default function NotifyCreateModal({ visible, onClose, onCreate }) {
+export default function NotifyEditModal({ visible, onClose, onCreate }) {
   const [title, setTitle] = useState("");
   const [data, setData] = useState("");
   const [creating, setCreating] = useState(false);
