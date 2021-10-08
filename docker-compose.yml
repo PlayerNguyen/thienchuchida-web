@@ -9,7 +9,7 @@ services:
     volumes:
       - mongo-data:/data/db
   server:
-    image: thienchuchidia/server
+    image: thienchuchida/server
     networks:
       - nw
     ports:
@@ -17,7 +17,7 @@ services:
     depends_on:
       - mongodb
   client:
-    image: thienchuchidia/client
+    image: thienchuchida/client
     networks:
       - nw
     ports: 
