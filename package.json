@@ -11,7 +11,7 @@
     "dev:client": "yarn --cwd client run start",
     "dev:server": "yarn --cwd server run dev",
     "deploy": "cd client && yarn build --production",
-    "init": "cd server && yarn init"
+    "init": "cd server && yarn run init"
   },
   "repository": {
     "type": "git",
