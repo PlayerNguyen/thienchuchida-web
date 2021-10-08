@@ -40,7 +40,7 @@ router.post("/signup", async (req, res, next) => {
     res.json({
       message: "Tạo tài khoản thành công.",
       data: {
-        ...generatedUser["_doc"]
+        ...generatedUser["_doc"],
       },
     });
   } catch (err) {
@@ -113,11 +113,13 @@ router.post("/signout", async (req, res, next) => {
       message: "Đăng xuất thành công.",
     });
   } catch (e) {
+    res.clearCookie("AccessToken");
+    res.clearCookie("RefreshToken");
     return next(e);
   }
 });
 
-router.post("/profile", getAuthorizeSilent, async(req, res, next) => {
+router.post("/profile", getAuthorizeSilent, async (req, res, next) => {
   try {
     const { _id, username, admin, display } = await req.currentUser;
     res.json({ _id, username, admin, display });
