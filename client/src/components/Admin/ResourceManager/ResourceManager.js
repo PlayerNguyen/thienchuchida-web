@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback, useMemo } from "react";
 import { Pagination, Button, Row, Col, Container } from "react-bootstrap";
 import ResourceService from "../../../services/ResourceService";
 import "./ResourceManager.scss";
@@ -23,7 +23,7 @@ function ResourceFooter({ totalSize, setPage, page }) {
   const [endIndex, setEndIndex] = useState(0);
 
   useEffect(() => {
-    async function updatePage() {
+    function updatePage() {
       if (totalSize) {
         setTotalPages(Math.abs(Math.ceil(totalSize / PAGE_ITEMS_LIMIT)));
         setPages(totalPages > 0 ? totalPages : 1);
@@ -118,14 +118,7 @@ export default function ResourceManager() {
     setRemoveVisible(false);
   };
 
-  /**
-   * Update items
-   */
-  useEffect(() => {
-    setLoading(true);
-    const k = (page - 1) * PAGE_ITEMS_LIMIT;
-    setStartIndex(k);
-    setEndIndex(k + PAGE_ITEMS_LIMIT);
+  const handleFetchData = useCallback(() => {
     ResourceService.getAllResources()
       .then((response) => {
         const { data } = response.data;
@@ -135,7 +128,19 @@ export default function ResourceManager() {
       .finally(() => {
         setLoading(false);
       });
-  }, [page]);
+  }, []);
+
+  /**
+   * Update items
+   */
+  useEffect(() => {
+    setLoading(true);
+    const k = (page - 1) * PAGE_ITEMS_LIMIT;
+    setStartIndex(k);
+    setEndIndex(k + PAGE_ITEMS_LIMIT);
+
+    handleFetchData();
+  }, [page, handleFetchData]);
 
   useEffect(() => {
     // Selection update
@@ -144,12 +149,12 @@ export default function ResourceManager() {
     }
   }, [data]);
 
-  const handleSelectAll = () => {
+  const handleSelectAll = useCallback(() => {
     const selectItems = data.filter(
       (_e, i) => startIndex <= i && i < endIndex && selection.indexOf(_e) === -1
     );
     setSelection([...selection, ...selectItems]);
-  };
+  }, [data, endIndex, startIndex, selection]);
 
   return (
     <>
@@ -203,15 +208,15 @@ export default function ResourceManager() {
                       data.map((ele, index) => {
                         if (startIndex <= index && index < endIndex) {
                           return (
-                           <ResourceItem
-                                id={ele}
-                                selected={selection.indexOf(ele) !== -1}
-                                minimizeThumbnail={true}
-                                key={index}
-                                onSelect={() => {
-                                  handleToggleSelect(ele);
-                                }}
-                              />
+                            <ResourceItem
+                              id={ele}
+                              selected={selection.indexOf(ele) !== -1}
+                              minimizeThumbnail={true}
+                              key={index}
+                              onSelect={() => {
+                                handleToggleSelect(ele);
+                              }}
+                            />
                           );
                         }
                         return null;

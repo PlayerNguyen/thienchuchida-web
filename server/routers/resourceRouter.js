@@ -1,13 +1,14 @@
 const express = require("express");
 const router = express.Router();
 const multer = require("multer");
-const storage = multer.memoryStorage({});
+const storage = multer.diskStorage({ destination: "uploads" });
 const upload = multer({ storage: storage });
 const { getAdminAuthorize } = require("../middlewares/AuthMiddleware");
 const ResourceController = require("../controllers/resourceController");
 const { MiddlewareError } = require("../errors/MiddlewareError");
 const ResourceMiddleware = require("../middlewares/ResourceMiddleware");
 const { processImage } = require("../utils/imagePreProcess");
+const ResourceHelper = require("../helpers/resourceHelper");
 
 router.post(
   "/",
@@ -25,24 +26,31 @@ router.post(
       return next(new MiddlewareError("No input files"));
     }
 
+    console.log(files);
+
     Promise.all(
       files.map((file) => {
         return new Promise((res) => {
-          const { buffer } = file;
-          // Minify the size of buffer by compress it
-          processImage(buffer).then((compressedBuffer) => {
-            // Create a file
-            ResourceController.createNewFile(
-              file,
-              compressedBuffer,
-              private
-            ).then((responseFile) => {
-              // // Then delete the cache file
-              // deleteFile(file.path).then(() => {
-              //   responseFile.data = null;
-              //   res(responseFile);
-              // });
-              res(responseFile)
+          console.log(`Get file ${file.originalname} from ${file.path}...`);
+          ResourceHelper.getBufferFromFile(file.path).then((buffer) => {
+            // const { buffer } = file;
+            // Minify the size of buffer by compress it
+            console.log(`Handling and processing the image ${file.originalname}...`);
+            processImage(buffer).then((compressedBuffer) => {
+              // Create a file
+              console.log(`Generating file ${file.originalname} in database...`);
+              ResourceController.createNewFile(
+                file,
+                compressedBuffer,
+                private
+              ).then((responseFile) => {
+                // // Then delete the cache file
+                console.log(`Removing file ${file.originalname}...`);
+                ResourceHelper.deleteFile(file.path).then(() => {
+                  responseFile.data = null;
+                  res(responseFile);
+                });
+              });
             });
           });
         });
@@ -57,53 +65,6 @@ router.post(
   }
 );
 
-// router.post(
-//   "/",
-//   getAdminAuthorize,
-//   upload.array("files"),
-//   async (req, res, next) => {
-//     const { files } = req;
-//     const { private } = req.body;
-
-//     if (!files) {
-//       return next(new MiddlewareError("No input files field found"));
-//     }
-
-//     if (files.length <= 0) {
-//       return next(new MiddlewareError("No input files"));
-//     }
-
-//     Promise.all(
-//       files.map((file) => {
-//         return new Promise((res) => {
-
-//           ResourceHelper.getBufferFromFile(file.path).then(async (buffer) => {
-//             // Minify the size of buffer by compress it
-//             processImage(buffer).then((compressedBuffer) => {
-//               // Create a file
-//               ResourceController.createNewFile(file, compressedBuffer, private).then(
-//                 (responseFile) => {
-//                   // Then delete the cache file
-//                   deleteFile(file.path).then(() => {
-//                     responseFile.data = null;
-//                     res(responseFile);
-//                   });
-//                 }
-//               );
-//             });
-//           });
-//         });
-//       })
-//     ).then((files) => {
-//       res.json({
-//         data: Array.from(files, (file) => {
-//           return file._id;
-//         }),
-//       });
-//     });
-//   }
-// );
-
 router.post(
   `/single`,
   getAdminAuthorize,
@@ -113,7 +74,7 @@ router.post(
       const { file } = req;
       const { crop } = req.body;
       // console.log(file);
-      const buffer = file.buffer;
+      const buffer = await ResourceHelper.getBufferFromFile(file.path);
       console.log("Processing and compressing an uploaded image...");
       const handledBuffer = await processImage(buffer, JSON.parse(crop));
       const responseFile = await ResourceController.createNewFile(
