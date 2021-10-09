@@ -16,7 +16,6 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import useClickOutsideRef from "../../hooks/useClickOutsideRef";
 import useWindowSize from "../../hooks/useWindowSize";
-import MiscConfig from "../../config/misc.config";
 
 function NavDropdown({ title, items }) {
   const [isOpen, setIsOpen] = useState(false);
@@ -206,7 +205,7 @@ export default function Header() {
                 <NavDropdown
                   title={`Info`}
                   items={[
-                    { url: `/`, text: `Confession` },
+                    { url: `/confession`, text: `Confession` },
                     { url: `/`, text: `About` },
                   ]}
                 />
@@ -241,7 +240,7 @@ export default function Header() {
             <NavDropdown
               title={`Info`}
               items={[
-                { url: `/`, text: `Confession` },
+                { url: `/confession`, text: `Confession` },
                 { url: `/`, text: `About` },
               ]}
             />

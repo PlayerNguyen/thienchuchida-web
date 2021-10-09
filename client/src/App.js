@@ -20,6 +20,7 @@ import useDisableRightClick from "./hooks/useDisableRightClick";
 import { Container } from "react-bootstrap";
 import NotFound from "./components/Error/NotFound";
 import Loading from "./components/Loading/Loading";
+import Confession from "./components/Confession/Confession";
 
 function App() {
   const dispatch = useDispatch();
@@ -86,6 +87,9 @@ function App() {
             <></>
           ) : (
             <Switch>
+              <RestrictedRoute path="/confession">
+                <Confession />
+              </RestrictedRoute>
               <AdminRestrictedRoute path="/admin">
                 <Admin />
               </AdminRestrictedRoute>

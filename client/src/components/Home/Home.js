@@ -12,6 +12,7 @@ import NotifyCard from "../NotifyCard/NotifyCard";
 export default function Home() {
   const [latest, setLatestUpdate] = useState(null);
   const [slogan, setSlogan] = useState("");
+  const [subSlogan, setSubSlogan] = useState("");
   const [notifies, setNotifies] = useState(null);
 
   useEffect(() => {
@@ -25,12 +26,37 @@ export default function Home() {
       const { value } = response.data;
       setSlogan(value);
     });
+
+    SettingService.getSetting("subslogan").then((response) => {
+      const { value } = response.data;
+      setSubSlogan(value);
+    });
     // Notify
     NotifyService.fetchNotify().then((response) => {
       const { data } = response.data;
       setNotifies(data);
     });
   }, []);
+
+  const handleRemoveNotify = (notify) => {
+    setNotifies(notifies.filter((ele) => ele._id !== notify._id));
+  };
+
+  const handleUpdateNotify = (updatedNotify) => {
+    setNotifies(
+      notifies.map((notify) => {
+        if (notify._id === updatedNotify._id) {
+          const { title, context, __v } = updatedNotify;
+          return {
+            title,
+            context,
+            __v,
+          };
+        }
+        return notify;
+      })
+    );
+  };
 
   return (
     <div>
@@ -39,8 +65,8 @@ export default function Home() {
       </div>
       <Container fluid="sm" className="home__container">
         <Container className="home__slogan fw-bold fs-5 text-light">
-          <h1>{slogan}</h1>
-          <h3>Sub-slogan with love</h3>
+          <h1 className="ff-normal">{slogan}</h1>
+          <h2 className="ff-handwriting">{subSlogan}</h2>
         </Container>
         <Row className="home__content">
           {/* Content */}
@@ -66,26 +92,19 @@ export default function Home() {
               </Col>
             </Row>
             <Row style={{ maxHeight: "425px", overflow: "auto" }}>
-              <NotifyCard
-                notifyTitle={`Thông báo #1`}
-                notifyContext={`  Nội dung thông báo rất nhiều và mình có thể expand nó ra như
-                  thế này. Tuy nhiên nó sẽ phải overflow`}
-              />
-              <NotifyCard
-                notifyTitle={`Thông báo #2`}
-                notifyContext={`  Nội dung thông báo rất nhiều và mình có thể expand nó ra như
-                  thế này. Tuy nhiên nó sẽ phải overflow`}
-              />
-              <NotifyCard
-                notifyTitle={`Thông báo #3`}
-                notifyContext={`  Nội dung thông báo rất nhiều và mình có thể expand nó ra như
-                  thế này. Tuy nhiên nó sẽ phải overflow`}
-              />
-              <NotifyCard
-                notifyTitle={`Thông báo #3`}
-                notifyContext={`  Nội dung thông báo rất nhiều và mình có thể expand nó ra như
-                  thế này. Tuy nhiên nó sẽ phải overflow`}
-              />
+              {notifies &&
+                notifies.map((notify, index) => {
+                  return (
+                    <NotifyCard
+                      key={notify._id}
+                      notifyId={notify._id}
+                      notifyTitle={notify.title}
+                      notifyContext={notify.context}
+                      onRemove={(_) => handleRemoveNotify(notify)}
+                      onUpdate={handleUpdateNotify}
+                    />
+                  );
+                })}
             </Row>
           </Col>
         </Row>
