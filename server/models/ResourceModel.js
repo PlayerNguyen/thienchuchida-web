@@ -22,9 +22,13 @@ const resourceSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  data: {
-    type: Buffer,
-    required: true
+  // data: {
+  //   type: Buffer,
+  //   required: true
+  // },
+  path: {
+    type: String, 
+    required: [true, "Path is required"]
   },
   private: {
     type: Boolean,

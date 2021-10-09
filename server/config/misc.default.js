@@ -11,6 +11,7 @@ const MiscConfig = {
       maxAge: ms("7d"),
     },
   },
+  upload: { directory: "../uploads" },
   compress: {
     quality: 50,
   },

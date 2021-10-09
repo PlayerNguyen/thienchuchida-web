@@ -9,12 +9,12 @@ const { MiddlewareError } = require("../errors/MiddlewareError");
  * @param {Boolean} private is private or not
  * @returns a promise with doc which was added
  */
-async function createNewFile(file, data, private) {
+async function createNewFile(file, buffer, private) {
   const resource = new Resource({
     originalName: file.originalname,
-    size: data.length,
+    size: buffer.length,
     mimetype: file.mimetype,
-    data: data,
+    path: file.path,
     private: private,
   });
   return resource.save();
