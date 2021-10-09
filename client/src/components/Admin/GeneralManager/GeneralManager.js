@@ -8,13 +8,19 @@ import ResourceUploadSingleModal from "../ResourceManager/ResourceUploadSingleMo
 export default function GeneralManager() {
   const [visibleBackgroundUpload, setVisibleBackgroundUpload] = useState(false);
   const [slogan, setSlogan] = useState("");
+  const [subSlogan, setSubSlogan] = useState("");
   const [sloganEdited, setSloganEdited] = useState(false);
+  const [subSloganEdited, setSubSloganEdited] = useState(false);
 
   useEffect(() => {
     // Set slogan
     SettingService.getSetting("slogan").then((response) => {
       const { value } = response.data;
       setSlogan(value);
+    });
+    SettingService.getSetting("subslogan").then((response) => {
+      const { value } = response.data;
+      setSubSlogan(value);
     });
   }, []);
 
@@ -38,6 +44,18 @@ export default function GeneralManager() {
       toastHelper.success("Thiết lập thành công slogan mới cho trang.");
     });
   };
+
+  const handleChangeSubSlogan = ({ target }) => {
+    setSubSloganEdited(true);
+    setSubSlogan(target.value);
+  };
+
+  const handleUpdateSubSlogan = () => {
+     setSubSloganEdited(false);
+    SettingService.setSetting("subslogan", slogan).then(() => {
+      toastHelper.success("Thiết lập thành công slogan phụ mới cho trang.");
+    });
+  }
 
   return (
     <div className="">
@@ -83,10 +101,34 @@ export default function GeneralManager() {
             </Form>
           </Col>
         </Row>
+        <Row className="mb-2 p-2 ">
+          <Col className="text-secondary" sm={12} md={2}>
+            Sub-slogan
+          </Col>
+          <Col>
+            <Form className="mb-2">
+              <Row>
+                <Col>
+                  <Form.Control
+                    type="text"
+                    value={subSlogan}
+                    placeholder={`Nhập sub-slogan và bấm thay đổi`}
+                    onChange={handleChangeSubSlogan}
+                  />
+                </Col>
+                <Col>
+                  <Button disabled={!subSloganEdited} onClick={handleUpdateSubSlogan}>
+                    Cập nhật
+                  </Button>
+                </Col>
+              </Row>
+            </Form>
+          </Col>
+        </Row>
         <Row>
           <Container className="home__slogan fw-bold fs-5 text-light bg-dark mt-0 mb-0">
-            <h1>{slogan}</h1>
-            <h3>Sub-slogan with love</h3>
+            <h1 className="ff-normal">{slogan}</h1>
+            <h3 className="ff-handwriting">{subSlogan}</h3>
           </Container>
         </Row>
       </Container>
