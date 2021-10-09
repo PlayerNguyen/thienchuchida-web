@@ -9,6 +9,7 @@ services:
     volumes:
       - mongo-data:/data/db
   server:
+    build: ./server
     image: thienchuchida/server
     networks:
       - nw
@@ -16,7 +17,10 @@ services:
       - "3001:3001"
     depends_on:
       - mongodb
+    volumes: 
+      - cdn:/usr/src/app/server/uploads
   client:
+    build: ./client
     image: thienchuchida/client
     networks:
       - nw
@@ -29,3 +33,5 @@ networks:
 volumes:
   mongo-data:
     driver: local
+  cdn:
+    driver: local   
