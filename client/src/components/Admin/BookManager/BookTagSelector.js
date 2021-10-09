@@ -96,7 +96,11 @@ export default function BookTagSelector({ tags, visible, close, onComplete }) {
                   value={query}
                   onChange={handleQueryChange}
                 />
-                <Button variant="outline-secondary" disabled={searching}>
+                <Button
+                  type="submit"
+                  variant="outline-secondary"
+                  disabled={searching}
+                >
                   <FontAwesomeIcon icon={faSearch} />
                 </Button>
               </InputGroup>
@@ -155,7 +159,11 @@ export default function BookTagSelector({ tags, visible, close, onComplete }) {
                               ) !== -1
                             }
                           >
-                            Thêm thẻ
+                            {selectedTags.findIndex(
+                              (tag) => tag._id === element._id
+                            ) !== -1
+                              ? "Đã thêm"
+                              : `Thêm thẻ`}
                           </Button>
                         </td>
                       </tr>
