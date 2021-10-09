@@ -25,8 +25,8 @@ export default function NotifyManager() {
   };
 
   const handleRemoveNotify = (id) => {
-    setNotifies(notifies.filter(e => e._id !==id))
-  }
+    setNotifies(notifies.filter((e) => e._id !== id));
+  };
 
   return (
     <Container fluid>
@@ -62,6 +62,7 @@ export default function NotifyManager() {
             notifies.map((notify, index) => {
               return (
                 <NotifyCard
+                  className="text-dark"
                   key={index}
                   notifyId={notify._id}
                   notifyTitle={notify.title}

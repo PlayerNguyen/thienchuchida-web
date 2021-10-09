@@ -3,7 +3,7 @@ const { v4: uuid } = require("uuid");
 const DatabaseConfig = require("../config/database.config");
 
 const notifySchema = mongoose.Schema({
-  id: {
+  _id: {
     type: String,
     default: uuid,
   },

@@ -5,18 +5,28 @@ import toastHelper from "../../../helpers/toastHelper";
 import NotifyService from "../../../services/NotifyService";
 import DOMPurify from "dompurify";
 
-export default function NotifyEditModal({ visible, onClose, onCreate }) {
+export default function NotifyEditModal({ notify, visible, onClose, onUpdate }) {
   const [title, setTitle] = useState("");
   const [data, setData] = useState("");
-  const [creating, setCreating] = useState(false);
+  const [updating, setUpdating] = useState(false);
 
   const handleOnSubmit = (e) => {
     e.preventDefault();
 
-    handleCreateData();
+    handleUpdateData();
   };
 
-  const handleCreateData = () => {
+  useEffect(() => {
+    if (notify) {
+      setTitle(notify.title)
+      setData(notify.context);
+    }
+  }, [notify])
+
+  const handleUpdateData = () => {
+    if (!notify) {
+      throw Error("Not found notify");
+    }
     // Validate input
     if (title === "" || data === "") {
       toastHelper.error("Dữ liệu còn trống");
@@ -24,16 +34,16 @@ export default function NotifyEditModal({ visible, onClose, onCreate }) {
     }
     // Sanitize the HTML format
     setData(DOMPurify.sanitize(data));
-    setCreating(true);
-    // Generate new notify
-    NotifyService.createNotify(title, data)
+    setUpdating(true);
+    // Update a current notify
+    NotifyService.updateNotify(notify._id, title, data)
       .then((response) => {
         const { data, message } = response.data;
         toastHelper.success(message);
-        onCreate(data);
+        onUpdate(data);
       })
       .finally(() => {
-        setCreating(false);
+        setUpdating(false);
         onClose();
       });
   };
@@ -53,7 +63,7 @@ export default function NotifyEditModal({ visible, onClose, onCreate }) {
       onHide={onClose}
     >
       <Modal.Header closeButton>
-        <Modal.Title>Tạo thông báo mới</Modal.Title>
+        <Modal.Title>Chỉnh sửa thông báo</Modal.Title>
       </Modal.Header>
       <Modal.Body>
         <Form onSubmit={handleOnSubmit}>
@@ -88,11 +98,11 @@ export default function NotifyEditModal({ visible, onClose, onCreate }) {
           Đóng
         </Button>
         <Button
-          onClick={handleCreateData}
+          onClick={handleUpdateData}
           variant="primary"
-          disabled={creating}
+          disabled={updating}
         >
-          {creating ? `Đang tạo...` : `Tạo`}
+          {updating ? `Đang sửa...` : `Sửa`}
         </Button>
       </Modal.Footer>
     </Modal>
