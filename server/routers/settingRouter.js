@@ -9,7 +9,7 @@ router.get("/:key", async (req, res, next) => {
     const { key } = req.params;
     const doc = await settingController.get(key);
     if (!doc) {
-      throw new MiddlewareError(`Không tìm thấy cài đặt này`, 404);
+      throw new MiddlewareError(`Không tìm thấy cài đặt ${key}`, 404);
     }
     res.json({ key: doc.key, value: doc.value });
   } catch (err) {
@@ -27,5 +27,6 @@ router.put("/:key", getAdminAuthorize, async (req, res, next) => {
     next(err);
   }
 });
+
 
 module.exports = router;
