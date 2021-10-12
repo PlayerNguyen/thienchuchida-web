@@ -99,5 +99,5 @@ async function getAuthorizeSilent(req, res, next) {
     next(err);
   }
 }
-
-module.exports = { getAuthorize, getAuthorizeSilent, getAdminAuthorize };
+const AuthMiddleware = { getAuthorize, getAuthorizeSilent, getAdminAuthorize };
+module.exports = AuthMiddleware;

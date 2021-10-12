@@ -10,6 +10,7 @@ const DatabaseConfig = {
     Author: { Name: "Author" },
     Setting: { Name: "Setting" },
     Notify: { Name: "Notify" },
+    Confession: {Name: "Confession"}
   },
   ConnectionDelay: 6000,
 };

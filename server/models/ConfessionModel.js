@@ -9,10 +9,20 @@ const ConfessionSchema = new mongoose.Schema({
   },
   content: {
     type: String,
-    
   },
   author: {
     type: String,
-    ref: DatabaseConfig.Model.User.Name
+    ref: DatabaseConfig.Model.User.Name,
+  },
+  secret: {
+    type: Boolean,
+    required: [true, "Secret cannot be null or empty"],
   },
 });
+
+const ConfessionModel = mongoose.model(
+  DatabaseConfig.Model.Confession.Name,
+  ConfessionSchema
+);
+
+module.exports = ConfessionModel;
