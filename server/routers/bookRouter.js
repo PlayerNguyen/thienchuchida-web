@@ -87,11 +87,13 @@ router.get("/book/:bookId", async (req, res, next) => {
     }
 
     const chapters = await getChaptersInBook(book._id);
+    // const totalViews = chapters.reduce((a, b) => a.views + b.views)
     res.json({
       data: book,
       chapters: {
         total_size: chapters.length,
         data: chapters,
+        // total_views: totalViews
       },
     });
   } catch (e) {

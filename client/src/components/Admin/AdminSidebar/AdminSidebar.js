@@ -37,31 +37,11 @@ export default function AdminAside() {
       path: "quan-ly-bang-tin",
       title: "Bảng tin",
     },
+    {
+      path: "quan-ly-confession",
+      title: "Confession",
+    },
   ];
-
-  // return (
-  //   <div
-  //   // className="admin__sidebar sidebar__wrapper d-flex flex-column flex-shrink-1 p-3 text-white bg-dark"
-  //   className="d-flex bg-dark"
-  //   >
-  //     <div className="sidebar">
-  //       <ul className="nav nav-pills flex-column mb-auto">
-  //         {menu.map((_item) => (
-  //           <li className="nav-item" key={_item.path}>
-  //             <Link
-  //               to={`${path}/${_item.path}`}
-  //               className={`nav-link ${
-  //                 activeMenu === _item.path ? "active" : ""
-  //               }`}
-  //             >
-  //               {_item.title}
-  //             </Link>
-  //           </li>
-  //         ))}
-  //       </ul>
-  //     </div>
-  //   </div>
-  // );
 
   return (
     <Nav

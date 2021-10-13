@@ -14,7 +14,9 @@ const chapters = require("./routers/chapterRouter");
 const comments = require("./routers/commentRouter");
 const settings = require("./routers/settingRouter");
 const notify = require("./routers/notifyRouter");
+
 const { middlewareError } = require("./utils/errors-handle");
+const ConfessionRouter = require("./routers/confessionRouter");
 
 /**
  * Middleware settings here
@@ -42,6 +44,7 @@ app.use("/chapters", chapters);
 app.use("/comments", comments);
 app.use("/settings", settings);
 app.use("/notify", notify);
+app.use("/confession", ConfessionRouter);
 
 /**
  * Closed middleware

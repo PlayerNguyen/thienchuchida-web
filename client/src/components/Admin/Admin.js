@@ -11,6 +11,7 @@ import AdminNavbar from "./AdminNavbar";
 import "./style.scss";
 import GeneralManager from "./GeneralManager/GeneralManager";
 import NotifyManager from "./NotifyManager/NotifyManager";
+import ConfessionManager from "./ConfessionManager/ConfessionManager";
 
 export default function Admin() {
   const { path } = useRouteMatch();
@@ -23,17 +24,20 @@ export default function Admin() {
 
       <Row sm={12} className="admin__container bg-light d-flex">
         {/* Aside render here, navigate follows a below link */}
-        <Col md={3} sm={12}>
+        <Col md={2} sm={12}>
           <AdminAside />
         </Col>
 
         {/* A container to contain */}
         <Col
-          md={9}
+          md={10}
           sm={12}
-          // className="admin__content"
         >
           <Switch>
+
+          <AdminRestrictedRoute path={`${path}/quan-ly-confession`}>
+              <ConfessionManager />
+            </AdminRestrictedRoute>
 
            <AdminRestrictedRoute path={`${path}/quan-ly-bang-tin`}>
               <NotifyManager />

@@ -2,7 +2,7 @@ const ConfessionModel = require("../models/ConfessionModel");
 const MiddlewareError = require("../errors/MiddlewareError");
 
 async function createConfession(content, author, secret) {
-  return ConfessionModel.create(content, author, secret);
+  return ConfessionModel.create({ content, author, secret });
 }
 
 async function getConfession(id) {
@@ -32,11 +32,30 @@ async function deleteConfession(id) {
   return ConfessionModel.remove({ _id: id });
 }
 
+function fetchConfession(limit, offset, sort) {
+  return ConfessionModel.find()
+    .skip(offset)
+    .limit(limit)
+    .sort(sort)
+    .populate("author", "-password -tokens -__v");
+}
+
+function revealConfession(id) {
+  const doc = ConfessionModel.findOne({ _id: id });
+  if (!doc) {
+    throw new MiddlewareError(`Không tìm thấy confession ${id}`);
+  }
+  doc.seen = true;
+  return doc.save();
+}
+
 const ConfessionController = {
   createConfession,
   getConfession,
   updateConfession,
   deleteConfession,
+  fetchConfession,
+  revealConfession,
 };
 
 module.exports = ConfessionController;

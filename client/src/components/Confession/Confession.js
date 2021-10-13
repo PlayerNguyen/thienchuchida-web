@@ -1,9 +1,31 @@
-import React from "react";
+import React, { useState } from "react";
 import { Col, Container, Row, Form, Button } from "react-bootstrap";
 import Footer from "../Footer/Footer";
 import Header from "../Header/Header";
+import ConfessionService from "../../services/ConfessionService";
+import toastHelper from "../../helpers/toastHelper"
 
 export default function Confession() {
+  const [content, setContent] = useState("");
+  const [secret, setSecret] = useState(false);
+  const [posting, setPosting] = useState(false);
+
+  const handleContentChange = (e) => {
+    setContent(e.target.value);
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    setPosting(true);
+    ConfessionService.createConfession(content, secret)
+      .then((response) => {
+        const {message} = response.data;
+        toastHelper.success(message);
+        setContent("")
+      })
+      .finally((_) => setPosting(false));
+  };
+
   return (
     <div className="confession__wrapper text-light">
       <div className="confession__header">
@@ -16,13 +38,19 @@ export default function Confession() {
           </Col>
         </Row>
         <Row>
-          <Form>
+          <Form onSubmit={handleSubmit}>
             <Form.Group as={Row} className="mb-3">
               <Form.Label column sm={2} md={4} className="fw-bold">
                 Bạn có gì muốn nói cùng nhà? <font color="red">*</font>
               </Form.Label>
               <Col sm={10} md={8}>
-                <Form.Control as="textarea" className="mb-3" required />
+                <Form.Control
+                  as="textarea"
+                  className="mb-3"
+                  required
+                  onChange={handleContentChange}
+                  value={content}
+                />
               </Col>
             </Form.Group>
             <Form.Group as={Row} className="mb-3">
@@ -36,6 +64,7 @@ export default function Confession() {
                   className="mb-3"
                   name="secret"
                   title="public"
+                  onClick={_ => setSecret(false)}
                   checked
                 />
                 <Form.Check
@@ -44,8 +73,15 @@ export default function Confession() {
                   className="mb-3"
                   name="secret"
                   title="private"
+                  onClick={_ => setSecret(true)}
                 />
-                <Button type="submit" variant="outline-primary">Chia sẻ với nhà</Button>
+                <Button
+                  type="submit"
+                  variant="outline-primary"
+                  disabled={posting}
+                >
+                  {posting ? `Đang gửi... ` : `Chia sẻ với nhà`}
+                </Button>
               </Col>
             </Form.Group>
           </Form>
