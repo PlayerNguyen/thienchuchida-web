@@ -27,10 +27,7 @@ router.post("/signup", async (req, res, next) => {
 
     if (!username || !password || !email || !display) {
       return next(
-        new MiddlewareError(
-          "Thiếu dữ liệu nhập vào, vui lòng nhập đủ dữ liệu cần thiết",
-          500
-        )
+        new MiddlewareError("Thiếu dữ liệu nhập vào, vui lòng nhập đủ dữ liệu cần thiết", 500)
       );
     }
 
@@ -152,7 +149,7 @@ router.delete("/:id", getAdminAuthorize, async (req, res, next) => {
 
 router.put("/", getAuthorize, async (req, res, next) => {
   try {
-    const { _id, password, avatar, email } = req.body;
+    const { _id, password, avatar, email, display } = req.body;
     // Not found a user
     if (_id == null) {
       throw new MiddlewareError(`Không tìm thấy giá trị id trong body.`);
@@ -163,13 +160,11 @@ router.put("/", getAuthorize, async (req, res, next) => {
 
     if (currentUser._id !== _id) {
       if (!currentUser.admin) {
-        throw new MiddlewareError(
-          "Bạn không có quyền chỉnh sửa thông tin của người khác!"
-        );
+        throw new MiddlewareError("Bạn không có quyền chỉnh sửa thông tin của người khác!");
       }
     }
 
-    let user = await updateUser(_id, { password, avatar, email });
+    let user = await updateUser(_id, { password, avatar, email, display });
     res.json({ message: "Cập nhật thành công người dùng.", data: user });
   } catch (err) {
     next(err);
@@ -179,6 +174,10 @@ router.put("/", getAuthorize, async (req, res, next) => {
 router.post("/admin", getAdminAuthorize, async (req, res, next) => {
   try {
     const { id } = req.body;
+    const { _id } = req.currentUser;
+    if (id === _id) {
+      throw new MiddlewareError("Bạn không thể tự sửa quyền admin của bản thân!");
+    }
     // Toggle admin permissions
     const account = await toggleAdmin(id);
     // response to user
