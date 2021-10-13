@@ -22,11 +22,16 @@ async function fetchConfession(limit, offset, sort) {
   );
 }
 
+async function revealConfession(id) {
+  return axiosInstance.post(`/confession/seen/${id}`);
+}
+
 const ConfessionService = {
   createConfession,
   getConfession,
   deleteConfession,
   updateConfession,
   fetchConfession,
+  revealConfession,
 };
 export default ConfessionService;

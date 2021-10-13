@@ -33,20 +33,25 @@ async function deleteConfession(id) {
 }
 
 function fetchConfession(limit, offset, sort) {
+  console.log(limit);
   return ConfessionModel.find()
-    .skip(offset)
-    .limit(limit)
+    .skip(parseInt(offset))
+    .limit(parseInt(limit))
     .sort(sort)
     .populate("author", "-password -tokens -__v");
 }
 
-function revealConfession(id) {
-  const doc = ConfessionModel.findOne({ _id: id });
+async function revealConfession(id) {
+  const doc = await ConfessionModel.findOne({ _id: id });
   if (!doc) {
     throw new MiddlewareError(`Không tìm thấy confession ${id}`);
   }
   doc.seen = true;
   return doc.save();
+}
+
+function countConfessions() {
+  return ConfessionModel.count();
 }
 
 const ConfessionController = {
@@ -56,6 +61,7 @@ const ConfessionController = {
   deleteConfession,
   fetchConfession,
   revealConfession,
+  countConfessions,
 };
 
 module.exports = ConfessionController;

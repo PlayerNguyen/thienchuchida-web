@@ -110,32 +110,36 @@ router.put("/:id", getAuthorize, async (req, res, next) => {
   }
 });
 
-router.get(
-  `/`,
+router.get(`/`, AuthMiddleware.getAdminAuthorize, async (req, res, next) => {
+  try {
+    // const { limit, offset, sort } = req.params;
+    const { limit, offset, sort } = req.query;
+    const docs = await ConfessionController.fetchConfession(
+      limit,
+      offset,
+      sort
+    );
+    const tolItems = await ConfessionController.countConfessions();
+    res.json({ data: docs, totalItems: tolItems });
+  } catch (error) {
+    next(error);
+  }
+});
+
+router.post(
+  "/seen/:id",
   AuthMiddleware.getAdminAuthorize,
   async (req, res, next) => {
     try {
-      // const { limit, offset, sort } = req.params;
-      const {limit, offset, sort} = req.query
-      console.log(req.query);
-      const docs = await ConfessionController.fetchConfession(limit, offset, sort);
-      res.json({ data: docs });
+      const { id } = req.params;
+      await ConfessionController.revealConfession(id);
+
+      res.json({ message: "Đã đọc nội dung này." });
     } catch (error) {
       next(error);
     }
   }
 );
 
-router.post('/seen/:id', AuthMiddleware.getAdminAuthorize, async(req, res, next) => {
-  try {
-    const {id} = req.params;
-    await ConfessionController.revealConfession(id);
-    res.json({message: "Đã đọc nội dung này."})
-  } catch (error) {
-    next(error)
-  }
-})
-
 const ConfessionRouter = router;
 module.exports = ConfessionRouter;
-
