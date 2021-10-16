@@ -1,0 +1,18 @@
+@import "styles/Color";
+@import "styles/Mixins";
+.profile {
+  &__container {
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 1.2333em;
+    width: 60%;
+    padding: 2.3em;
+    background: #fff;
+    border-radius: 12px;
+    @include mobile {
+      width: 100%;
+      padding: 1.2em;
+      margin-top: 0;
+    }
+  }
+}

@@ -124,3 +124,6 @@ dist
 
 uploads
 # End of https://www.toptal.com/developers/gitignore/api/node
+
+# Test server for unit testing
+/server_test
