@@ -13,7 +13,7 @@
     }
   }
   &__content {
-    @include mobile {
+    @include tablet {
       padding-top: 6em !important;
     }
   }

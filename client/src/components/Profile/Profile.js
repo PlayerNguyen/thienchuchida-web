@@ -16,7 +16,7 @@ export default function Profile() {
       <div>
         <Header />
       </div>
-      <Container fluid className="profile-container">
+<Container fluid className="profile-container">
         <Container className="bg-white p-4 mt-md-5 mb-md-5 mt-sm-2 mb-sm-2">
           <Row className="mb-3">
             <Col>
