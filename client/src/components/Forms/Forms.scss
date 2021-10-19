@@ -21,7 +21,6 @@
     @include mobile {
       width: 90%;
       flex-flow: column;
-      
     }
   }
 
@@ -133,3 +132,12 @@
     border: 0 !important;
   }
 }
+.w-scalable {
+  @include mobile {
+    width: 100% !important;
+  }
+  @include tablet {
+    width: 95% !important;
+  }
+}
+

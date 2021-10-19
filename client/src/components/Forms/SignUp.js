@@ -5,6 +5,16 @@ import { useHistory } from "react-router-dom";
 import { toast } from "react-toastify";
 import MiscConfig from "../../config/misc.config";
 import Header from "../Header/Header";
+import {
+  Container,
+  Row,
+  Col,
+  Form,
+  FloatingLabel,
+  Button,
+} from "react-bootstrap";
+import validateHelper from "../../helpers/validateHelper";
+import toastHelper from "../../helpers/toastHelper";
 
 export default function SignUp() {
   const [username, setUsername] = useState("");
@@ -15,34 +25,20 @@ export default function SignUp() {
   const [isPasswordValid, setPasswordValid] = useState(false);
   const [isRepasswordValid, setIsRepasswordValid] = useState(false);
   const [isValid, setIsValid] = useState(false);
+  const [isDisplayValid, setIsDisplayValid] = useState(true);
   const history = useHistory();
   // const dispatch = useDispatch();
-
-  const handleUsernameChange = (e) => {
-    setUsername(e.target.value);
-  };
-  const handlePasswordChange = (e) => {
-    setPassword(e.target.value);
-  };
-
-  const handleEmailChange = (e) => {
-    setEmail(e.target.value);
-  };
-
-  const handleRepasswordChange = (e) => {
-    setRepassword(e.target.value);
-  };
-
-  const handleChangeDisplay = ({ target }) => {
-    setDisplay(target.value);
-  };
 
   const handleSubmit = (e) => {
     // Prevent a submit form action
     e.preventDefault();
 
     // Empty field means no sign in
-    if (username === "" && password === "") return;
+    if (!isValid) {
+      return toastHelper.error(
+        "Các thông tin bạn nhập bị thiếu hoặc chưa chính xác. Hãy thử lại."
+      );
+    }
 
     // Field validation: password must greater than configured value
     if (password.length < MiscConfig.PASSWORD_MINIMUM_LENGTH) {
@@ -70,11 +66,15 @@ export default function SignUp() {
   };
 
   useEffect(() => {
-    setPasswordValid(password.length >= MiscConfig.PASSWORD_MINIMUM_LENGTH);
+    if (password === "") {
+      setPasswordValid(true);
+    } else setPasswordValid(validateHelper.validatePassword(password));
   }, [password]);
 
   useEffect(() => {
-    setIsRepasswordValid(password === repassword);
+    if (password === "" || repassword === "") {
+      setIsRepasswordValid(true);
+    } else setIsRepasswordValid(password === repassword);
   }, [password, repassword]);
 
   useEffect(() => {
@@ -87,124 +87,139 @@ export default function SignUp() {
     );
   }, [username, email, isPasswordValid, isRepasswordValid, display]);
 
+  useEffect(() => {
+    // if (display === "") {
+    //   setIsDisplayValid(true);
+    // } else setIsDisplayValid(validateHelper.validateDisplayName(display));
+    setIsDisplayValid(display !== "");
+  }, [display]);
+
   return (
     <div>
-      <Header />
-      <div className="container form--outer ">
-        <form className="form formSignUp" onSubmit={handleSubmit}>
-          <div className="form__header">
-            <h1 className="form__header__title">Đăng ký</h1>
-          </div>
-          {/* display name */}
-          <div className="form__container">
-            <div className="form__container--block">
-              <div className="form--label">Tên hiển thị</div>
-              <div className="form__input__outer">
-                <input
-                  type="text"
-                  className="input"
-                  value={display}
-                  onChange={handleChangeDisplay}
-                />
-              </div>
-              <small className="input__description">
-                Dùng để hiển thị khi bạn tương tác với mọi người
-              </small>
-            </div>
-
-            {/* sign up username */}
-            <div className="form__container--block">
-              <div className="form--label">Tên đăng nhập</div>
-              <div className="form__input__outer">
-                <input
-                  type="text"
-                  className="input"
-                  value={username}
-                  onChange={handleUsernameChange}
-                />
-              </div>
-              <small className="input__description">
-                  Dùng để đăng nhập.
-                </small>
-            </div>
-            {/* email */}
-            <div className="form__container--block">
-              <div className="form--label">Email</div>
-              <div className="form__input__outer">
-                <input
-                  type="email"
-                  className="input"
-                  value={email}
-                  onChange={handleEmailChange}
-                />
-              </div>
-              <small className="input__description">
-                  Dùng để thông báo và khôi phục mật khẩu khi bị mất.
-                </small>
-            </div>
-            {/* password */}
-            <div className="form__container--block">
-              <div className="form--label">Mật khẩu</div>
-              <div className="form__input__outer">
-                <input
-                  type="password"
-                  className={`input ${
-                    password !== "" &&
-                    (isPasswordValid ? `input--success` : `input--danger`)
-                  }`}
-                  value={password}
-                  onChange={handlePasswordChange}
-                />
-                <small className="input__description">
-                  Mật khẩu phải có ít nhất 8 ký tự, một chữ cái viết hoa và một
-                  chữ số.
-                </small>
-              </div>
-            </div>
-            {/* repassword */}
-            <div className="form__container--block">
-              <div className="form--label">Nhập lại mật khẩu</div>
-              <div className="form__input__outer">
-                <input
-                  type="password"
-                  className={`input ${
-                    repassword !== "" &&
-                    (isRepasswordValid ? `input--success` : `input--danger`)
-                  }`}
-                  value={repassword}
-                  onChange={handleRepasswordChange}
-                />
-              </div>
-            </div>
-            {/* sign up button */}
-            <div className="form__container--block">
-              <div className="form__input__outer">
-                <input
-                  type="submit"
-                  className={`input input--submit ${
-                    !isValid && `input--disabledz`
-                  }`}
-                  // disabled={!isValid}
-                  value="Đăng ký"
-                />
-              </div>
-            </div>
-          </div>
-
-          <div className="form__footer">
-            <a className="link link--secondary text-secondary" href="/dang-nhap">
-              Đăng nhập
-            </a>
-          </div>
-        </form>
-        <div className="form form--others">
-          <div className="form__header">
-            <h1 className="form__header__title form__header__title--lighter">
-              hoặc đăng nhập bằng:
-            </h1>
-          </div>
-        </div>
+      <div>
+        <Header />
       </div>
+      <Container>
+        <Container className=" w-25 w-scalable bg-white mt-3 mb-3 p-4 rounded">
+          <Row className="mb-3">
+            <Col>
+              <h1 className="ff-normal">Đăng ký</h1>
+            </Col>
+          </Row>
+          <Form onSubmit={handleSubmit}>
+            <Form.Group className="mb-3">
+              <FloatingLabel controlId="display" label="Tên hiển thị">
+                <Form.Control
+                  type="text"
+                  placeholder="Tên hiển thị"
+                  required
+                  value={display}
+                  onChange={({ target }) => setDisplay(target.value)}
+                  isInvalid={!isDisplayValid}
+                />
+              </FloatingLabel>
+              <Form.Text className="text-muted">
+                Tên này dùng để hiển thị với mọi người
+              </Form.Text>
+            </Form.Group>
+
+            <Form.Group className="mb-3">
+              <FloatingLabel controlId="username" label="Tên người dùng">
+                <Form.Control
+                  type="text"
+                  placeholder="Tên người dùng"
+                  required
+                  value={username}
+                  onChange={({ target }) => setUsername(target.value)}
+                />
+              </FloatingLabel>
+              <Form.Text className="text-muted">
+                Tên này dùng để đăng nhập
+              </Form.Text>
+            </Form.Group>
+
+            <Form.Group className="mb-3">
+              <FloatingLabel controlId="email" label="Email">
+                <Form.Control
+                  type="email"
+                  placeholder="Email"
+                  required
+                  value={email}
+                  onChange={({ target }) => setEmail(target.value)}
+                />
+              </FloatingLabel>
+            </Form.Group>
+
+            <Form.Group className="mb-3">
+              <FloatingLabel controlId="password" label="Mật khẩu">
+                <Form.Control
+                  type="password"
+                  name="password"
+                  placeholder="Mật khẩu"
+                  required
+                  value={password}
+                  onChange={({ target }) => setPassword(target.value)}
+                  isInvalid={!isPasswordValid}
+                />
+              </FloatingLabel>
+
+              <Form.Text className="text-muted">
+                <strong>Mật khẩu phải có </strong>
+                <br />
+                <ul>
+                  <li>Một ký tự viết thường</li>
+                  <li>Một ký tự viết hoa</li>
+                  <li>Một chữ số</li>
+                  <li>Ít nhất 8 ký tự</li>
+                </ul>
+              </Form.Text>
+            </Form.Group>
+
+            <Form.Group className="mb-3">
+              <FloatingLabel
+                controlId="password"
+                label="Nhập lại mật khẩu"
+                isInvalid={!isRepasswordValid}
+              >
+                <Form.Control
+                  type="password"
+                  name="repassword"
+                  placeholder="Nhập lại mật khẩu"
+                  required
+                  value={repassword}
+                  onChange={({ target }) => setRepassword(target.value)}
+                  isInvalid={!isRepasswordValid}
+                />
+              </FloatingLabel>
+            </Form.Group>
+
+            <Button
+              type="submit"
+              variant="primary"
+              size={"md"}
+              className="w-100 mb-3"
+            >
+              Đăng ký
+            </Button>
+
+            <Form.Group>
+              <Form.Label className="text-secondary">
+                Đã có tài khoản?
+              </Form.Label>
+              <Button
+                onClick={() => {
+                  history.push("/dang-nhap");
+                }}
+                variant="outline-success"
+                size={"md"}
+                className="w-100"
+              >
+                Đăng nhập
+              </Button>
+            </Form.Group>
+          </Form>
+        </Container>
+      </Container>
     </div>
   );
 }
