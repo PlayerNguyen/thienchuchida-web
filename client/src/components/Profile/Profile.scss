@@ -1,5 +1,16 @@
+@import "styles/Mixins";
 .profile {
   &-container {
-    
+    > div {
+      width: 50% !important;
+      
+      @include tablet {
+        width: 75% !important;
+      }
+
+      @include mobile {
+        width: 100% !important;
+      }
+    }
   }
 }

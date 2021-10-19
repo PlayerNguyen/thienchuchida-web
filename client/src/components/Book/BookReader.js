@@ -47,8 +47,16 @@ export default function BookReader() {
                 <Breadcrumb
                   data={[
                     { url: "/", value: "Trang chủ" },
-                    { url: "/", value: `${data && data.book.title}` },
-                    { url: `/${data && data.slug}`, value: data && data.name },
+                    {
+                      url: `/truyen/${data && data.book.slug}`,
+                      value: `${data && data.book.title}`,
+                    },
+                    {
+                      url: `/truyen/${data && data.book.slug}/${
+                        data && data.slug
+                      }`,
+                      value: data && data.name,
+                    },
                   ]}
                 />
               </Col>

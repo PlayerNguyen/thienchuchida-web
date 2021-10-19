@@ -13,6 +13,10 @@ const DatabaseConfig = {
     Confession: {Name: "Confession"}
   },
   ConnectionDelay: 6000,
+  Url: {
+    Dev: "mongodb://localhost:27017/thienchuchida",
+    Deploy: "mongodb://localhost:27017/thienchuchida"
+  }
 };
 
 module.exports = DatabaseConfig;

@@ -6,12 +6,15 @@ import toastHelper from "../../helpers/toastHelper";
 
 export default function ProfileSetting() {
   const persistUser = useSelector((selector) => selector.auth.persistUser);
+
+  const [profileModify, setProfileModify] = useState(false);
   const [username, setUsername] = useState("");
   const [display, setDisplay] = useState("");
   const [email, setEmail] = useState("");
   const [changingInformation, setChangingInformation] = useState(false);
 
-  const [currentPassword, setCurrentPassword] = useState("");
+  // const [currentPassword, setCurrentPassword] = useState("");
+  const [passwordModify, setPasswordModify] = useState(false);
   const [newPassword, setNewPassword] = useState("");
   const [renewPassword, setRenewPassword] = useState("");
   const [changingPassword, setChangingPassword] = useState(false);
@@ -42,8 +45,11 @@ export default function ProfileSetting() {
       .then((response) => {
         const { message } = response.data;
         toastHelper.success(message);
+        setProfileModify(false);
       })
-      .finally((_) => setChangingInformation(false));
+      .finally((_) => {
+        setChangingInformation(false);
+      });
   };
 
   const handleSubmitChangePassword = (e) => {
@@ -60,13 +66,16 @@ export default function ProfileSetting() {
     UserService.putAdminModifyUser({
       _id: persistUser._id,
       password: newPassword,
-    }).then((response) => {
-      const {message} = response.data;
-      toastHelper.success(message)
-    }).finally(_ => {
-      setRenewPassword("")
-      setNewPassword("")
-    });
+    })
+      .then((response) => {
+        const { message } = response.data;
+        toastHelper.success(message);
+      })
+      .finally((_) => {
+        setRenewPassword("");
+        setNewPassword("");
+        setChangingPassword(false)
+      });
   };
 
   return (
@@ -99,7 +108,10 @@ export default function ProfileSetting() {
             <Form.Control
               type="text"
               value={display}
-              onChange={(_) => setDisplay(_.target.value)}
+              onChange={(_) => {
+                setProfileModify(true);
+                setDisplay(_.target.value);
+              }}
             />
           </Col>
         </Form.Group>
@@ -112,7 +124,10 @@ export default function ProfileSetting() {
             <Form.Control
               type="email"
               value={email}
-              onChange={(_) => setEmail(_.target.value)}
+              onChange={(_) => {
+                setProfileModify(true);
+                setEmail(_.target.value);
+              }}
             />
           </Col>
         </Form.Group>
@@ -120,7 +135,10 @@ export default function ProfileSetting() {
         <Row>
           <Col md={2}></Col>
           <Col>
-            <Button type="submit" disabled={changingInformation}>
+            <Button
+              type="submit"
+              disabled={changingInformation || !profileModify}
+            >
               {changingInformation ? `Đang thay đổi...` : `Thay đổi`}
             </Button>
           </Col>
@@ -174,7 +192,9 @@ export default function ProfileSetting() {
               type="password"
               name="password"
               value={renewPassword}
-              onChange={(_) => setRenewPassword(_.target.value)}
+              onChange={(_) => {
+                setRenewPassword(_.target.value);
+              }}
             />
           </Col>
         </Form.Group>
@@ -182,7 +202,12 @@ export default function ProfileSetting() {
         <Row>
           <Col md={2}></Col>
           <Col>
-            <Button type="submit" disabled={changingPassword}>
+            <Button
+              type="submit"
+              disabled={
+                changingPassword || (newPassword === "" && renewPassword === "")
+              }
+            >
               {changingPassword ? `Đang thay đổi...` : `Đổi mật khẩu`}
             </Button>
           </Col>

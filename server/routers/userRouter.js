@@ -19,6 +19,7 @@ const {
 } = require("../middlewares/AuthMiddleware");
 const router = express.Router();
 const { validatePassword } = require("../helpers/validateHelper");
+const UserModel = require("../models/UserModel.js");
 
 /**
  * Register new account api.
@@ -194,6 +195,23 @@ router.put("/", getAuthorize, async (req, res, next) => {
         )
       );
     }
+
+    // Check for existence of email
+    // const currentUser = await UserModel.findOne({_id: _id});
+    const userFromEmail = await UserModel.findOne({ email });
+    // console.log(userFromEmail);
+    if (email && userFromEmail) {
+      // console.log(userFromEmail._id);
+      // console.log(_id);
+      if (userFromEmail._id !== _id) {
+        return next(
+          new MiddlewareError(
+            "Email này đã có người sử dụng, vui lòng sử dụng email khác."
+          )
+        );
+      }
+    }
+
     // If current user are not match with id or not an admin
     const { currentUser } = req;
 

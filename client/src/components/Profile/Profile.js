@@ -17,17 +17,17 @@ export default function Profile() {
         <Header />
       </div>
       <Container fluid className="profile-container">
-        <Container className="w-50 bg-white p-4 mt-5 mb-5">
-          <Row>
+        <Container className="bg-white p-4 mt-md-5 mb-md-5 mt-sm-2 mb-sm-2">
+          <Row className="mb-3">
             <Col>
-              <h1>{persistUser && persistUser.display}</h1>
+              <h1 className="ff-normal">{persistUser && persistUser.display}</h1>
             </Col>
           </Row>
-          <Row className="mb-2">
+          {/* <Row className="mb-2">
             <Col>
               <h4>Sub-title</h4>
             </Col>
-          </Row>
+          </Row> */}
           <Row>
             <ul class="nav nav-tabs">
               {navItems.map((item, i) => (
