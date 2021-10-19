@@ -216,7 +216,7 @@ export default function Header() {
           <div className="header-navigation" >
             <NavDropdown
               title={
-                isSignedIn ? persistUser && persistUser.username : `Account`
+                isSignedIn ? persistUser && persistUser.display : `Account`
               }
               items={userInfoItems}
             />

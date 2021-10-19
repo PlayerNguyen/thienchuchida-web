@@ -3,6 +3,7 @@ const httpServer = require("http").createServer(app);
 const chalk = require("chalk");
 const mongoose = require("mongoose");
 const settingController = require("../controllers/settingController");
+const DatabaseConfig = require("../config/database.config");
 // const DatabaseConfig = require("../config/database.config");
 require("dotenv").config();
 /**
@@ -14,23 +15,30 @@ const port = process.env.PORT || 3000;
 /**
  * Database initialize
  */
+// const DATABASE_URL =
+//   process.env.NODE_ENV === "development"
+//     ? process.env.DATABASE_DEV_URL
+//     : process.env.DATABASE_URL;
+// Select database configuration 
 const DATABASE_URL =
   process.env.NODE_ENV === "development"
-    ? process.env.DATABASE_DEV_URL
-    : process.env.DATABASE_URL;
+    ? DatabaseConfig.Url.Dev
+    : DatabaseConfig.Url.Deploy;
+// Connect to database server
 mongoose.connect(DATABASE_URL);
+// On catch error, close connection and return error
 mongoose.connection.on("error", (err) => {
   console.log("err", err);
 });
 
-mongoose.connection.on("connected", async() => {
+mongoose.connection.on("connected", async () => {
   console.log(`💾  ${chalk.greenBright(`Mongoose is connected`)}`);
   /**
    * Initialize usual settings
    */
-  await settingController.init("background-url", "Background.png")
-  await settingController.init("slogan", "A miracle is another name of effect")
-  await settingController.init("subslogan", "Sub-slogan below slogan")
+  await settingController.init("background-url", "Background.png");
+  await settingController.init("slogan", "A miracle is another name of effect");
+  await settingController.init("subslogan", "Sub-slogan below slogan");
 });
 
 /**

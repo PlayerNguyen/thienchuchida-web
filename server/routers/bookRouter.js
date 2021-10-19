@@ -21,9 +21,14 @@ const BookController = require("../controllers/bookController");
  */
 router.post("/", getAdminAuthorize, async (req, res, next) => {
   try {
-    const { title, description } = req.body;
+    const { title, description, password } = req.body;
     const { _id } = req.currentUser;
-    const book = await createNewBook({ title, description, creator: _id });
+    const book = await createNewBook({
+      title,
+      description,
+      creator: _id,
+      password,
+    });
     res.json({ data: book, message: "Tạo truyện thành công." });
   } catch (e) {
     next(e);
@@ -87,7 +92,6 @@ router.get("/book/:bookId", async (req, res, next) => {
     }
 
     const chapters = await getChaptersInBook(book._id);
-    // const totalViews = chapters.reduce((a, b) => a.views + b.views)
     res.json({
       data: book,
       chapters: {
@@ -104,12 +108,22 @@ router.get("/book/:bookId", async (req, res, next) => {
 /**
  * Check whether this book has password or not
  */
-router.post(`/has-password`, async (req, res, next) => {
+router.post(`/book/:bookId/has-password`, async (req, res, next) => {
   try {
     const { book } = req.body;
     res.json({ data: await BookController.hasPassword(book) });
   } catch (err) {
     next(err);
+  }
+});
+
+router.post("/book/:bookId/validate-password", async (req, res, next) => {
+  try {
+    const { bookId } = req.params;
+    const book = await findBook(bookId);
+    await book.comparePassword();
+  } catch (error) {
+    next(error);
   }
 });
 

@@ -51,7 +51,7 @@ export default function ResourceImage({ id, alt, height, ...children }) {
           <div className="text-danger text-center p-5">Ảnh không hợp lệ.</div>
         )
       ) : (
-        <div className="text-danger text-center p-5">
+        <div className="text-danger text-center p-5 bg-white">
           Không có ảnh (không tìm thấy ảnh)
         </div>
       )}

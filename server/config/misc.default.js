@@ -15,6 +15,21 @@ const MiscConfig = {
   compress: {
     quality: 50,
   },
+  authentication: {
+    bcrypt: {
+      rounds: 16,
+    },
+  },
+  tokens: {
+    accessToken: {
+      secret: "",
+      expiration: "15m",
+    },
+    refreshToken: {
+      secret: "",
+      expiration: "7d",
+    },
+  },
 };
 
 module.exports = MiscConfig;

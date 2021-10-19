@@ -55,7 +55,13 @@ router.delete("/comment/:id", getAuthorize, async (req, res, next) => {
     // Check permissions
     const currentUser = req.currentUser;
     const comment = await readComment(id);
-    if (comment.user !== currentUser._id && !currentUser.admin) {
+    // console.log(
+    //   "currentUser id",
+    //   currentUser._id,
+    //   "comment user id",
+    //   comment.user._id
+    // );
+    if (comment.user._id !== currentUser._id && !currentUser.admin) {
       return next(
         new MiddlewareError("Bạn không có quyền để thực hiện hành động này.")
       );

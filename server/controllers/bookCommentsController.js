@@ -29,7 +29,7 @@ async function deleteComment(id) {
     throw new MiddlewareError("Không tìm thấy bình luận này để xoá");
   }
   // Remove, say bye to your mom
-  return BookCommentsModel.remove({ _id: id });
+  return BookCommentsModel.deleteOne({ _id: id });
 }
 
 /**

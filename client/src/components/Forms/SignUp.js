@@ -123,6 +123,9 @@ export default function SignUp() {
                   onChange={handleUsernameChange}
                 />
               </div>
+              <small className="input__description">
+                  Dùng để đăng nhập.
+                </small>
             </div>
             {/* email */}
             <div className="form__container--block">
@@ -135,6 +138,9 @@ export default function SignUp() {
                   onChange={handleEmailChange}
                 />
               </div>
+              <small className="input__description">
+                  Dùng để thông báo và khôi phục mật khẩu khi bị mất.
+                </small>
             </div>
             {/* password */}
             <div className="form__container--block">
@@ -150,7 +156,8 @@ export default function SignUp() {
                   onChange={handlePasswordChange}
                 />
                 <small className="input__description">
-                  Mật khẩu phải có ít nhất 8 ký tự
+                  Mật khẩu phải có ít nhất 8 ký tự, một chữ cái viết hoa và một
+                  chữ số.
                 </small>
               </div>
             </div>
@@ -175,17 +182,17 @@ export default function SignUp() {
                 <input
                   type="submit"
                   className={`input input--submit ${
-                    !isValid && `input--disabled`
+                    !isValid && `input--disabledz`
                   }`}
-                  disabled={!isValid}
+                  // disabled={!isValid}
                   value="Đăng ký"
                 />
               </div>
             </div>
           </div>
-          
+
           <div className="form__footer">
-            <a className="link link--secondary" href="/dang-nhap">
+            <a className="link link--secondary text-secondary" href="/dang-nhap">
               Đăng nhập
             </a>
           </div>

@@ -70,23 +70,31 @@ function CommentSection({ comment, index, persistUser, handleRemoveComment }) {
   }, [comment]);
 
   const handleToggleEditMode = () => {
+    
     setEdit(!edit);
+    if (edit) {
+      handleUpdateComment()
+    }
   };
 
   const handleChangeEditContext = ({ target }) => {
     setContent(target.value);
   };
 
-  useEffect(() => {
-    if (!edit && content !== comment.content) {
-      CommentService.updateComment(comment._id, content).then((response) => {
-        const { message } = response.data;
-        // Put it to success method
-        toastHelper.success(message);
-        // Then set it to comment content
-      });
-    }
-  }, [edit, content, comment]);
+  // useEffect(() => {
+  //   if (!edit && content !== comment.content) {
+
+  //   }
+  // }, [edit, content, comment]);
+
+  const handleUpdateComment = () => {
+    CommentService.updateComment(comment._id, content).then((response) => {
+      const { message } = response.data;
+      // Put it to success method
+      toastHelper.success(message);
+      // Then set it to comment content
+    });
+  };
 
   return (
     <LazyLoad>
@@ -209,7 +217,7 @@ export default function Book() {
 
   useEffect(() => {
     if (bookInfo) {
-      document.title = `${bookInfo.title} | Thiên Chu Chi Dạ`
+      document.title = `${bookInfo.title} | Thiên Chu Chi Dạ`;
       setIsCommentLoading(true);
       // Then fetch comments of this book
       handleFetchComment(bookInfo);
