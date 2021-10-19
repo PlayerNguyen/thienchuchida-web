@@ -1,13 +1,19 @@
 const mongoose = require("mongoose");
 const userController = require("../controllers/userController");
 const chalk = require("chalk");
+const DatabaseConfig = require("../config/database.config");
+
 /**
  * Database initialize
  */
+// const DATABASE_URL =
+//   process.env.NODE_ENV === "production"
+//     ? process.env.DATABASE_URL
+//     : process.env.DATABASE_DEV_URL;
 const DATABASE_URL =
-  process.env.NODE_ENV === "production"
-    ? process.env.DATABASE_URL
-    : process.env.DATABASE_DEV_URL;
+  process.env.NODE_ENV === "development"
+    ? DatabaseConfig.Url.Dev
+    : DatabaseConfig.Url.Deploy;
 console.log(DATABASE_URL);
 mongoose.connect(DATABASE_URL);
 mongoose.connection.on("error", (err) => {
