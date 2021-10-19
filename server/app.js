@@ -17,6 +17,7 @@ const notify = require("./routers/notifyRouter");
 
 const { middlewareError } = require("./utils/errors-handle");
 const ConfessionRouter = require("./routers/confessionRouter");
+const MiscConfig = require("./config/misc.config");
 
 /**
  * Middleware settings here
@@ -28,7 +29,8 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cookieParser());
 app.use(
   cors({
-    origin: process.env.ORIGIN_URL,
+    // origin: process.env.ORIGIN_URL,
+    origin: MiscConfig.cors,
     credentials: true,
   })
 );
