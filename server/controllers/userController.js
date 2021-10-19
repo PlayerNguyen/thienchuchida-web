@@ -138,10 +138,11 @@ async function updateUser(id, body) {
     throw new MiddlewareError(`Không tìm thấy người dùng với id ${id}`);
   }
 
-  const { password, email, avatar } = body;
+  const { password, email, avatar, display } = body;
   if (password) doc.password = password;
   doc.email = email || doc.email;
   doc.avatar = avatar || doc.avatar;
+  doc.display = display || doc.display;
   // Then save all
   return doc.save();
 }
