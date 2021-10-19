@@ -4,6 +4,7 @@ const { MiddlewareError } = require("../errors/MiddlewareError");
 const TokenNotFoundError = require("../errors/TokenNotFoundError");
 const CookieHelper = require("../helpers/cookieHelper");
 const { verifyAccessToken } = require("../helpers/tokenHelper");
+const UserModel = require("../models/UserModel");
 
 async function getAuthorize(req, res, next) {
   try {
@@ -17,7 +18,9 @@ async function getAuthorize(req, res, next) {
 
     // Verify a token and export data for next stage
     const data = await verifyAccessToken(AccessToken);
-    req.currentUser = data;
+    // Get a newest data from database
+    const user = await UserModel.findOne({_id: data._id}, "-password -__v -tokens");
+    req.currentUser = user;
     next();
   } catch (err) {
     next(err);
@@ -52,7 +55,9 @@ async function getAdminAuthorize(req, res, next) {
       );
     }
     // Otherwise, continue the task
-    req.currentUser = data;
+    // Get a newest data from database
+    const user = await UserModel.findOne({_id: data._id}, "-password -__v -tokens");
+    req.currentUser = user;
     next();
   } catch (error) {
     next(error);
@@ -92,8 +97,9 @@ async function getAuthorizeSilent(req, res, next) {
 
     // Validate token
     const data = await verifyAccessToken(AccessToken);
-
-    req.currentUser = data;
+    // Get a newest data from database
+    const user = await UserModel.findOne({_id: data._id}, "-password -__v -tokens");
+    req.currentUser = user;
     next();
   } catch (err) {
     next(err);

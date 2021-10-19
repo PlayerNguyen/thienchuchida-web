@@ -4,6 +4,7 @@ import { Container, Row, Col } from "react-bootstrap";
 import "./Profile.scss";
 import { useSelector } from "react-redux";
 import { useRouteMatch, Link, Switch, Route } from "react-router-dom";
+import ProfileSetting from './ProfileSetting'
 
 export default function Profile() {
   const persistUser = useSelector((state) => state.auth.persistUser);
@@ -16,7 +17,7 @@ export default function Profile() {
         <Header />
       </div>
       <Container fluid className="profile-container">
-        <Container className="w-50 bg-white p-4 mt-5 ">
+        <Container className="w-50 bg-white p-4 mt-5 mb-5">
           <Row>
             <Col>
               <h1>{persistUser && persistUser.display}</h1>
@@ -42,7 +43,7 @@ export default function Profile() {
             <Container>
               <Switch>
                 <Route path="/">
-                  
+                  <ProfileSetting />
                 </Route>
               </Switch>
             </Container>

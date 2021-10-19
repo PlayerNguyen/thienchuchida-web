@@ -9,6 +9,7 @@ const {
   deleteUser,
   updateUser,
   toggleAdmin,
+  getProfile,
 } = require("../controllers/userController");
 const { MiddlewareError } = require("../errors/MiddlewareError");
 const {
@@ -17,6 +18,7 @@ const {
   getAuthorize,
 } = require("../middlewares/AuthMiddleware");
 const router = express.Router();
+const { validatePassword } = require("../helpers/validateHelper");
 
 /**
  * Register new account api.
@@ -27,7 +29,19 @@ router.post("/signup", async (req, res, next) => {
 
     if (!username || !password || !email || !display) {
       return next(
-        new MiddlewareError("Thiếu dữ liệu nhập vào, vui lòng nhập đủ dữ liệu cần thiết", 500)
+        new MiddlewareError(
+          "Thiếu dữ liệu nhập vào, vui lòng nhập đủ dữ liệu cần thiết",
+          500
+        )
+      );
+    }
+
+    // whether the given password is not valid
+    if (!validatePassword(password)) {
+      return next(
+        new MiddlewareError(
+          "Mật khẩu phải có ít nhất 1 ký tự viết thường, một ký tự viết hoa, một chữ số."
+        )
       );
     }
 
@@ -98,6 +112,22 @@ router.post("/refresh-token", async (req, res, next) => {
   }
 });
 
+router.get("/general/:id", async (req, res, next) => {
+  try {
+    // fetch id in require params
+    const { id } = req.params;
+    const profile = await getProfile(id);
+    // response not found when not found an account
+    if (!profile) {
+      throw new MiddlewareError(`Không tìm thấy tài khoản ${id}`);
+    }
+    // response the profile to the client
+    res.json({ data: profile });
+  } catch (err) {
+    next(err);
+  }
+});
+
 router.post("/signout", async (req, res, next) => {
   try {
     // Delete Refresh token existed in the database
@@ -150,17 +180,28 @@ router.delete("/:id", getAdminAuthorize, async (req, res, next) => {
 router.put("/", getAuthorize, async (req, res, next) => {
   try {
     const { _id, password, avatar, email, display } = req.body;
+
     // Not found a user
     if (_id == null) {
       throw new MiddlewareError(`Không tìm thấy giá trị id trong body.`);
     }
 
+    // Whether the password is invalid
+    if (password && !validatePassword(password)) {
+      return next(
+        new MiddlewareError(
+          "Mật khẩu phải có ít nhất 1 ký tự viết thường, một ký tự viết hoa, một chữ số."
+        )
+      );
+    }
     // If current user are not match with id or not an admin
     const { currentUser } = req;
 
     if (currentUser._id !== _id) {
       if (!currentUser.admin) {
-        throw new MiddlewareError("Bạn không có quyền chỉnh sửa thông tin của người khác!");
+        throw new MiddlewareError(
+          "Bạn không có quyền chỉnh sửa thông tin của người khác!"
+        );
       }
     }
 
@@ -176,7 +217,9 @@ router.post("/admin", getAdminAuthorize, async (req, res, next) => {
     const { id } = req.body;
     const { _id } = req.currentUser;
     if (id === _id) {
-      throw new MiddlewareError("Bạn không thể tự sửa quyền admin của bản thân!");
+      throw new MiddlewareError(
+        "Bạn không thể tự sửa quyền admin của bản thân!"
+      );
     }
     // Toggle admin permissions
     const account = await toggleAdmin(id);

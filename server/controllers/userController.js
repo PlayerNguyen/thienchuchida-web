@@ -132,7 +132,7 @@ async function deleteUser(id) {
 }
 
 async function updateUser(id, body) {
-  const doc = await UserModel.findOne({ _id: id }, "-password");
+  const doc = await UserModel.findOne({ _id: id }, "-password -tokens");
 
   if (!doc) {
     throw new MiddlewareError(`Không tìm thấy người dùng với id ${id}`);
@@ -159,6 +159,10 @@ async function toggleAdmin(id) {
   return doc.save();
 }
 
+async function getProfile(id) {
+  return UserModel.findOne({_id: id}, "-tokens -password -__v")
+}
+
 module.exports = {
   signIn,
   doRefreshToken,
@@ -169,4 +173,5 @@ module.exports = {
   deleteUser,
   updateUser,
   toggleAdmin,
+  getProfile
 };

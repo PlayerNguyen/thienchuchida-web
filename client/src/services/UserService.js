@@ -36,6 +36,10 @@ const postAdminToggleUserPermission = (id) => {
   return axiosInstance.post("/users/admin", { id });
 };
 
+const getGeneralProfile = (id) => {
+  return axiosInstance.get(`/users/general/${id}`)
+}
+
 const UserService = {
   getProfile,
   postSignIn,
@@ -46,5 +50,6 @@ const UserService = {
   putAdminModifyUser,
   deleteAdminDeleteUser,
   postAdminToggleUserPermission,
+  getGeneralProfile,
 };
 export default UserService;
