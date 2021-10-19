@@ -1,5 +1,3 @@
-const jsonwebtoken = require("jsonwebtoken");
-const MiscConfig = require("../config/misc.default");
 const { isAdmin, doRefreshToken } = require("../controllers/userController");
 const { MiddlewareError } = require("../errors/MiddlewareError");
 const TokenNotFoundError = require("../errors/TokenNotFoundError");
@@ -46,7 +44,7 @@ async function getAdminAuthorize(req, res, next) {
 
     // Check whether this player is admin or not
     const admin = await isAdmin(data._id);
-    
+
     // User is not an administrator
     if (!admin) {
       return next(
