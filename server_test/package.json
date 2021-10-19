@@ -1,0 +1,18 @@
+{
+  "name": "server_test",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "jest",
+    "start": "node runtime.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.17.1",
+    "jest": "^27.2.5",
+    "supertest": "^6.1.6"
+  }
+}

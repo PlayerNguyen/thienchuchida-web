@@ -2,12 +2,12 @@ const { MiddlewareError } = require("../errors/MiddlewareError");
 const BookChapterModel = require("../models/BookChapterModel");
 const BookModel = require("../models/BookModel");
 
-async function createNewBook({ title, description, authors, creator }) {
+async function createNewBook({ title, description, authors, creator, password }) {
   const existedBook = await BookModel.findOne({ title });
   if (existedBook) {
     throw new MiddlewareError(`Truyện với tiêu đề ${title} đã tồn tại.`);
   }
-  const data = await BookModel.create({ title, description, authors, creator });
+  const data = await BookModel.create({ title, description, authors, creator, password });
   return data;
 }
 
@@ -108,8 +108,12 @@ async function updateBook(
   book.description = description || book.description;
   book.thumbnail = thumbnail || book.thumbnail;
   book.tags = tags || book.tags;
-  if (password !== undefined) book.password = password;
   book.updatedAt = Date.now();
+  
+  if (password) {
+    console.log("Change password of a book: " + book._id);
+    book.password = password;
+  }
   // Update and save
   return book.save();
 }
