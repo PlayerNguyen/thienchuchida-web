@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Modal, Button, Form } from "react-bootstrap";
 import { toast } from "react-toastify";
-import validateHelper, { createUserSchema, modifyUserSchema } from "../../helpers/validateHelper";
+import validateHelper, { createUserSchema, modifyUserSchema } from "../../helpers/validateHelper/index";
 
 function ModifyUserModal({ visible, onConfirm, onClose, user = null, loading }) {
   const [userInfo, setUserInfo] = useState({
