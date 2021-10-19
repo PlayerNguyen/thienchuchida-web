@@ -19,19 +19,16 @@ const port = process.env.PORT || 3000;
 //   process.env.NODE_ENV === "development"
 //     ? process.env.DATABASE_DEV_URL
 //     : process.env.DATABASE_URL;
-// Select database configuration 
+// Select database configuration
 const DATABASE_URL =
   process.env.NODE_ENV === "development"
     ? DatabaseConfig.Url.Dev
     : DatabaseConfig.Url.Deploy;
-// Connect to database server
-mongoose.connect(DATABASE_URL);
-// On catch error, close connection and return error
-mongoose.connection.on("error", (err) => {
-  console.log("err", err);
-});
 
-mongoose.connection.on("connected", async () => {
+async function main() {
+  // Connect to database server
+
+  await mongoose.connect(DATABASE_URL);
   console.log(`💾  ${chalk.greenBright(`Mongoose is connected`)}`);
   /**
    * Initialize usual settings
@@ -39,17 +36,30 @@ mongoose.connection.on("connected", async () => {
   await settingController.init("background-url", "Background.png");
   await settingController.init("slogan", "A miracle is another name of effect");
   await settingController.init("subslogan", "Sub-slogan below slogan");
-});
 
-/**
- * Listen to the server
- */
-setTimeout(() => {
-  httpServer.listen(port, () => {
-    console.log(chalk.blue(`⚙ Listening at port ${port}`));
-    console.log(chalk.gray(`|- 🌐  http://localhost:${port}/`));
-    console.log(
-      chalk.gray(`|- ⚙  Running as ${process.env.NODE_ENV} node env`)
-    );
-  });
-}, 200);
+  /**
+   * Listen to the server
+   */
+  setTimeout(() => {
+    httpServer.listen(port, () => {
+      console.log(chalk.blue(`⚙ Listening at port ${port}`));
+      console.log(chalk.gray(`|- 🌐  http://localhost:${port}/`));
+      console.log(
+        chalk.gray(`|- ⚙  Running as ${process.env.NODE_ENV} node env`)
+      );
+    });
+  }, 200);
+}
+
+// // On catch error, close connection and return error
+// mongoose.connection.on("error", (err) => {
+//   console.log("err", err);
+// });
+
+// mongoose.connection.on("connected", async () => {
+
+// });
+
+main().catch((err) => {
+  console.log("Unexpected error: ", err);
+});
