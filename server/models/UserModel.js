@@ -59,11 +59,11 @@ userSchema.pre("save", async function (next) {
   next();
 });
 
-userSchema.pre(/find/, async function(next) {
-  const a = await this.model.findOne(this.getQuery())
-  console.log(a)
-  next()
-})
+// userSchema.pre(/find/, async function(next) {
+//   const a = await this.model.findOne(this.getQuery())
+//   console.log(a)
+//   next()
+// })
 
 /**
  * Compare raw password with hashed password.
