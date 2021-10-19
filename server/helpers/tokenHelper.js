@@ -24,7 +24,7 @@ async function generateAccessToken(user) {
     },
     MiscConfig.tokens.accessToken.secret,
     {
-      expiresIn: MiscConfig.tokens.accessToken.secret,
+      expiresIn: MiscConfig.tokens.accessToken.expiration,
     }
   );
 
