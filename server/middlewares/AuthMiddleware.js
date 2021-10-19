@@ -1,8 +1,10 @@
 const jsonwebtoken = require("jsonwebtoken");
+const MiscConfig = require("../config/misc.default");
 const { isAdmin, doRefreshToken } = require("../controllers/userController");
 const { MiddlewareError } = require("../errors/MiddlewareError");
 const TokenNotFoundError = require("../errors/TokenNotFoundError");
 const CookieHelper = require("../helpers/cookieHelper");
+const TokenHelper = require("../helpers/tokenHelper");
 const { verifyAccessToken } = require("../helpers/tokenHelper");
 const UserModel = require("../models/UserModel");
 
@@ -39,13 +41,12 @@ async function getAdminAuthorize(req, res, next) {
       );
     }
 
-    // Validate token
-    const data = jsonwebtoken.verify(
-      AccessToken,
-      process.env.ACCESS_TOKEN_SECRET
-    );
+    // Verify the provided access token
+    const data = await TokenHelper.verifyAccessToken(AccessToken);
 
+    // Check whether this player is admin or not
     const admin = await isAdmin(data._id);
+    
     // User is not an administrator
     if (!admin) {
       return next(
