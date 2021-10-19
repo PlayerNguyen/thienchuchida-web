@@ -1,4 +1,5 @@
 const jwt = require("jsonwebtoken");
+const MiscConfig = require("../config/misc.config");
 
 async function generateAccessToken(user) {
   // Not found a user to generate a token
@@ -21,9 +22,9 @@ async function generateAccessToken(user) {
       _id,
       display,
     },
-    process.env.ACCESS_TOKEN_SECRET,
+    MiscConfig.tokens.accessToken.secret,
     {
-      expiresIn: process.env.ACCESS_TOKEN_EXPIRATION,
+      expiresIn: MiscConfig.tokens.accessToken.secret,
     }
   );
 
@@ -54,9 +55,10 @@ async function generateRefreshToken(user, userAgent, address) {
       userAgent,
       address,
     },
-    process.env.REFRESH_TOKEN_SECRET,
+    MiscConfig.tokens.refreshToken.secret,
+    // process.env.REFRESH_TOKEN_SECRET,
     {
-      expiresIn: process.env.REFRESH_TOKEN_EXPIRATION,
+      expiresIn: MiscConfig.tokens.refreshToken.expiration,
     }
   );
 
@@ -70,7 +72,7 @@ async function verifyRefreshToken(token) {
     throw new Error("Token not found");
   }
 
-  return jwt.verify(token, process.env.REFRESH_TOKEN_SECRET);
+  return jwt.verify(token, MiscConfig.tokens.refreshToken.secret);
 }
 
 async function verifyAccessToken(token) {
@@ -79,7 +81,7 @@ async function verifyAccessToken(token) {
     throw new Error("Token not found");
   }
 
-  return jwt.verify(token, process.env.ACCESS_TOKEN_SECRET);
+  return jwt.verify(token, MiscConfig.tokens.accessToken.secret);
 }
 
 const TokenHelper = {
