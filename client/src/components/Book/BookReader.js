@@ -7,6 +7,7 @@ import ResourceImage from "../Admin/ResourceManager/ResourceImage";
 import Breadcrumb from "../Breadcrumb/Breadcrumb";
 import Header from "../Header/Header";
 import Loading from "../Loading/Loading";
+import Footer from "../Footer/Footer";
 import "./BookReader.scss";
 
 export default function BookReader() {
@@ -74,7 +75,28 @@ export default function BookReader() {
                   </Row>
                 );
               })}
-
+            {/* Bottom Breadcrumb */}
+            <Row>
+              <Col></Col>
+              <Col sm={12} md={10} lg={8}>
+                <Breadcrumb
+                  data={[
+                    { url: "/", value: "Trang chủ" },
+                    {
+                      url: `/truyen/${data && data.book.slug}`,
+                      value: `${data && data.book.title}`,
+                    },
+                    {
+                      url: `/truyen/${data && data.book.slug}/${
+                        data && data.slug
+                      }`,
+                      value: data && data.name,
+                    },
+                  ]}
+                />
+              </Col>
+              <Col></Col>
+            </Row>
             {/* Footer shows the navigation to another episode, things, links,... */}
             <div className="reader__footer pt-3 pb-3">
               <Row>
@@ -102,6 +124,9 @@ export default function BookReader() {
         ) : (
           <Loading />
         )}
+        <div>
+          <Footer />
+        </div>
       </Container>
     </div>
   );
