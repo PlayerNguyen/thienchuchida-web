@@ -59,7 +59,10 @@ router.get("/", async (req, res, next) => {
  */
 router.put("/", getAdminAuthorize, async (req, res, next) => {
   try {
-    const { _id, title, description, thumbnail, tags, password } = req.body;
+    const { _id, title, description, thumbnail, tags, password, author } =
+      req.body;
+
+    console.log(req.body);
 
     const updatedBook = await updateBook(
       _id,
@@ -67,7 +70,8 @@ router.put("/", getAdminAuthorize, async (req, res, next) => {
       description,
       thumbnail,
       tags,
-      password
+      password,
+      author
     );
 
     res.json({

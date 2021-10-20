@@ -2,12 +2,24 @@ const { MiddlewareError } = require("../errors/MiddlewareError");
 const BookChapterModel = require("../models/BookChapterModel");
 const BookModel = require("../models/BookModel");
 
-async function createNewBook({ title, description, authors, creator, password }) {
+async function createNewBook({
+  title,
+  description,
+  authors,
+  creator,
+  password,
+}) {
   const existedBook = await BookModel.findOne({ title });
   if (existedBook) {
     throw new MiddlewareError(`Truyện với tiêu đề ${title} đã tồn tại.`);
   }
-  const data = await BookModel.create({ title, description, authors, creator, password });
+  const data = await BookModel.create({
+    title,
+    description,
+    authors,
+    creator,
+    password,
+  });
   return data;
 }
 
@@ -33,7 +45,9 @@ async function getChapterById(book, chapter) {
   return BookChapterModel.findOne({
     book,
     $or: [{ _id: chapter }, { slug: chapter }],
-  }).populate("thumbnail", "-__v").populate("content", "-__v");
+  })
+    .populate("thumbnail", "-__v")
+    .populate("content", "-__v");
 }
 
 /**
@@ -46,7 +60,7 @@ async function getBooks(query, sort, limit, skip) {
     .limit(limit)
     .skip(skip)
     .populate("creator", "display _id username")
-    .populate("tags", "-__v")
+    .populate("tags", "-__v");
 }
 
 /**
@@ -60,7 +74,7 @@ async function getBookById(id) {
 }
 /**
  * Find a book by query.
- * 
+ *
  * @param {*} query any input
  * @returns a book whether find or null
  */
@@ -68,12 +82,14 @@ async function findBook(query) {
   return BookModel.findOne(
     { $or: [{ _id: query }, { slug: query }] },
     "-__v -password"
-  ).populate("tags", "-__v").then((doc) => {
-    if (doc) {
-      doc.views += 1;
-      return doc.save();
-    }
-  });
+  )
+    .populate("tags", "-__v")
+    .then((doc) => {
+      if (doc) {
+        doc.views += 1;
+        return doc.save();
+      }
+    });
   // .populate("thumbnail", "-__v");
 }
 
@@ -96,7 +112,8 @@ async function updateBook(
   description,
   thumbnail,
   tags,
-  password
+  password,
+  author
 ) {
   const book = await BookModel.findOne({ _id: bookId });
   // Book not exist
@@ -109,7 +126,8 @@ async function updateBook(
   book.thumbnail = thumbnail || book.thumbnail;
   book.tags = tags || book.tags;
   book.updatedAt = Date.now();
-  
+  book.author = author || book.author;
+
   if (password) {
     console.log("Change password of a book: " + book._id);
     book.password = password;

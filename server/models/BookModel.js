@@ -45,9 +45,9 @@ const bookSchema = new mongoose.Schema({
     type: String,
     ref: DatabaseConfig.Model.Resource.Name,
   },
-  authors: {
+  author: {
     type: String,
-    ref: DatabaseConfig.Model.Author.Name,
+    // ref: DatabaseConfig.Model.Author.Name,
   },
   creator: {
     type: String,
