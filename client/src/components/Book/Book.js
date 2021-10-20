@@ -324,7 +324,9 @@ export default function Book() {
                       Tác giả
                     </p>
 
-                    <p className="text-light d-inline-block ">Tên tác giả</p>
+                    <p className="text-light d-inline-block ">
+                      {bookInfo && bookInfo.author}
+                    </p>
                   </Col>
                 </Row>
 
