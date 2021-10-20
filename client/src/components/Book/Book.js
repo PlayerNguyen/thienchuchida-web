@@ -15,6 +15,7 @@ import Loading from "../Loading/Loading";
 import { useSelector } from "react-redux";
 import toastHelper from "../../helpers/toastHelper";
 import LazyLoad from "react-lazyload";
+import Footer from "../Footer/Footer";
 
 function Chapter({ data, bookId }) {
   const { url } = useRouteMatch();
@@ -70,10 +71,9 @@ function CommentSection({ comment, index, persistUser, handleRemoveComment }) {
   }, [comment]);
 
   const handleToggleEditMode = () => {
-    
     setEdit(!edit);
     if (edit) {
-      handleUpdateComment()
+      handleUpdateComment();
     }
   };
 
@@ -278,15 +278,17 @@ export default function Book() {
         {!isLoading ? (
           <>
             <Row>
-              <Breadcrumb
-                data={[
-                  { url: "/", value: "Trang chủ" },
-                  {
-                    url: `/truyen/${bookInfo && bookInfo.slug}`,
-                    value: `${bookInfo && bookInfo.title}`,
-                  },
-                ]}
-              />
+              <Col>
+                <Breadcrumb
+                  data={[
+                    { url: "/", value: "Trang chủ" },
+                    {
+                      url: `/truyen/${bookInfo && bookInfo.slug}`,
+                      value: `${bookInfo && bookInfo.title}`,
+                    },
+                  ]}
+                />
+              </Col>
             </Row>
             {/* Header */}
             <Row>
@@ -299,24 +301,42 @@ export default function Book() {
                 />
               </Col>
               <Col sm={12} md={6} className="mt-3">
-                <h1 className="text-light fw-bold">
-                  {bookInfo && bookInfo.title}
-                </h1>
-                <p className="text-light">{bookInfo && bookInfo.description}</p>
                 <Row>
-                  <Col sm={6} md={3} lg={2}>
-                    <p className="text-light fw-bold">Tác giả </p>
+                  <Col>
+                    <h1 className="text-light fw-bold">
+                      {bookInfo && bookInfo.title}
+                    </h1>
                   </Col>
-                  <Col sm={6} md={9} lg={10}>
-                    <p className="text-light">Tên tác giả</p>
+                </Row>
+                <Row>
+                  <Col>
+                    <p className="text-light">
+                      {bookInfo && bookInfo.description}
+                    </p>
+                  </Col>
+                </Row>
+                <Row>
+                  <Col>
+                    <p
+                      className="text-light fw-bold d-inline-block"
+                      style={{ marginRight: "2em" }}
+                    >
+                      Tác giả
+                    </p>
+
+                    <p className="text-light d-inline-block ">Tên tác giả</p>
                   </Col>
                 </Row>
 
                 <Row>
-                  <Col sm={6} md={3} lg={2}>
-                    <p className="text-light fw-bold">Thẻ</p>
-                  </Col>
-                  <Col sm={6} md={9} lg={10}>
+                  <Col>
+                    <p
+                      className="text-light fw-bold d-inline-block"
+                      style={{ marginRight: "2em" }}
+                    >
+                      Thẻ
+                    </p>
+
                     {bookInfo && bookInfo.tags && bookInfo.tags.length > 0 ? (
                       bookInfo.tags.map((tag) => {
                         return (
@@ -326,7 +346,7 @@ export default function Book() {
                         );
                       })
                     ) : (
-                      <div className="text-light">Không có thẻ</div>
+                      <span className="text-light">Không có thẻ</span>
                     )}
                   </Col>
                 </Row>
@@ -426,6 +446,9 @@ export default function Book() {
           <Loading />
         )}
       </Container>
+      <div>
+        <Footer />
+      </div>
     </div>
   );
 }

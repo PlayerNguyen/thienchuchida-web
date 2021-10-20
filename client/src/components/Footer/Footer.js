@@ -17,12 +17,22 @@ export default function Footer() {
           <Col sm={12} md="auto">
             <Row className="mb-2">
               <Col sm={12} md="auto" className=" mb-2">
-                <Button variant={`facebook`} size="md" className="w-100">
+                <Button
+                  variant={`facebook`}
+                  size="md"
+                  className="w-100"
+                  href="https://www.facebook.com/tccd.thienchuchida/"
+                >
                   Facebook
                 </Button>
               </Col>
               <Col sm={12} md="auto">
-                <Button variant={`facebook`} size="md" className="w-100">
+                <Button
+                  variant={`facebook`}
+                  size="md"
+                  className="w-100"
+                  href="https://www.facebook.com/thienchuchida/"
+                >
                   Facebook 2
                 </Button>
               </Col>
@@ -37,15 +47,20 @@ export default function Footer() {
           <Col sm={12} md="auto">
             <Row>
               <Col>
-                <Button variant={`facebook`} size="md" className="w-100">
-                Group facebook
-              </Button>
+                <Button
+                  variant={`facebook`}
+                  size="md"
+                  className="w-100"
+                  href="https://www.facebook.com/groups/tccddubiaddia/"
+                >
+                  Group facebook
+                </Button>
               </Col>
             </Row>
           </Col>
         </Row>
 
-        <Row className="text-light fw-light fs-5">
+        <Row className="text-light fw-light fs-5 mb-3">
           <Col xs={12}>
             Các tác phẩm được thực hiện bởi Thiên Chu Chi Dạ, mọi vấn đề liên
             quan đến bản quyền xin hãy liên lạc cho chúng tôi.

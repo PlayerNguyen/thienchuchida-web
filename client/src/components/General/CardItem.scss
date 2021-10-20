@@ -19,14 +19,14 @@
       position: absolute;
       top: 0%;
       left: 0%;
-      background: rgba(0, 0, 0, 0.7);
+      background: rgba(0, 0, 0, 0.37);
       width: 100%;
       height: 100%;
       overflow: hidden;
       text-overflow: ellipsis;
       transition: cubic-bezier(0.165, 0.84, 0.44, 1) .5s;
       &:hover {
-        background: rgba(0, 0, 0, 0.85);
+        background: rgba(0, 0, 0, 0.50);
       }
 
     }
