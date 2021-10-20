@@ -51,11 +51,11 @@ export default function GeneralManager() {
   };
 
   const handleUpdateSubSlogan = () => {
-     setSubSloganEdited(false);
-    SettingService.setSetting("subslogan", slogan).then(() => {
+    setSubSloganEdited(false);
+    SettingService.setSetting("subslogan", subSlogan).then(() => {
       toastHelper.success("Thiết lập thành công slogan phụ mới cho trang.");
     });
-  }
+  };
 
   return (
     <div className="">
@@ -117,7 +117,10 @@ export default function GeneralManager() {
                   />
                 </Col>
                 <Col>
-                  <Button disabled={!subSloganEdited} onClick={handleUpdateSubSlogan}>
+                  <Button
+                    disabled={!subSloganEdited}
+                    onClick={handleUpdateSubSlogan}
+                  >
                     Cập nhật
                   </Button>
                 </Col>

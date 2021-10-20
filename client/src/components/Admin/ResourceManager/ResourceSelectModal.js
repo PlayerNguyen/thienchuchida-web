@@ -1,8 +1,17 @@
 import React, { useState, useEffect } from "react";
-import { Modal, Form, Pagination, Button, Container, Row } from "react-bootstrap";
+import {
+  Modal,
+  Form,
+  Pagination,
+  Button,
+  Container,
+  Row,
+  Col,
+} from "react-bootstrap";
 import "./ResourceSelectModal.scss";
 import ResourceItem from "./ResourceItem";
 import ResourceService from "../../../services/ResourceService";
+import UploadModal from "./UploadModal";
 
 const DATA_OFFSET = 8;
 const PAGE_RANGE_OFFSET = 2;
@@ -29,6 +38,8 @@ export default function ResourceSelectModal({
   const [searching, setSearching] = useState(false);
 
   const [selectValues, setSelectValues] = useState([]);
+
+  const [isUploadVisible, setIsUploadVisible] = useState(false);
 
   useEffect(() => {
     const k = (page - 1) * DATA_OFFSET;
@@ -61,6 +72,8 @@ export default function ResourceSelectModal({
     if (!multiple) {
       onSelect && onSelect(e);
     } else {
+      // console.log("cursor: ", e);
+      // Whether not selected resource, remove. Otherwise add into the selectValues
       setSelectValues(
         selectValues.indexOf(e) !== -1
           ? selectValues.filter((e1) => e1 !== e)
@@ -123,7 +136,8 @@ export default function ResourceSelectModal({
     if (data) {
       Promise.all(data.filter((_, i) => startIndex <= i && i <= endIndex)).then(
         (values) => {
-          setSelectValues([...selectValues, ...values]);
+          const appendValue = [...values].filter((value) => selectValues.indexOf(value) === -1)
+          setSelectValues([...selectValues, ...appendValue]);
         }
       );
     }
@@ -151,7 +165,7 @@ export default function ResourceSelectModal({
         </Modal.Title>
       </Modal.Header>
       <Modal.Body className="container">
-        <Form className="mb-5" onSubmit={handleSearchResource}>
+        <Form className="mb-3" onSubmit={handleSearchResource}>
           <Form.Control
             type="text"
             value={searchValue}
@@ -160,30 +174,43 @@ export default function ResourceSelectModal({
           />
         </Form>
         <Container fluid>
+          {/* <Row className="mb-3">
+            <Col xs={12} className="text-muted">
+              <p>Bộ lọc</p>
+            </Col>
+            <Col>
+              <Button>Mới tải lên</Button>
+            </Col>
+          </Row> */}
           <Row>
             {data &&
-            data.map((e, i) => {
-              if (startIndex <= i && i <= endIndex) {
-                return (
-                  <ResourceItem
-                    key={i}
-                    id={e}
-                    // disableInfo
-                    // onClick={handleSelectResource}
-                    selected={multiple && selectValues.indexOf(e) !== -1}
-                    minimizeThumbnail={true}
-                    onSelect={() => {
-                      handleSelectResource(e);
-                    }}
-                  />
-                );
-              }
-              return null;
-            })}
+              data.map((e, i) => {
+                if (startIndex <= i && i <= endIndex) {
+                  return (
+                    <ResourceItem
+                      key={i}
+                      id={e}
+                      selected={multiple && selectValues.indexOf(e) !== -1}
+                      minimizeThumbnail={true}
+                      onSelect={(_) => {
+                        handleSelectResource(e);
+                      }}
+                    />
+                  );
+                }
+                return null;
+              })}
           </Row>
         </Container>
       </Modal.Body>
       <Modal.Footer>
+        <Button
+          onClick={() => {
+            setIsUploadVisible(true);
+          }}
+        >
+          Tải lên
+        </Button>
         {multiple && (
           <span className="text-secondary">Đã chọn {selectValues.length} </span>
         )}
@@ -223,7 +250,6 @@ export default function ResourceSelectModal({
             <Button
               onClick={() => {
                 onMultipleSelect && onMultipleSelect(selectValues);
-                // Then clean up
               }}
             >
               Chọn
@@ -231,6 +257,19 @@ export default function ResourceSelectModal({
           </>
         )}
       </Modal.Footer>
+      {/* Register upload modal */}
+      <UploadModal
+        show={isUploadVisible}
+        // Item was uploaded successfully
+        setData={(_) => {
+          // Set the data to data state
+          setData([..._, ...data]);
+          // Close the upload models
+          setIsUploadVisible(false);
+        }}
+        data={data}
+        onClose={(_) => setIsUploadVisible(false)}
+      />
     </Modal>
   );
 }

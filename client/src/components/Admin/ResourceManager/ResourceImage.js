@@ -3,6 +3,7 @@ import axiosInstance from "../../../helpers/axiosInstance";
 import imageHelper from "../../../helpers/imageHelper";
 import Loading from "../../Loading/Loading";
 import "./ResourceItem.scss";
+import ServerConfig from '../../../config/server.config'
 
 export default function ResourceImage({ id, alt, height, ...children }) {
   const [contentType, setContentType] = useState(null);
@@ -16,7 +17,7 @@ export default function ResourceImage({ id, alt, height, ...children }) {
 
       // Then load it
       axiosInstance
-        .get(imageHelper.gertBase64ResourceUrl(id))
+        .get(imageHelper.getBase64ResourceUrl(id))
         .then((response) => {
           const { headers } = response;
           setContentType(headers["content-type"]);
@@ -51,9 +52,12 @@ export default function ResourceImage({ id, alt, height, ...children }) {
           <div className="text-danger text-center p-5">Ảnh không hợp lệ.</div>
         )
       ) : (
-        <div className="text-danger text-center p-5 bg-white">
-          Không có ảnh (không tìm thấy ảnh)
-        </div>
+        <img
+            src={ServerConfig.DEFAULT_THUMBNAIL}
+            alt={alt || ``}
+            className="w-100 img--resource"
+            style={{ maxHeight: height }}
+          />
       )}
     </div>
   );

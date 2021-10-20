@@ -6,7 +6,7 @@ function getRawResourceUrl(id) {
   );
 }
 
-function gertBase64ResourceUrl(id) {
+function getBase64ResourceUrl(id) {
   return (
     `${ServerConfig.SERVER_API_URL}/resources/resource/base64/${id}`
   );
@@ -14,7 +14,7 @@ function gertBase64ResourceUrl(id) {
 
 const imageHelper = {
   getRawResourceUrl,
-  gertBase64ResourceUrl
+  getBase64ResourceUrl
 };
 
 export default imageHelper;

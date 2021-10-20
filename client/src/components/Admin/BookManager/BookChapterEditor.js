@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import {
   Form,
   Row,
@@ -27,7 +27,8 @@ import path from "path";
 import ResourceImage from "../ResourceManager/ResourceImage";
 
 function ResourceSection({
-  id,
+  data,
+  // id,
   currentIndex,
   maxIndex,
   onRemove,
@@ -35,35 +36,36 @@ function ResourceSection({
   onDecease,
   onPreview,
 }) {
-  const [data, setData] = useState(null);
-  const [originalName, setOriginalName] = useState("");
-  useEffect(() => {
-    ResourceService.getResourceMetadata(id).then((response) => {
-      const { data } = response.data;
-      setData(data);
-      setOriginalName(data.originalName);
-    });
-  }, [id]);
+  // const [data, setData] = useState(null);
+  // const [originalName, setOriginalName] = useState("");
 
-  const onDragStart = (e, index) => {
-    
-    e.dataTransfer.effectAllowed = "move";
-    e.dataTransfer.setData("text/html", e.target);
-    e.dataTransfer.setDragImage(e.target, 20, 20);
-  };
+  // useEffect(() => {
+  //   ResourceService.getResourceMetadata(id).then((response) => {
+  //     const { data } = response.data;
+  //     setData(data);
+  //     setOriginalName(data.originalName);
+  //   });
+  // }, [id]);
+
+  // const onDragStart = (e, index) => {
+
+  //   e.dataTransfer.effectAllowed = "move";
+  //   e.dataTransfer.setData("text/html", e.target);
+  //   e.dataTransfer.setDragImage(e.target, 20, 20);
+  // };
 
   return (
     <InputGroup className="mb-3">
       {/* File name */}
       <Form.Control
         type="text"
-        value={originalName}
+        value={data && data.originalName}
         disabled
-        draggable
-        onDragStart={() => {
-          onDragStart(currentIndex)
-        }}
-        style={{cursor: "grab"}}
+        // draggable
+        // onDragStart={() => {
+        //   onDragStart(currentIndex)
+        // }}
+        // style={{cursor: "grab"}}
       />
       {/* Up button */}
       {currentIndex !== 0 && (
@@ -86,7 +88,7 @@ function ResourceSection({
       >
         <FontAwesomeIcon icon={faEye} />
       </Button>
-      {/* Remove butotn */}
+      {/* Remove button */}
       <Button variant="outline-danger" onClick={onRemove}>
         <FontAwesomeIcon icon={faTrashAlt} />
       </Button>
@@ -149,9 +151,27 @@ export default function BookChapterEditor() {
   };
 
   const handleResourceSelect = (selects) => {
-    setResourceSelected([...resourceSelected, ...selects]);
+    // TODO call on select and return a list of resource with full metadata
+    Promise.all(
+      [...selects].map((select) => {
+        return getResourceMetadata(select);
+      })
+    ).then((items) => {
+      // console.log(items);
+      setResourceSelected([...resourceSelected, ...items]);
+      handleCloseResourcePopup();
+    });
+  };
 
-    handleCloseResourcePopup();
+  const getResourceMetadata = (id) => {
+    return new Promise((resolve, reject) => {
+      ResourceService.getResourceMetadata(id)
+        .then((response) => {
+          // callback(response.data.data);
+          resolve(response.data.data);
+        })
+        .catch(reject);
+    });
   };
 
   const handleRemoveSelect = (index) => {
@@ -225,6 +245,14 @@ export default function BookChapterEditor() {
     setVisibleDelete(true);
   };
 
+  const handleSortSelection = () => {
+    const sortedArray = [...resourceSelected].sort((a, b) => {
+      return ("", a.originalName).localeCompare(b.originalName);
+    });
+    // console.log("sorted array ", sortedArray);
+    setResourceSelected(sortedArray);
+  };
+
   return (
     <div className="editor__wrapper">
       {!chapterData ? (
@@ -287,29 +315,48 @@ export default function BookChapterEditor() {
                   Nội dung
                 </Form.Label>
                 <Col sm={10}>
-                  {resourceSelected.map((e, i) => {
-                    return (
-                      <ResourceSection
-                        currentIndex={i}
-                        id={e}
-                        key={i}
-                        maxIndex={resourceSelected.length}
-                        onRemove={() => {
-                          handleRemoveSelect(i);
-                        }}
-                        onAscend={() => {
-                          handleAscendSelect(i);
-                        }}
-                        onDecease={() => {
-                          handleDeceaseSelect(i);
-                        }}
-                        onPreview={handleOnPreview}
-                      />
-                    );
-                  })}
-                  <Button variant="success" onClick={handleOpenResourcePopup}>
-                    Thêm
-                  </Button>
+                  <Row className="mb-3">
+                    <Col>
+                      <Button variant="primary" onClick={handleSortSelection}>
+                        Sắp xếp theo tên
+                      </Button>
+                    </Col>
+                  </Row>
+                  <Row>
+                    <Col>
+                      {resourceSelected.map((e, i) => {
+                        return (
+                          <ResourceSection
+                            currentIndex={i}
+                            // id={e}
+                            data={e}
+                            key={i}
+                            maxIndex={resourceSelected.length}
+                            onRemove={() => {
+                              handleRemoveSelect(i);
+                            }}
+                            onAscend={() => {
+                              handleAscendSelect(i);
+                            }}
+                            onDecease={() => {
+                              handleDeceaseSelect(i);
+                            }}
+                            onPreview={handleOnPreview}
+                          />
+                        );
+                      })}
+                    </Col>
+                  </Row>
+                  <Row>
+                    <Col>
+                      <Button
+                        variant="success"
+                        onClick={handleOpenResourcePopup}
+                      >
+                        Thêm
+                      </Button>
+                    </Col>
+                  </Row>
                 </Col>
               </Form.Group>
               {/* <Button variant="primary">Xem</Button> */}
@@ -328,6 +375,7 @@ export default function BookChapterEditor() {
             </Form>
           </div>
 
+          {/* Thumbnail update selection */}
           <ResourceSelectModal
             visible={visibleThumbnailSelect}
             close={() => {
@@ -336,12 +384,15 @@ export default function BookChapterEditor() {
             onSelect={handleUpdateThumbnailChapter}
           />
 
+          {/* Resource selection */}
           <ResourceSelectModal
             multiple
             visible={visibleResourceSelect}
             close={handleCloseResourcePopup}
             onMultipleSelect={handleResourceSelect}
           />
+
+          {/* Resource preview */}
           <ResourcePreviewModal
             data={previewData}
             visible={visiblePreview}

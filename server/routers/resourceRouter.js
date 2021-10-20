@@ -217,15 +217,18 @@ router.delete("/resource/:id", getAdminAuthorize, async (req, res, next) => {
   try {
     const { id } = req.params;
     const file = await ResourceController.removeFile(id);
+    console.log(file);
     console.log(
       chalk.bgRed(
         `Remove file ${file.originalName} (${file.path} - ${file.size}) out of the storage folder...`
       )
     );
     // Whether exist, remove a raw file. Otherwise, just remove data
-    if (await ResourceHelper.existFile()) {
-      await ResourceHelper.deleteFile(file.path);
-    }
+    // if (await ResourceHelper.existFile()) {
+
+    // }
+    console.log(`Removing file in path ${file.path}`);
+    await ResourceHelper.deleteFile(file.path);
     res.json({
       message: "Đã xoá thành công tài nguyên trên.",
       data: file,

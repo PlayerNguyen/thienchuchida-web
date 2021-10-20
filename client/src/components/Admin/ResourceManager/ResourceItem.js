@@ -85,7 +85,9 @@ export default function ResourceItem({
           >
             Xem
           </Button>
-          <Button onClick={onSelect} variant="link" size="sm">
+          <Button onClick={() => {
+            onSelect(data)
+          }} variant="link" size="sm">
             {!selected ? `Chọn` : `Huỷ chọn`}
           </Button>
         </Card.Footer>

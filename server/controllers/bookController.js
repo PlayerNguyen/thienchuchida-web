@@ -33,7 +33,7 @@ async function getChapterById(book, chapter) {
   return BookChapterModel.findOne({
     book,
     $or: [{ _id: chapter }, { slug: chapter }],
-  }).populate("thumbnail", "-__v");
+  }).populate("thumbnail", "-__v").populate("content", "-__v");
 }
 
 /**

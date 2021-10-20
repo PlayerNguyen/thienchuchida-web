@@ -4,6 +4,10 @@ async function getAllResources() {
   return axiosInstance.get(`/resources/?sort=-createdAt`);
 }
 
+async function getAllResourcesQuery(query) {
+  return axiosInstance.get(`/resources/${query}`);
+}
+
 async function searchResourceByName(name) {
   return axiosInstance.get(`/resources/search/?originalName=${name}`)
 }
@@ -34,7 +38,8 @@ const ResourceService = {
   removeResource,
   getResourceMetadata,
   searchResourceByName,
-  uploadSingleResource
+  uploadSingleResource,
+  getAllResourcesQuery
 };
 
 export default ResourceService;
