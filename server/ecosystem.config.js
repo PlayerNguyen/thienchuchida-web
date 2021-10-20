@@ -2,7 +2,7 @@ module.exports = {
   apps: [
     {
       name: "tccd-server",
-      script: "./www",
+      script: "./bin/www",
       env_production: {
         NODE_ENV: "production",
       },
