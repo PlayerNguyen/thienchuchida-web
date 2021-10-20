@@ -5,6 +5,7 @@ import {
   Container,
   Button,
   Col,
+  Row,
   ButtonGroup,
 } from "react-bootstrap";
 import "./Editor.scss";
@@ -46,6 +47,7 @@ export default function BookEditor() {
     useState(false);
   const [tags, setTags] = useState([]);
   const [title, setTitle] = useState("");
+  const [author, setAuthor] = useState("");
   const [password, setPassword] = useState("");
   const [description, setDescription] = useState("");
 
@@ -56,12 +58,14 @@ export default function BookEditor() {
     BookService.getBookBySlug(bookId)
       .then((response) => {
         const { data, chapters } = response.data;
+        console.log(data)
         setBookData(data);
         setChapterData(chapters);
 
         setTitle(data.title);
         setDescription(data.description);
         setTags(data.tags);
+        setAuthor(data.author)
       })
       .catch((err) => {
         // Not found or error
@@ -88,6 +92,7 @@ export default function BookEditor() {
         description,
         password,
         tags: tagIdentifies,
+        author
       })
         .then((response) => {
           const { data, message } = response.data;
@@ -110,10 +115,6 @@ export default function BookEditor() {
     setVisibleThumbnailSelect(false);
   };
 
-  const handleTagSelectorSubmit = (e) => {
-    e.preventDefault();
-  };
-
   const handleTagDialogComplete = (selectedTags) => {
     setTags([...selectedTags]);
   };
@@ -130,100 +131,180 @@ export default function BookEditor() {
       )}
       {bookData && (
         <>
-          <h1 className="text-secondary">
-            <Link
-              className="link text-secondary"
-              to={`/truyen/${bookData._id}`}
-            >
-              {bookData.title}
-            </Link>
-          </h1>
-          <Form className="editor" onSubmit={handleOnSubmit}>
-            <div className="editor__header">
-              <Col sm={12} lg={6}>
-                <Form.Group
-                  // as={`Col`}
-                  className="editor__thumbnail editor__header--first"
+          <Row>
+            <Col>
+              <h1 className="text-secondary">
+                <Link
+                  className="link text-secondary"
+                  to={`/truyen/${bookData._id}`}
                 >
-                  <div
-                    onClick={() => {
-                      setVisibleThumbnailSelect(true);
+                  {bookData.title}
+                </Link>
+              </h1>
+            </Col>
+          </Row>
+
+          <Row>
+            <Container>
+              <Form onSubmit={handleOnSubmit}>
+                <Col sm={12} lg={6}>
+                  <Form.Group
+                    // as={`Col`}
+                    className="editor__thumbnail editor__header--first"
+                  >
+                    <div
+                      onClick={() => {
+                        setVisibleThumbnailSelect(true);
+                      }}
+                    >
+                      <ResourceImage id={bookData.thumbnail} />
+                      <small>Nhấn vào ảnh bìa để thay đổi</small>
+                    </div>
+                  </Form.Group>
+                </Col>
+
+                <Col className="mt-3">
+                  <Container fluid="sm">
+                    {/* Title section */}
+                    <Form.Group as={Row} className="mb-3">
+                      <Form.Label column sm={2}>
+                        Tiêu đề
+                      </Form.Label>
+                      <Col sm={10}>
+                        <Form.Control
+                          type="text"
+                          value={title}
+                          onChange={({ target }) => {
+                            setTitle(target.value);
+                          }}
+                        />
+                        <Form.Text className="text-muted">
+                          Tiêu đề của truyện, dùng để tìm kiếm.
+                        </Form.Text>
+                      </Col>
+                    </Form.Group>
+
+                    {/* Password section */}
+                    <Form.Group as={Row} className="mb-3">
+                      <Form.Label column sm={2}>
+                        Mật khẩu
+                      </Form.Label>
+                      <Col sm={10}>
+                        <Form.Control
+                          type="password"
+                          value={password}
+                          onChange={({ target }) => {
+                            setPassword(target.value);
+                          }}
+                        />
+
+                        <Form.Text className="text-muted">
+                          Thiết lập mật khẩu cho truyện của bạn để giới hạn nội
+                          dung
+                        </Form.Text>
+                      </Col>
+                    </Form.Group>
+
+                    <Form.Group as={Row} className="mb-3">
+                      <Form.Label column sm={2}>
+                        Giới thiệu
+                      </Form.Label>
+                      <Col sm={10}>
+                        <Form.Control
+                          as="textarea"
+                          value={description}
+                          onChange={(e) => {
+                            setDescription(e.target.value);
+                          }}
+                        />
+                        <Form.Text className="text-muted">
+                          Giới thiệu về truyện của bạn ở đây
+                        </Form.Text>
+                      </Col>
+                    </Form.Group>
+
+                    <Form.Group as={Row} className="mb-3">
+                      <Form.Label column sm={2}>
+                        Tác giả
+                      </Form.Label>
+                      <Col sm={10}>
+                        <Form.Control
+                          type="text"
+                          value={author}
+                          onChange={(e) => {
+                            setAuthor(e.target.value);
+                          }}
+                        />
+                        <Form.Text className="text-muted">
+                          Tên tác giả của truyện
+                        </Form.Text>
+                      </Col>
+                    </Form.Group>
+
+                    <Form.Group as={Row} className="mb-3">
+                      <Form.Label column sm={2}>
+                        Thẻ
+                      </Form.Label>
+                      <Col sm={10}>
+                        <Row>
+                          <Col>
+                            {tags &&
+                            tags.map((e, i) => {
+                              return <Tag key={i} data={e} />;
+                            })}
+                          <Button
+                            variant={`dark`}
+                            onClick={(e) => {
+                              setVisibleTagDialog(true);
+                            }}
+                          >
+                            Chỉnh sửa thẻ
+                          </Button>
+                          </Col>
+                        </Row>
+                        <Form.Text>
+                          Bấm lưu để thay đổi chỉnh sửa về thẻ
+                        </Form.Text>
+                      </Col>
+                    </Form.Group>
+
+                    {/* <div className="d-flex flex-row-reverse">
+                    </div> */}
+                    <Form.Group as={Row} className="mb-3">
+                      <Col sm={2}></Col>
+                      <Col>
+                        <Button variant="success" type="submit">
+                          Lưu chỉnh sửa
+                        </Button>
+                      </Col>
+                    </Form.Group>
+                  </Container>
+                </Col>
+              </Form>
+            </Container>
+          </Row>
+
+          {/* <Row>
+            <Container>
+              <Form onSubmit={handleTagSelectorSubmit}>
+                <div>
+                  {tags &&
+                    tags.map((e, i) => {
+                      return <Tag key={i} data={e} />;
+                    })}
+                  <Button
+                    variant={`dark`}
+                    onClick={(e) => {
+                      setVisibleTagDialog(true);
                     }}
                   >
-                    <ResourceImage id={bookData.thumbnail} />
-                    <small>Nhấn vào ảnh bìa để thay đổi</small>
-                  </div>
-                </Form.Group>
-              </Col>
+                    Chỉnh sửa thẻ
+                  </Button>
+                </div>
+              </Form>
+            </Container>
+          </Row> */}
 
-              <Col sm={12} lg={8} className="editor__header--secondary">
-                <Form.Group className="editor__title">
-                  <Form.Label>Tiêu đề</Form.Label>
-                  <Form.Control
-                    type="text"
-                    value={title}
-                    onChange={({ target }) => {
-                      setTitle(target.value);
-                    }}
-                  />
-                  <Form.Text className="text-muted">
-                    Tiêu đề của truyện, dùng để tìm kiếm.
-                  </Form.Text>
-                </Form.Group>
-                <Form.Group className="editor__password">
-                  <Form.Label>Mật khẩu</Form.Label>
-                  <Form.Control
-                    type="password"
-                    value={password}
-                    onChange={({ target }) => {
-                      setPassword(target.value);
-                    }}
-                  />
-
-                  <Form.Text className="text-muted">
-                    Thiết lập mật khẩu cho truyện của bạn để giới hạn nội dung
-                  </Form.Text>
-                </Form.Group>
-              </Col>
-            </div>
-            <div className="editor__body">
-              <Form.Group>
-                <Form.Label>Giới thiệu</Form.Label>
-                <Form.Control
-                  as="textarea"
-                  value={description}
-                  onChange={(e) => {
-                    setDescription(e.target.value);
-                  }}
-                />
-                <Form.Text className="text-muted">
-                  Giới thiệu về truyện của bạn ở đây
-                </Form.Text>
-              </Form.Group>
-              <div className="d-flex flex-row-reverse">
-                <Button variant="success" type="submit">
-                  Lưu
-                </Button>
-              </div>
-            </div>
-          </Form>
-
-          <Form onSubmit={handleTagSelectorSubmit}>
-            <div>
-              {tags &&
-                tags.map((e, i) => {
-                  return <Tag key={i} data={e} />;
-                })}
-              <Button
-                variant={`dark`}
-                onClick={(e) => {
-                  setVisibleTagDialog(true);
-                }}
-              >
-                Chỉnh sửa thẻ
-              </Button>
-            </div>
-          </Form>
           <Form>
             <Form.Group className="editor__chapters">
               <h2>Danh sách các tập</h2>
@@ -297,4 +378,19 @@ export default function BookEditor() {
       )}
     </div>
   );
+
+  // <div>
+  //   <Container>
+  //     <Row>
+  //       <Col>
+  //         <h1 className="text-secondary ff-normal">{bookData && bookData.title}</h1>
+  //       </Col>
+  //     </Row>
+  //     {/* Body container */}
+  //     <Row>
+
+  //     </Row>
+  //   </Container>
+  // </div>
+  // );
 }
