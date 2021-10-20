@@ -38,9 +38,9 @@
     "uuid": "^8.3.2"
   },
   "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
-    "test": "react-scripts test",
+    "start": "SASS_PATH=node_modules:src react-scripts start",
+    "build": "SASS_PATH=node_modules:src react-scripts build",
+    "test": "SASS_PATH=node_modules:src react-scripts test",
     "test-watch": "react-scripts test --watch",
     "eject": "react-scripts eject"
   },
