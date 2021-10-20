@@ -1,14 +1,17 @@
-import React, { useEffect, useState } from "react";
-import axiosInstance from "../../../helpers/axiosInstance";
+// import React, { useEffect, useState } from "react";
+import React from 'react'
+
+// import axiosInstance from "../../../helpers/axiosInstance";
 import imageHelper from "../../../helpers/imageHelper";
-import Loading from "../../Loading/Loading";
+// import Loading from "../../Loading/Loading";
 import "./ResourceItem.scss";
-import ServerConfig from "../../../config/server.config";
+// import ServerConfig from "../../../config/server.config";
+import LazyLoad from "react-lazyload";
 
 export default function ResourceImage({ id, alt, height, ...children }) {
   // const [contentType, setContentType] = useState(null);
-  const [data, setData] = useState(null);
-  const [loading, setLoading] = useState(false);
+  // const [data, setData] = useState(null);
+  // const [loading, setLoading] = useState(false);
 
   // useEffect(() => {
   //   if (id) {
@@ -30,41 +33,43 @@ export default function ResourceImage({ id, alt, height, ...children }) {
 
   //   // Clean up the component
   //   return () => {
-  //     setLoading(false)
-  //     setContentType(null)
-  //     setLoading(false)
+  //     setLoading(false);
+  //     setContentType(null);
+  //     setLoading(false);
   //   };
   // }, [id]);
 
   return (
-    // <div className="w-100" {...children}>
-    //   {loading ? (
-    //     <Loading />
-    //   ) : id ? (
-    //     data ? (
-    //       <img
-    //         src={`data:${imageHelper.getBase64ResourceUrl(id)};base64, ${imageHelper.getBase64ResourceUrl(id)}`}
-    //         alt={alt || ``}
-    //         className="w-100 img--resource"
-    //         style={{ maxHeight: height }}
-    //       />
-    //     ) : (
-    //       <div className="text-danger text-center p-5">Ảnh không hợp lệ.</div>
-    //     )
-    //   ) : (
-    //     <img
-    //         src={ServerConfig.DEFAULT_THUMBNAIL}
-    //         alt={alt || ``}
-    //         className="w-100 img--resource"
-    //         style={{ maxHeight: height }}
-    //       />
-    //   )}
-    // </div>
-    <img
-      src={imageHelper.getRawResourceUrl(id)}
-      alt={alt || ``}
-      className="w-100 img--resource"
-      style={{ maxHeight: height }}
-    />
+    <LazyLoad offset={200}>
+      {/* <div className="w-100" {...children}>
+        {loading ? (
+          <Loading />
+        ) : id ? (
+          data ? (
+            <img
+              src={`data:${contentType};base64, ${data}`}
+              alt={alt || ``}
+              className="w-100 img--resource"
+              style={{ maxHeight: height }}
+            />
+          ) : (
+            <div className="text-danger text-center p-5">Ảnh không hợp lệ.</div>
+          )
+        ) : (
+          <img
+            src={ServerConfig.DEFAULT_THUMBNAIL}
+            alt={alt || ``}
+            className="w-100 img--resource"
+            style={{ maxHeight: height }}
+          />
+        )}
+      </div> */}
+      <img
+              src={imageHelper.getRawResourceUrl(id)}
+              alt={alt || ``}
+              className="w-100 img--resource"
+              style={{ maxHeight: height }}
+            />
+    </LazyLoad>
   );
 }
