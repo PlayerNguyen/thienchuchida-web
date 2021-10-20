@@ -9,6 +9,7 @@ import Header from "../Header/Header";
 import Loading from "../Loading/Loading";
 import Footer from "../Footer/Footer";
 import "./BookReader.scss";
+import { Helmet } from "react-helmet-async";
 
 export default function BookReader() {
   const { bookSlug, chapterId } = useParams();
@@ -23,6 +24,7 @@ export default function BookReader() {
         const { data, nextChapter } = response.data;
         setData(data);
         setNextChapter(nextChapter);
+        console.log(data)
       })
       .finally(() => {
         setLoading(false);
@@ -34,6 +36,10 @@ export default function BookReader() {
 
   return (
     <div className="reader">
+      <Helmet>
+        <title>{data && `${data.book.title} | ${data.name}`}</title>
+        <meta name="description" content={data && data.book.description}></meta>
+      </Helmet>
       <div className="reader__header">
         <Header />
       </div>

@@ -3,7 +3,8 @@ import { Col, Container, Row, Form, Button } from "react-bootstrap";
 import Footer from "../Footer/Footer";
 import Header from "../Header/Header";
 import ConfessionService from "../../services/ConfessionService";
-import toastHelper from "../../helpers/toastHelper"
+import toastHelper from "../../helpers/toastHelper";
+import { Helmet } from "react-helmet-async";
 
 export default function Confession() {
   const [content, setContent] = useState("");
@@ -19,15 +20,18 @@ export default function Confession() {
     setPosting(true);
     ConfessionService.createConfession(content, secret)
       .then((response) => {
-        const {message} = response.data;
+        const { message } = response.data;
         toastHelper.success(message);
-        setContent("")
+        setContent("");
       })
       .finally((_) => setPosting(false));
   };
 
   return (
     <div className="confession__wrapper text-light">
+      <Helmet>
+        <title>Confession</title>
+      </Helmet>
       <div className="confession__header">
         <Header />
       </div>
@@ -64,7 +68,7 @@ export default function Confession() {
                   className="mb-3"
                   name="secret"
                   title="public"
-                  onClick={_ => setSecret(false)}
+                  onClick={(_) => setSecret(false)}
                   checked
                 />
                 <Form.Check
@@ -73,7 +77,7 @@ export default function Confession() {
                   className="mb-3"
                   name="secret"
                   title="private"
-                  onClick={_ => setSecret(true)}
+                  onClick={(_) => setSecret(true)}
                 />
                 <Button
                   type="submit"

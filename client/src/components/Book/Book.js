@@ -16,6 +16,7 @@ import { useSelector } from "react-redux";
 import toastHelper from "../../helpers/toastHelper";
 import LazyLoad from "react-lazyload";
 import Footer from "../Footer/Footer";
+import { Helmet } from "react-helmet-async";
 
 function Chapter({ data, bookId }) {
   const { url } = useRouteMatch();
@@ -217,7 +218,7 @@ export default function Book() {
 
   useEffect(() => {
     if (bookInfo) {
-      document.title = `${bookInfo.title} | Thiên Chu Chi Dạ`;
+      // document.title = `${bookInfo.title} | Thiên Chu Chi Dạ`;
       setIsCommentLoading(true);
       // Then fetch comments of this book
       handleFetchComment(bookInfo);
@@ -262,7 +263,7 @@ export default function Book() {
   };
 
   const handleRemoveComment = (id) => {
-    console.log(id);
+    // console.log(id);
     CommentService.deleteComment(id).then((response) => {
       const { message } = response.data;
       toastHelper.success(message);
@@ -273,7 +274,16 @@ export default function Book() {
 
   return (
     <div className="book__wrapper">
-      <Header />
+      <Helmet>
+        <title>{bookInfo && bookInfo.title}</title>
+        <meta
+          name="description"
+          content={bookInfo && bookInfo.description}
+        ></meta>
+      </Helmet>
+      <div>
+        <Header />
+      </div>
       <Container fluid="sm" className="book__container">
         {!isLoading ? (
           <>

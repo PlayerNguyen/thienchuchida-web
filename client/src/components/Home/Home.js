@@ -8,6 +8,7 @@ import SettingService from "../../services/SettingService";
 import NotifyService from "../../services/NotifyService";
 import Footer from "../Footer/Footer";
 import NotifyCard from "../NotifyCard/NotifyCard";
+import {Helmet} from "react-helmet-async"
 
 export default function Home() {
   const [latest, setLatestUpdate] = useState(null);
@@ -60,6 +61,9 @@ export default function Home() {
 
   return (
     <div>
+    <Helmet>
+      <title>Trang Chủ</title>
+    </Helmet>
       <div className="home__header">
         <Header />
       </div>

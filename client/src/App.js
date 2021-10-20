@@ -21,6 +21,7 @@ import { Container } from "react-bootstrap";
 import NotFound from "./components/Error/NotFound";
 import Loading from "./components/Loading/Loading";
 import Confession from "./components/Confession/Confession";
+import { Helmet } from "react-helmet-async";
 
 function App() {
   const dispatch = useDispatch();
@@ -74,6 +75,7 @@ function App() {
 
   return (
     <div className="app__wrapper">
+      <Helmet titleTemplate="%s | Thiên Chu Chi Dạ"></Helmet>
       <div
         className="app__background"
         style={{ backgroundImage: `url(${background})` }}
