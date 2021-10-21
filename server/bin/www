@@ -25,6 +25,14 @@ const DATABASE_URL =
     ? DatabaseConfig.Url.Dev
     : DatabaseConfig.Url.Deploy;
 
+async function setupSettings() {
+  await settingController.init("background-url", "Background.png");
+  await settingController.init("slogan", "A miracle is another name of effect");
+  await settingController.init("subslogan", "Sub-slogan below slogan");
+}
+
+async function setupPermissions() {}
+
 async function main() {
   // Connect to database server
 
@@ -33,9 +41,12 @@ async function main() {
   /**
    * Initialize usual settings
    */
-  await settingController.init("background-url", "Background.png");
-  await settingController.init("slogan", "A miracle is another name of effect");
-  await settingController.init("subslogan", "Sub-slogan below slogan");
+  await setupSettings();
+
+  /**
+   * Initialize the user permissions
+   */
+  await setupPermissions();
 
   /**
    * Listen to the server

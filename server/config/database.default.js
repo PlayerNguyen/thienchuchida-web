@@ -10,13 +10,15 @@ const DatabaseConfig = {
     Author: { Name: "Author" },
     Setting: { Name: "Setting" },
     Notify: { Name: "Notify" },
-    Confession: {Name: "Confession"}
+    Confession: { Name: "Confession" },
+    Permissions: { Name: "Permissions" },
+    Roles: { Name: "Roles" },
   },
   ConnectionDelay: 6000,
   Url: {
     Dev: "mongodb://localhost:27017/thienchuchida",
-    Deploy: "mongodb://localhost:27017/thienchuchida"
-  }
+    Deploy: "mongodb://localhost:27017/thienchuchida",
+  },
 };
 
 module.exports = DatabaseConfig;
