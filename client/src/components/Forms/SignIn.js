@@ -40,7 +40,7 @@ export default function SignIn() {
       .then(({ data }) => {
         // If success sign in
         // setResponseData()
-        toastHelper.success(data.message);
+        // toastHelper.success(data.message);
         // Navigate to home
 
         // Store credential and navigate to home
