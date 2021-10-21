@@ -59,7 +59,7 @@ function ResourceSection({
       {/* File name */}
       <Form.Control
         type="text"
-        value={data && data.originalName}
+        value={data && data.filename}
         disabled
         // draggable
         // onDragStart={() => {
