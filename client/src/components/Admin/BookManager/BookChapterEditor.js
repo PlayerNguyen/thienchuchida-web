@@ -247,7 +247,7 @@ export default function BookChapterEditor() {
 
   const handleSortSelection = () => {
     const sortedArray = [...resourceSelected].sort((a, b) => {
-      return ("", a.originalName).localeCompare(b.originalName);
+      return ("", a.filename).localeCompare(b.filename);
     });
     // console.log("sorted array ", sortedArray);
     setResourceSelected(sortedArray);
