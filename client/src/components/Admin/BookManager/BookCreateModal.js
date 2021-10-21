@@ -51,7 +51,6 @@ export default function BookCreateModal({ visible, onHide }) {
     setValid(title !== "");
   }, [title]);
 
-
   return (
     <Modal show={visible} onHide={onHide} keyboard={true}>
       <Modal.Header closeButton>
@@ -91,7 +90,8 @@ export default function BookCreateModal({ visible, onHide }) {
         </Button>
         <Button
           variant="primary"
-          type="submit"
+          // type="submit" not work because out of border
+          onClick={handleCreate}
           disabled={!valid || creating}
         >
           {creating ? "Đang tạo..." : `Tạo`}

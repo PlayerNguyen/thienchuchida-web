@@ -3,13 +3,14 @@ import axiosInstance from "../../../helpers/axiosInstance";
 import imageHelper from "../../../helpers/imageHelper";
 import Loading from "../../Loading/Loading";
 import "./ResourceItem.scss";
-import ServerConfig from "../../../config/server.config";
+import { Link } from "react-router-dom";
 import LazyLoad from "react-lazyload";
 
 export default function ResourceImage({ id, alt, height, ...children }) {
   const [contentType, setContentType] = useState(null);
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(false);
+  const [isPrivate, setPrivate] = useState(false);
 
   useEffect(() => {
     if (id) {
@@ -23,6 +24,11 @@ export default function ResourceImage({ id, alt, height, ...children }) {
           const { headers } = response;
           setContentType(headers["content-type"]);
           setData(response.data);
+          console.log(response);
+        })
+        .catch((error) => {
+          // console.log()
+          setPrivate(error.response.data.error.name === "TokenNotFoundError");
         })
         .finally(() => {
           setLoading(false);
@@ -31,9 +37,9 @@ export default function ResourceImage({ id, alt, height, ...children }) {
 
     // Clean up the component
     return () => {
-      setLoading(false);
+      // setLoading(false);
       setContentType(null);
-      setLoading(false);
+      // setLoading(false);
     };
   }, [id]);
 
@@ -62,12 +68,27 @@ export default function ResourceImage({ id, alt, height, ...children }) {
           />
         )}
       </div> */}
-      <img
-        src={`data:${contentType};base64, ${data}`}
-        alt={alt || ``}
-        className="w-100 img--resource"
-        style={{ maxHeight: height }}
-      />
+      {!loading ? (
+        <>
+          {!isPrivate ? (
+            <img
+              src={`data:${contentType};base64, ${data}`}
+              alt={alt || ``}
+              className="w-100 img--resource"
+              style={{ maxHeight: height }}
+            />
+          ) : (
+            <div className="p-5 text-center text-warning">
+              <strong>Nội dung yêu cầu đăng nhập</strong>
+              <br />
+              <Link to="/dang-nhap" className="text-muted">Đăng nhập</Link>
+              
+            </div>
+          )}
+        </>
+      ) : (
+        <Loading />
+      )}
     </LazyLoad>
   );
 }

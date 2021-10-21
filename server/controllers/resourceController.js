@@ -3,21 +3,21 @@ const { MiddlewareError } = require("../errors/MiddlewareError");
 
 /**
  * Uploads and adds new image into database
- *
- * @param {*} file a properties of this plugin
- * @param {Buffer}  data a buffer to set up
- * @param {Boolean} private is private or not
- * @returns a promise with doc which was added
+ * @param {*} file the file name
+ * @param {*} size the file size
+ * @param {*} mimetype mimetype of file
+ * @param {*} path a relative path
+ * @param {*} private whether private or not
+ * @returns generated file
  */
-async function createNewFile(file, buffer, private) {
-  const resource = new Resource({
-    originalName: file.originalname,
-    size: buffer.length,
-    mimetype: file.mimetype,
-    path: file.path,
+async function createNewFile(name, size, mimetype, path, private) {
+  return Resource.create({
+    filename: name,
+    size: size,
+    mimetype: mimetype,
+    path: path,
     private: private,
   });
-  return resource.save();
 }
 
 /**

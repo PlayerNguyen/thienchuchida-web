@@ -1,4 +1,4 @@
-import { faArchive, faClock } from "@fortawesome/free-solid-svg-icons";
+import { faArchive, faClock, faLock, faLockOpen } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React, { useState, useEffect } from "react";
 import { Card, Button, Col, Row } from "react-bootstrap";
@@ -56,7 +56,7 @@ export default function ResourceItem({
 
         {!disableInfo && (
           <Card.Body>
-            <Card.Title>{data && data.originalName}</Card.Title>
+            <Card.Title>{data && data.filename}</Card.Title>
             <div className="text-secondary">
               <Row>
                 <Col xs={3}>
@@ -70,6 +70,14 @@ export default function ResourceItem({
                 </Col>
                 <Col xs={9}>
                   {data && momentHelper(data.createdAt).fromNow()}
+                </Col>
+              </Row>
+              <Row>
+                <Col xs={3}>
+                  {data && data.private ? <FontAwesomeIcon icon={faLock} /> : <FontAwesomeIcon icon={faLockOpen} />}
+                </Col>
+                <Col xs={9}>
+                  <small>{data && data.private  ? "Tệp riêng tư" : "Tệp công khai"}</small>
                 </Col>
               </Row>
             </div>

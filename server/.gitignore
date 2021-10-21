@@ -123,4 +123,5 @@ dist
 .pnp.*
 
 uploads
+resources
 # End of https://www.toptal.com/developers/gitignore/api/node

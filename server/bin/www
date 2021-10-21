@@ -4,6 +4,9 @@ const chalk = require("chalk");
 const mongoose = require("mongoose");
 const settingController = require("../controllers/settingController");
 const DatabaseConfig = require("../config/database.config");
+const MiscConfig = require("../config/misc.config");
+const fs = require("fs");
+
 // const DatabaseConfig = require("../config/database.config");
 require("dotenv").config();
 /**
@@ -15,10 +18,7 @@ const port = process.env.PORT || 3000;
 /**
  * Database initialize
  */
-// const DATABASE_URL =
-//   process.env.NODE_ENV === "development"
-//     ? process.env.DATABASE_DEV_URL
-//     : process.env.DATABASE_URL;
+
 // Select database configuration
 const DATABASE_URL =
   process.env.NODE_ENV === "development"
@@ -32,6 +32,12 @@ async function setupSettings() {
 }
 
 async function setupPermissions() {}
+
+async function setupResource() {
+  console.log("Resource folder: ", MiscConfig.resource.directory);
+  if (!fs.existsSync(MiscConfig.resource.directory))
+    fs.mkdirSync(MiscConfig.resource.directory);
+}
 
 async function main() {
   // Connect to database server
@@ -47,6 +53,11 @@ async function main() {
    * Initialize the user permissions
    */
   await setupPermissions();
+
+  /**
+   * Initialize resource folder
+   */
+  await setupResource();
 
   /**
    * Listen to the server

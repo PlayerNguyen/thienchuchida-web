@@ -6,7 +6,7 @@ function requestPrivateAccess(req, res, next) {
 
   findFileMetadata(id)
     .then((data) => {
-      if (data.private) {
+      if (data && data.private) {
         return getAuthorize(req, res, next);
       }
       return next();

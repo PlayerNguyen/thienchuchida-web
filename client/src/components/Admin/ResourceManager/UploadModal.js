@@ -7,7 +7,7 @@ import "./ResourceManager.scss";
 export default function UploadModal(props) {
   const [isValid, setValid] = useState(false);
   const [files, setFiles] = useState(null);
-  const [privated, setPrivate] = useState(false);
+  const [isPrivate, setPrivate] = useState(false);
   const [isUploading, setIsUploading] = useState();
   const [isError, setIsError] = useState(false);
   const [responseMessage, setResponseMessage] = useState(null);
@@ -50,7 +50,7 @@ export default function UploadModal(props) {
     fileArray.forEach((file) => {
       formData.append("files", file);
     });
-    formData.append("private", privated)
+    formData.append("private", isPrivate)
 
     ResourceService.uploadResources(formData)
       .then((response) => {
@@ -129,9 +129,9 @@ export default function UploadModal(props) {
               type="checkbox"
               label="Tệp riêng tư (chỉ hiển thị khi người dùng đã đăng nhập)"
               name="private"
-              checked={privated}
+              checked={isPrivate}
               onChange={() => {
-                setPrivate(!privated)
+                setPrivate(!isPrivate)
               }}
               disabled={!files}
             />

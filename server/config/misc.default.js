@@ -1,8 +1,7 @@
 const ms = require("ms");
+
 const MiscConfig = {
-  cors: {
-    whitelist: ["http://localhost:3000/"],
-  },
+  cors: "http://localhost:3000",
   cookies: {
     refreshToken: {
       maxAge: ms("7d"),
@@ -11,7 +10,7 @@ const MiscConfig = {
       maxAge: ms("7d"),
     },
   },
-  upload: { directory: "./uploads" },
+  upload: { directory: "./uploads", },
   compress: {
     quality: 50,
   },
@@ -22,14 +21,17 @@ const MiscConfig = {
   },
   tokens: {
     accessToken: {
-      secret: "",
+      secret: "$random$6739$IjjISPZxS",
       expiration: "15m",
     },
     refreshToken: {
-      secret: "",
+      secret: "$random$8720$KLUicHMY",
       expiration: "7d",
     },
   },
+  resource: {
+    directory: './resources'
+  }
 };
 
 module.exports = MiscConfig;

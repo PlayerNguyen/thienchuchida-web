@@ -1,6 +1,10 @@
 const express = require("express");
 const router = express.Router();
 
+const path = require("path");
+const fs = require("fs");
+const { v4: uuid } = require("uuid");
+
 const { getAdminAuthorize } = require("../middlewares/AuthMiddleware");
 const ResourceController = require("../controllers/resourceController");
 const { MiddlewareError } = require("../errors/MiddlewareError");
@@ -16,6 +20,15 @@ const storage = multer.diskStorage({
 });
 const upload = multer({ storage: storage });
 
+function getResourceDirectory() {
+  const date = new Date();
+  const currentDate = `${date.getFullYear()}_${
+    date.getMonth() < 10 ? "0" + date.getMonth() : date.getMonth()
+  }_${date.getDay() < 10 ? "0" + date.getDay() : date.getDay()}`;
+  const realDirectory = currentDate;
+  return path.join(MiscConfig.resource.directory, realDirectory);
+}
+
 router.post(
   "/",
   getAdminAuthorize,
@@ -24,6 +37,7 @@ router.post(
     try {
       const { files } = req;
       const { private } = req.body;
+      console.log("private", private);
 
       if (!files) {
         return next(new MiddlewareError("No input files field found"));
@@ -33,48 +47,52 @@ router.post(
         return next(new MiddlewareError("No input files"));
       }
 
-      console.log(files);
-
       Promise.all(
-        files.map((file) => {
-          return new Promise((res) => {
-            console.log(`Get file ${file.originalname} from ${file.path}...`);
-            ResourceHelper.getBufferFromFile(file.path).then((buffer) => {
-              // const { buffer } = file;
-              // Minify the size of buffer by compress it
-              console.log(
-                `Handling and processing the image ${file.originalname}...`
-              );
-              // Create a file
-              console.log(
-                `Generating file ${file.originalname} in database...`
-              );
-              ResourceController.createNewFile(file, buffer, private).then(
-                (responseFile) => {
-                  res(responseFile);
-                  // // Then delete the cache file
-                  // console.log(`Removing file ${file.originalname}...`);
-                  // ResourceHelper.deleteFile(file.path).then(() => {
-                  //   responseFile.data = null;
-                  // });
-                }
-              );
-            });
-          });
+        [...files].map(async (file) => {
+          // Receive a buffer, then process (compress) the image.
+          // const fileBuffer = await ResourceHelper.getBufferFromFile(file.path);
+
+          const currentDir = getResourceDirectory();
+          // Check whether not exist, make a directory
+          if (!fs.existsSync(currentDir)) {
+            fs.mkdirSync(currentDir);
+          }
+
+          // Compress the image and convert it to webp
+          const generatedFileName =
+            [...uuid()].map((e) => (e !== "-" ? e : "")).join("") + ".webp";
+          const currentFileLocation = path.join(currentDir, generatedFileName);
+          const output = await ImagePreProcess.processImage(
+            file.path,
+            currentFileLocation
+          );
+          // Remove the cache file (raw file) in upload
+          await ResourceHelper.deleteFile(file.path);
+
+          // Then put this file into database
+          const databaseItem = await ResourceController.createNewFile(
+            file.originalname,
+            output.size,
+            "image/webp",
+            currentFileLocation,
+            private
+          );
+
+          return {
+            input: file,
+            output: output,
+            currentPath: currentFileLocation,
+            databaseItem,
+          };
         })
       ).then((files) => {
+        console.log("After all", files);
         res.json({
-          data: Array.from(files, (file) => {
-            return file._id;
+          message: "Đã thành công tải các tệp lên.",
+          data: [...files].map((file) => {
+            return file.databaseItem._id;
           }),
         });
-        // Process files after response
-        // files.map(async (file) => {
-        //   const buffer = await ResourceHelper.getBufferFromFile(file.path);
-        //   const compressedBuffer = await ImagePreProcess.processImage(buffer);
-        //   console.log(`Overwriting image ${file.originalname}...`);
-        //   await ResourceHelper.overwriteFile(file, compressedBuffer);
-        // });
       });
     } catch (err) {
       next(err);
@@ -89,24 +107,37 @@ router.post(
   async (req, res, next) => {
     try {
       const { file } = req;
-      const { crop } = req.body;
-      // console.log(file);
-      const buffer = await ResourceHelper.getBufferFromFile(file.path);
-      console.log("Processing and compressing an uploaded image...");
-      const handledBuffer = await ImagePreProcess.processImage(
-        buffer,
-        JSON.parse(crop)
+      const { private } = req.body;
+
+      const currentDir = getResourceDirectory();
+      // Check whether not exist, make a directory
+      if (!fs.existsSync(currentDir)) {
+        fs.mkdirSync(currentDir);
+      }
+
+      // Compress the image and convert it to webp
+      const generatedFileName =
+        [...uuid()].map((e) => (e !== "-" ? e : "")).join("") + ".webp";
+      const currentFileLocation = path.join(currentDir, generatedFileName);
+      const output = await ImagePreProcess.processImage(
+        file.path,
+        currentFileLocation
       );
-      const responseFile = await ResourceController.createNewFile(
-        file,
-        handledBuffer,
-        false
+      // Remove the cache file (raw file) in upload
+      await ResourceHelper.deleteFile(file.path);
+
+      // Then put this file into database
+      const databaseItem = await ResourceController.createNewFile(
+        file.originalname,
+        output.size,
+        "image/webp",
+        currentFileLocation,
+        private
       );
-      // Response
+
       res.json({
-        data: responseFile,
-        message:
-          "Đã tải lên tệp thành công, bạn có thể xem lại tại trang quản lý tài nguyên.",
+        message: "Đã tải nội dung này thành công",
+        data: databaseItem,
       });
     } catch (err) {
       next(err);
@@ -182,8 +213,11 @@ router.get(
 
       // Set a header to mimetype and send file
       const resource = await ResourceHelper.getBufferFromFile(doc.path);
-      res.setHeader("Content-Type", doc.mimetype);
-      res.send(resource.toString("base64"));
+      // data:image/png;base64
+      // res.setHeader("Content-Type", `data:${doc.mimetype};base64`);
+      // res.setHeader('Cache-Control', 'public, max-age=31557600'); // one year
+      res.writeHead(200, { "Content-Type": doc.mimetype });
+      res.end(resource.toString("base64"));
     } catch (err) {
       next(err);
     }
@@ -192,6 +226,7 @@ router.get(
 
 router.get(
   "/resource/raw/:id",
+  // getAuth,
   ResourceMiddleware.requestPrivateAccess,
   async (req, res, next) => {
     const { id } = req.params;

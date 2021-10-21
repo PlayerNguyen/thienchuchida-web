@@ -1,6 +1,6 @@
 const jimp = require("jimp");
-const MiscConfig = require("../config/misc.config");
-const MiscConfigDefault = require("../config/misc.default");
+const sharp = require("sharp");
+// const MiscConfig = require("../config/misc.config");
 
 function insertTextIntoImage(buffer, text) {
   return new Promise((res) => {
@@ -24,40 +24,44 @@ function insertTextIntoImage(buffer, text) {
   });
 }
 
-function processImage(buffer, crop) {
-  return new Promise((res, rej) => {
-    jimp
-      .read(buffer)
-      .then((image) => {
-        // Down-quality this picture
-        if (crop) {
-          const { x, y, height, width } = crop;
-          console.log(crop);
-          return res(
-            image
-              .quality(
-                parseInt(
-                  MiscConfig.compress.quality ||
-                    MiscConfigDefault.compress.quality
-                )
-              )
-              .crop(x, y, width, height)
-              .getBufferAsync(image.getMIME())
-          );
-        }
-        return res(
-            image
-              .quality(
-                parseInt(
-                  MiscConfig.compress.quality ||
-                    MiscConfigDefault.compress.quality
-                )
-              )
-              .getBufferAsync(image.getMIME())
-          );
-      })
-      .catch(rej);
-  });
+// function processImage(buffer, crop) {
+//   return new Promise((res, rej) => {
+//     jimp
+//       .read(buffer)
+//       .then((image) => {
+//         // Down-quality this picture
+//         if (crop) {
+//           const { x, y, height, width } = crop;
+//           console.log(crop);
+//           return res(
+//             image
+//               .quality(
+//                 parseInt(
+//                   MiscConfig.compress.quality ||
+//                     MiscConfigDefault.compress.quality
+//                 )
+//               )
+//               .crop(x, y, width, height)
+//               .getBufferAsync(image.getMIME())
+//           );
+//         }
+//         return res(
+//             image
+//               .quality(
+//                 parseInt(
+//                   MiscConfig.compress.quality ||
+//                     MiscConfigDefault.compress.quality
+//                 )
+//               )
+//               .getBufferAsync(image.getMIME())
+//           );
+//       })
+//       .catch(rej);
+//   });
+// }
+
+function processImage(input, output) {
+  return sharp(input).webp({ quality: 30 }).toFile(output);
 }
 
 /**

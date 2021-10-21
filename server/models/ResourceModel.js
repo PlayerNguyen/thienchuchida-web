@@ -6,7 +6,7 @@ const resourceSchema = new mongoose.Schema({
     type: String,
     default: uuid,
   },
-  originalName: {
+  filename: {
     type: String,
     required: true,
   },
@@ -22,13 +22,9 @@ const resourceSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  // data: {
-  //   type: Buffer,
-  //   required: true
-  // },
   path: {
     type: String, 
-    required: [true, "Path is required"]
+    required: true,
   },
   private: {
     type: Boolean,
