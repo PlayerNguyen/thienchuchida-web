@@ -14,7 +14,7 @@ export default function ProfileSetting() {
   const [changingInformation, setChangingInformation] = useState(false);
 
   // const [currentPassword, setCurrentPassword] = useState("");
-  const [passwordModify, setPasswordModify] = useState(false);
+  // const [passwordModify, setPasswordModify] = useState(false);
   const [newPassword, setNewPassword] = useState("");
   const [renewPassword, setRenewPassword] = useState("");
   const [changingPassword, setChangingPassword] = useState(false);

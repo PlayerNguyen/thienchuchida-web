@@ -43,7 +43,12 @@ function AccountManagement() {
   };
 
   const handleCloseConfirmModal = () => {
-    setConfirmModalInfo({ visible: false, title: "", content: "", onConfirm: () => {} });
+    setConfirmModalInfo({
+      visible: false,
+      title: "",
+      content: "",
+      onConfirm: () => {},
+    });
   };
 
   /**
@@ -60,15 +65,16 @@ function AccountManagement() {
    * Confirm to delete user
    * @param {Object} _deleteUser
    */
-  const handleOpenConfirmDeleteUserModal = (_deleteUser) => {
-    setConfirmModalInfo({
-      visible: true,
-      title: "Xoá tài khoản",
-      content: `Bạn có chắc chắn muốn xoá tài khoản '${_deleteUser.username}'?`,
-      onConfirm: () => handleConfirmDeleteUser(_deleteUser._id),
-    });
-    setRandomKey(v1());
-  };
+  // * redundant code, uncomment if you want to use this code
+  // const handleOpenConfirmDeleteUserModal = (_deleteUser) => {
+  //   setConfirmModalInfo({
+  //     visible: true,
+  //     title: "Xoá tài khoản",
+  //     content: `Bạn có chắc chắn muốn xoá tài khoản '${_deleteUser.username}'?`,
+  //     onConfirm: () => handleConfirmDeleteUser(_deleteUser._id),
+  //   });
+  //   setRandomKey(v1());
+  // };
 
   /**
    *
@@ -89,7 +95,10 @@ function AccountManagement() {
       .then((resp) => {
         toast.success(resp.data.message);
         const newUser = resp.data.data;
-        setUsers([...users.filter((_user) => _user._id !== newUser._id), { ...newUser }]);
+        setUsers([
+          ...users.filter((_user) => _user._id !== newUser._id),
+          { ...newUser },
+        ]);
         handleCloseModifyModal();
       })
       .finally(() => {
@@ -97,18 +106,19 @@ function AccountManagement() {
       });
   };
 
-  const handleConfirmDeleteUser = (_id) => {
-    setLoading(true);
-    UserService.deleteAdminDeleteUser(_id)
-      .then((resp) => {
-        toast.success(resp.data.message);
-        setUsers(users.filter((_user) => _user._id !== _id));
-        handleCloseConfirmModal();
-      })
-      .finally(() => {
-        setLoading(false);
-      });
-  };
+  // * redundant code, uncomment if you want to use this
+  // const handleConfirmDeleteUser = (_id) => {
+  //   setLoading(true);
+  //   UserService.deleteAdminDeleteUser(_id)
+  //     .then((resp) => {
+  //       toast.success(resp.data.message);
+  //       setUsers(users.filter((_user) => _user._id !== _id));
+  //       handleCloseConfirmModal();
+  //     })
+  //     .finally(() => {
+  //       setLoading(false);
+  //     });
+  // };
 
   /**
    * @param {String} _id
@@ -188,7 +198,11 @@ function AccountManagement() {
 
   return (
     <>
-      <Button variant="link" className="w-fit" onClick={() => handleOpenModifyModal()}>
+      <Button
+        variant="link"
+        className="w-fit"
+        onClick={() => handleOpenModifyModal()}
+      >
         Thêm tài khoản mới
       </Button>
       <Table responsive bordered striped>
@@ -210,7 +224,9 @@ function AccountManagement() {
                 {columns.map((__col) => (
                   <td key={__col.key}>
                     {__col.render
-                      ? __col.render(__col.dataIndex ? _user[__col.dataIndex] : _user)
+                      ? __col.render(
+                          __col.dataIndex ? _user[__col.dataIndex] : _user
+                        )
                       : _user[__col.dataIndex]}
                   </td>
                 ))}

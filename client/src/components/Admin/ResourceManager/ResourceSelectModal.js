@@ -6,7 +6,6 @@ import {
   Button,
   Container,
   Row,
-  Col,
 } from "react-bootstrap";
 import "./ResourceSelectModal.scss";
 import ResourceItem from "./ResourceItem";
@@ -136,7 +135,9 @@ export default function ResourceSelectModal({
     if (data) {
       Promise.all(data.filter((_, i) => startIndex <= i && i <= endIndex)).then(
         (values) => {
-          const appendValue = [...values].filter((value) => selectValues.indexOf(value) === -1)
+          const appendValue = [...values].filter(
+            (value) => selectValues.indexOf(value) === -1
+          );
           setSelectValues([...selectValues, ...appendValue]);
         }
       );

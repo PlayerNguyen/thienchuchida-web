@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useCallback, useMemo } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import { Pagination, Button, Row, Col, Container } from "react-bootstrap";
 import ResourceService from "../../../services/ResourceService";
 import "./ResourceManager.scss";

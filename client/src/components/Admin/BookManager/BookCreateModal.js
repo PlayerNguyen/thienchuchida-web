@@ -51,13 +51,14 @@ export default function BookCreateModal({ visible, onHide }) {
     setValid(title !== "");
   }, [title]);
 
+
   return (
     <Modal show={visible} onHide={onHide} keyboard={true}>
       <Modal.Header closeButton>
         <Modal.Title>Tạo truyện mới</Modal.Title>
       </Modal.Header>
       <Modal.Body>
-        <Form onSubmit={handleCreate}>
+        <Form onSubmit={handleSubmit}>
           <Form.Group className="mb-3">
             <Form.Label>Tên truyện</Form.Label>
             <Form.Control
@@ -90,7 +91,7 @@ export default function BookCreateModal({ visible, onHide }) {
         </Button>
         <Button
           variant="primary"
-          onClick={handleCreate}
+          type="submit"
           disabled={!valid || creating}
         >
           {creating ? "Đang tạo..." : `Tạo`}

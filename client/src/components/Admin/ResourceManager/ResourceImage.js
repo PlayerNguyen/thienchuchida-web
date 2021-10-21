@@ -1,43 +1,41 @@
-// import React, { useEffect, useState } from "react";
-import React from 'react'
-
-// import axiosInstance from "../../../helpers/axiosInstance";
+import React, { useEffect, useState } from "react";
+import axiosInstance from "../../../helpers/axiosInstance";
 import imageHelper from "../../../helpers/imageHelper";
-// import Loading from "../../Loading/Loading";
+import Loading from "../../Loading/Loading";
 import "./ResourceItem.scss";
-// import ServerConfig from "../../../config/server.config";
+import ServerConfig from "../../../config/server.config";
 import LazyLoad from "react-lazyload";
 
 export default function ResourceImage({ id, alt, height, ...children }) {
-  // const [contentType, setContentType] = useState(null);
-  // const [data, setData] = useState(null);
-  // const [loading, setLoading] = useState(false);
+  const [contentType, setContentType] = useState(null);
+  const [data, setData] = useState(null);
+  const [loading, setLoading] = useState(false);
 
-  // useEffect(() => {
-  //   if (id) {
-  //     // Set loading an image to true
-  //     setLoading(false);
+  useEffect(() => {
+    if (id) {
+      // Set loading an image to true
+      setLoading(false);
 
-  //     // Then load it
-  //     axiosInstance
-  //       .get(imageHelper.getBase64ResourceUrl(id))
-  //       .then((response) => {
-  //         const { headers } = response;
-  //         setContentType(headers["content-type"]);
-  //         setData(response.data);
-  //       })
-  //       .finally(() => {
-  //         setLoading(false);
-  //       });
-  //   }
+      // Then load it
+      axiosInstance
+        .get(imageHelper.getBase64ResourceUrl(id))
+        .then((response) => {
+          const { headers } = response;
+          setContentType(headers["content-type"]);
+          setData(response.data);
+        })
+        .finally(() => {
+          setLoading(false);
+        });
+    }
 
-  //   // Clean up the component
-  //   return () => {
-  //     setLoading(false);
-  //     setContentType(null);
-  //     setLoading(false);
-  //   };
-  // }, [id]);
+    // Clean up the component
+    return () => {
+      setLoading(false);
+      setContentType(null);
+      setLoading(false);
+    };
+  }, [id]);
 
   return (
     <LazyLoad offset={200}>
@@ -65,11 +63,11 @@ export default function ResourceImage({ id, alt, height, ...children }) {
         )}
       </div> */}
       <img
-              src={imageHelper.getRawResourceUrl(id)}
-              alt={alt || ``}
-              className="w-100 img--resource"
-              style={{ maxHeight: height }}
-            />
+        src={`data:${contentType};base64, ${data}`}
+        alt={alt || ``}
+        className="w-100 img--resource"
+        style={{ maxHeight: height }}
+      />
     </LazyLoad>
   );
 }
