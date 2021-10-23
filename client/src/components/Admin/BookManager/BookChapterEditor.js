@@ -124,7 +124,7 @@ export default function BookChapterEditor() {
         setThumbnailData(data.thumbnail);
         setTitle(data.name);
         setResourceSelected(data.content);
-        console.log(data.book);
+        // console.log(data.book);
         setBookData({ ...data.book });
       })
       .finally(() => {
@@ -260,9 +260,12 @@ export default function BookChapterEditor() {
   };
 
   const handleSortSelection = () => {
-    const sortedArray = [...resourceSelected].sort((a, b) => {
-      return ("", a.filename).localeCompare(b.filename);
-    });
+    const sortedArray = [...resourceSelected].sort((a, b) =>
+      a.filename.localeCompare(b.filename, navigator.languages[0] || navigator.language, {
+        numeric: true,
+        ignorePunctuation: true,
+      })
+    );
     // console.log("sorted array ", sortedArray);
     setResourceSelected(sortedArray);
   };
