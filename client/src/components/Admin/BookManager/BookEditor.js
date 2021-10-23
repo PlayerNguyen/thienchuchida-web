@@ -39,7 +39,7 @@ function Tag({ onClick, data }) {
 
 export default function BookEditor() {
   const { bookId } = useParams();
-
+  //eslint-disable-next-line
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [bookData, setBookData] = useState(null);
@@ -52,7 +52,7 @@ export default function BookEditor() {
   const [title, setTitle] = useState("");
   const [author, setAuthor] = useState("");
   const [password, setPassword] = useState("");
-  const [description, setDescription] = useState("");
+  const [description, setDescription] = useState("...");
 
   const { url } = useRouteMatch();
 
@@ -62,12 +62,12 @@ export default function BookEditor() {
     BookService.getBookBySlug(bookId)
       .then((response) => {
         const { data, chapters } = response.data;
-        // console.log(data);
+        console.log(data.description);
         setBookData(data);
         setChapterData(chapters);
 
         setTitle(data.title);
-        setDescription(data.description);
+        // setDescription(data.description);
         setTags(data.tags);
         setAuthor(data.author);
       })
@@ -227,7 +227,7 @@ export default function BookEditor() {
                           }}
                         /> */}
                         <Editor
-                          data={loading && description}
+                          data={bookData.description}
                           onDataUpdate={(data) => setDescription(data)}
                         />
                         <Form.Text className="text-muted">
