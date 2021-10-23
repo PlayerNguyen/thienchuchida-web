@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 
-import { Card, Button, Container } from "react-bootstrap";
+import { Card, Button, Container, Row, Col } from "react-bootstrap";
 import BookService from "../../../services/BookService";
 import { Link, useRouteMatch } from "react-router-dom";
 
@@ -8,7 +8,9 @@ import BookCreateModal from "./BookCreateModal";
 import BookRemoveConfirmModel from "./BookRemoveConfirmModel";
 import ResourceImage from "../ResourceManager/ResourceImage";
 import "./Selector.scss";
-
+import momentHelper from "../../../helpers/momentHelper";
+import {FontAwesomeIcon} from '@fortawesome/react-fontawesome'
+import {faClock, faLock} from '@fortawesome/free-solid-svg-icons'
 
 export default function BookSelector() {
   const [books, setBooks] = useState(null);
@@ -34,7 +36,7 @@ export default function BookSelector() {
   };
 
   const handleRemoveConfirmation = (targetId) => {
-    console.log(targetId);
+    // console.log(targetId);
     setRemoveTarget(targetId);
     setVisibleRemoveModal(true);
   };
@@ -63,6 +65,7 @@ export default function BookSelector() {
         {books ? (
           books.length > 0 ? (
             books.map((e, i) => {
+              console.log(e.createdAt);
               return (
                 <Card className="item" key={e._id}>
                   {/* <Card.Img
@@ -74,12 +77,33 @@ export default function BookSelector() {
                         : ServerConfig.DEFAULT_THUMBNAIL
                     }
                   /> */}
-                  <ResourceImage id={e.thumbnail} height={300} />
+                  <ResourceImage id={e.thumbnail} height={200} />
                   <Card.Body>
                     <Card.Title>{e.title}</Card.Title>
-                    <Card.Text>{e.description}</Card.Text>
+                    <Card.Text className="text-muted">
+                      <div
+                        dangerouslySetInnerHTML={{ __html: e.description }}
+                      ></div>
+                      {/* {e.description} */}
+                    </Card.Text>
                     {/* Information */}
+                    <Row className="text-muted">
+                      <Col xs={2}>
+                        <FontAwesomeIcon icon={faClock} />
+                      </Col>
+                      <Col >
+                        {momentHelper(e.createdAt).fromNow()}
+                      </Col>
+                    </Row>
 
+                    {/* <Row className="text-muted">
+                      <Col xs={2}>
+                        <FontAwesomeIcon icon={faLock} />
+                      </Col>
+                      <Col >
+                        Có mật khẩu
+                      </Col>
+                    </Row> */}
                   </Card.Body>
                   <Card.Footer>
                     <Button variant={`link`}>
@@ -105,6 +129,7 @@ export default function BookSelector() {
           )
         ) : null}
       </div>
+
       <BookCreateModal
         visible={visibleCreateModal}
         onHide={() => {

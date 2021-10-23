@@ -22,9 +22,10 @@ import {
 import ResourceService from "../../../services/ResourceService";
 import toastHelper from "../../../helpers/toastHelper";
 import ResourcePreviewModal from "../ResourceManager/ResourcePreviewModal";
-import { useHistory, useRouteMatch } from "react-router-dom";
+import { Link, useHistory, useRouteMatch } from "react-router-dom";
 import path from "path";
 import ResourceImage from "../ResourceManager/ResourceImage";
+import UnknownImage from "../../UnknownImage/UnknownImage";
 
 function ResourceSection({
   data,
@@ -98,6 +99,7 @@ function ResourceSection({
 
 export default function BookChapterEditor() {
   const { bookId, chapterId } = useParams();
+  const [bookData, setBookData] = useState({});
   const [chapterData, setChapterData] = useState(null);
   const [thumbnailData, setThumbnailData] = useState(null);
   const [visibleThumbnailSelect, setVisibleThumbnailSelect] = useState(false);
@@ -117,10 +119,13 @@ export default function BookChapterEditor() {
     BookService.getChapterById(bookId, chapterId)
       .then((response) => {
         const { data } = response.data;
+        // console.log(data)
         setChapterData(data);
         setThumbnailData(data.thumbnail);
         setTitle(data.name);
         setResourceSelected(data.content);
+        console.log(data.book);
+        setBookData({ ...data.book });
       })
       .finally(() => {
         setLoading(false);
@@ -136,6 +141,15 @@ export default function BookChapterEditor() {
         const { message } = response.data;
         toastHelper.success(message);
         setVisibleThumbnailSelect(false);
+      })
+      .then(() => {
+        BookService.getChapterById(bookId, chapterId).then((response) => {
+          const { data } = response.data;
+          setChapterData(data);
+          setThumbnailData(data.thumbnail);
+          setTitle(data.name);
+          setResourceSelected(data.content);
+        });
       })
       .finally(() => {
         setSaving(false);
@@ -266,7 +280,13 @@ export default function BookChapterEditor() {
       ) : (
         <Container fluid>
           <Col>
-            <h1 className="text-secondary mb-3">Truyện tên gì vậy</h1>
+            <h4 className="text-secondary mb-3 ff-normal">
+              <Link className="mr-5" to={`${path.dirname(url)}`}>
+                {bookData && bookData.title}
+              </Link>
+              {"/"}
+              <Link to={`${url}`}>{chapterData && title}</Link>
+            </h4>
           </Col>
           <Col className="editor__header d-flex ">
             <Container
@@ -275,11 +295,16 @@ export default function BookChapterEditor() {
                 setVisibleThumbnailSelect(true);
               }}
             >
-              <Col sm={12} md={10} lg={8} xl={6}>
-                <ResourceImage
-                  id={chapterData && thumbnailData && thumbnailData._id}
-                  alt="Chỉnh sửa ảnh bìa"
-                />
+              <Col xs={12} sm={8} md={6}>
+                {chapterData && thumbnailData ? (
+                  <ResourceImage
+                    id={thumbnailData._id}
+                    alt="Chỉnh sửa ảnh bìa"
+                    height="200px"
+                  />
+                ) : (
+                  <UnknownImage />
+                )}
               </Col>
               <Col>
                 <small>Nhấn vào ảnh bìa để thay đổi</small>

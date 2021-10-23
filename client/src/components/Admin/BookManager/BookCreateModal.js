@@ -3,6 +3,7 @@ import { Modal, Button, Form } from "react-bootstrap";
 import { useHistory } from "react-router";
 import { toast } from "react-toastify";
 import BookService from "../../../services/BookService";
+import Editor from "../Editor/Editor";
 
 export default function BookCreateModal({ visible, onHide }) {
   const [title, setTitle] = useState("");
@@ -16,8 +17,8 @@ export default function BookCreateModal({ visible, onHide }) {
     setTitle(target.value);
   };
 
-  const handleDescriptionChange = ({ target }) => {
-    setDescription(target.value);
+  const handleDescriptionChange = (data) => {
+    setDescription(data);
   };
 
   const handlePasswordChange = ({ target }) => {
@@ -52,7 +53,13 @@ export default function BookCreateModal({ visible, onHide }) {
   }, [title]);
 
   return (
-    <Modal show={visible} onHide={onHide} keyboard={true}>
+    <Modal
+      show={visible}
+      onHide={onHide}
+      keyboard={true}
+      autoFocus={false}
+      enforceFocus={false}
+    >
       <Modal.Header closeButton>
         <Modal.Title>Tạo truyện mới</Modal.Title>
       </Modal.Header>
@@ -68,11 +75,13 @@ export default function BookCreateModal({ visible, onHide }) {
           </Form.Group>
           <Form.Group className="mb-3">
             <Form.Label>Giới thiệu về truyện</Form.Label>
-            <Form.Control
+            {/* Change to book editor */}
+            {/* <Form.Control
               as="textarea"
               value={description}
               onChange={handleDescriptionChange}
-            />
+            /> */}
+            <Editor data={description} onDataUpdate={handleDescriptionChange} />
           </Form.Group>
           <Form.Group className="mb-3">
             <Form.Label>Mật khẩu</Form.Label>

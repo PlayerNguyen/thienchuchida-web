@@ -29,6 +29,12 @@ const resourceSchema = new mongoose.Schema({
   private: {
     type: Boolean,
     default: false
+  },
+  width: {
+    type: Number,
+  },
+  height: {
+    type: Number,
   }
 });
 

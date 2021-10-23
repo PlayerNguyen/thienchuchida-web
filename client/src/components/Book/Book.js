@@ -22,14 +22,14 @@ function Chapter({ data, bookId }) {
   const { url } = useRouteMatch();
 
   return (
-    <Col sm={12} md={6} lg={3} className="mb-3">
+    <Col sm={12} md={6} lg={4} className="mb-3">
       <Link to={`${url}/${data && data.slug}`} className="text-decoration-none">
         {/* Thumbnail */}
         <Col>
           <Thumbnail
             id={data.thumbnail}
             alt={`Chapter ${data && data._id} thumbnail`}
-            height={`300px`}
+            height={`200px`}
           />
         </Col>
         {/* Chapter info */}
@@ -267,7 +267,7 @@ export default function Book() {
     CommentService.deleteComment(id).then((response) => {
       const { message } = response.data;
       toastHelper.success(message);
-      // Fetch
+      // Fetch the comment
       handleFetchComment(bookInfo);
     });
   };
@@ -313,15 +313,15 @@ export default function Book() {
               <Col sm={12} md={6} className="mt-3">
                 <Row>
                   <Col>
-                    <h1 className="text-light fw-bold">
+                    <h1 className="text-light fw-bold ff-normal">
                       {bookInfo && bookInfo.title}
                     </h1>
                   </Col>
                 </Row>
                 <Row>
                   <Col>
-                    <p className="text-light">
-                      {bookInfo && bookInfo.description}
+                    <p className="text-light" dangerouslySetInnerHTML={{ __html: bookInfo && bookInfo.description}}>
+                      {/* {bookInfo && bookInfo.description} */}
                     </p>
                   </Col>
                 </Row>
@@ -335,7 +335,7 @@ export default function Book() {
                     </p>
 
                     <p className="text-light d-inline-block ">
-                      {bookInfo && bookInfo.author}
+                      {bookInfo && bookInfo.author ? bookInfo.author : "Không có tác giả"}
                     </p>
                   </Col>
                 </Row>

@@ -188,7 +188,7 @@ export default function Header() {
                 <NavDropdown
                   title={`Services`}
                   items={[
-                    { url: `/`, text: `Donate` },
+                    // { url: `/`, text: `Donate` },
                     { url: `/`, text: `Raw purchase` },
                   ]}
                 />
@@ -223,7 +223,7 @@ export default function Header() {
             <NavDropdown
               title={`Services`}
               items={[
-                { url: `/`, text: `Donate` },
+                // { url: `/`, text: `Donate` },
                 { url: `/`, text: `Raw purchase` },
               ]}
             />

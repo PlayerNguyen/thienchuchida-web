@@ -8,7 +8,7 @@ import SettingService from "../../services/SettingService";
 import NotifyService from "../../services/NotifyService";
 import Footer from "../Footer/Footer";
 import NotifyCard from "../NotifyCard/NotifyCard";
-import {Helmet} from "react-helmet-async"
+import { Helmet } from "react-helmet-async";
 
 export default function Home() {
   const [latest, setLatestUpdate] = useState(null);
@@ -61,9 +61,9 @@ export default function Home() {
 
   return (
     <div>
-    <Helmet>
-      <title>Trang Chủ</title>
-    </Helmet>
+      <Helmet>
+        <title>Trang Chủ</title>
+      </Helmet>
       <div className="home__header">
         <Header />
       </div>
@@ -89,6 +89,7 @@ export default function Home() {
           </Col>
 
           {/* Aside bar */}
+          {/* Notify list */}
           <Col sm={12} md={4}>
             <Row>
               <Col>
@@ -97,7 +98,7 @@ export default function Home() {
             </Row>
             <Row style={{ maxHeight: "425px", overflow: "auto" }}>
               {notifies &&
-                notifies.map((notify, index) => {
+                notifies.map((notify, _index) => {
                   return (
                     <NotifyCard
                       key={notify._id}

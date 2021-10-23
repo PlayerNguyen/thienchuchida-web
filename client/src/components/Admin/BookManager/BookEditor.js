@@ -20,6 +20,8 @@ import ResourceSelectModal from "../ResourceManager/ResourceSelectModal";
 import { toast } from "react-toastify";
 import BookChapterCreateModal from "./BookChapterCreateModal";
 import ResourceImage from "../ResourceManager/ResourceImage";
+import Editor from "../Editor/Editor";
+import UnknownImage from "../../UnknownImage/UnknownImage";
 
 function Tag({ onClick, data }) {
   return (
@@ -38,6 +40,7 @@ function Tag({ onClick, data }) {
 export default function BookEditor() {
   const { bookId } = useParams();
 
+  const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [bookData, setBookData] = useState(null);
   const [chapterData, setChapterData] = useState(null);
@@ -54,22 +57,24 @@ export default function BookEditor() {
   const { url } = useRouteMatch();
 
   useEffect(() => {
+    setLoading(true)
     // Get book by book slug
     BookService.getBookBySlug(bookId)
       .then((response) => {
         const { data, chapters } = response.data;
-        console.log(data)
+        // console.log(data);
         setBookData(data);
         setChapterData(chapters);
 
         setTitle(data.title);
         setDescription(data.description);
         setTags(data.tags);
-        setAuthor(data.author)
+        setAuthor(data.author);
       })
       .catch((err) => {
         // Not found or error
         setError(err.response);
+        setLoading(false)
       });
 
     return () => {
@@ -92,7 +97,7 @@ export default function BookEditor() {
         description,
         password,
         tags: tagIdentifies,
-        author
+        author,
       })
         .then((response) => {
           const { data, message } = response.data;
@@ -157,7 +162,11 @@ export default function BookEditor() {
                         setVisibleThumbnailSelect(true);
                       }}
                     >
-                      <ResourceImage id={bookData.thumbnail} />
+                      {bookData.thumbnail ? (
+                        <ResourceImage id={bookData.thumbnail} height={200} />
+                      ) : (
+                        <UnknownImage height={200} />
+                      )}
                       <small>Nhấn vào ảnh bìa để thay đổi</small>
                     </div>
                   </Form.Group>
@@ -210,12 +219,16 @@ export default function BookEditor() {
                         Giới thiệu
                       </Form.Label>
                       <Col sm={10}>
-                        <Form.Control
+                        {/* <Form.Control
                           as="textarea"
                           value={description}
                           onChange={(e) => {
                             setDescription(e.target.value);
                           }}
+                        /> */}
+                        <Editor
+                          data={loading && description}
+                          onDataUpdate={(data) => setDescription(data)}
                         />
                         <Form.Text className="text-muted">
                           Giới thiệu về truyện của bạn ở đây
@@ -249,17 +262,17 @@ export default function BookEditor() {
                         <Row>
                           <Col>
                             {tags &&
-                            tags.map((e, i) => {
-                              return <Tag key={i} data={e} />;
-                            })}
-                          <Button
-                            variant={`dark`}
-                            onClick={(e) => {
-                              setVisibleTagDialog(true);
-                            }}
-                          >
-                            Chỉnh sửa thẻ
-                          </Button>
+                              tags.map((e, i) => {
+                                return <Tag key={i} data={e} />;
+                              })}
+                            <Button
+                              variant={`dark`}
+                              onClick={(e) => {
+                                setVisibleTagDialog(true);
+                              }}
+                            >
+                              Chỉnh sửa thẻ
+                            </Button>
                           </Col>
                         </Row>
                         <Form.Text>

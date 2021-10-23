@@ -69,13 +69,16 @@ router.post(
           // Remove the cache file (raw file) in upload
           await ResourceHelper.deleteFile(file.path);
 
-          // Then put this file into database
+          const { width, height } = output;
+          //ß Then put this file into database
           const databaseItem = await ResourceController.createNewFile(
             file.originalname,
             output.size,
             "image/webp",
             currentFileLocation,
-            private
+            private,
+            width,
+            height
           );
 
           return {
@@ -189,10 +192,15 @@ router.get("/resource/metadata/:id", async (req, res, next) => {
 
     // Not found this file
     if (!doc) {
-      throw new MiddlewareError("File not found", 404);
+      throw new MiddlewareError("Không tìm thấy tài nguyên này", 404);
     }
-
-    res.json({ data: doc, url: { raw: `/resources/resource/raw/${id}` } });
+    res.json({
+      data: doc,
+      url: {
+        raw: `/resources/resource/raw/${id}`,
+        base64: `/resources/resource/base64/${id}`,
+      },
+    });
   } catch (err) {
     next(err);
   }
@@ -208,7 +216,7 @@ router.get(
 
       // Not found this file
       if (!doc) {
-        throw new MiddlewareError("File not found", 404);
+        throw new MiddlewareError("Không tìm thấy tài nguyên này.", 404);
       }
 
       // Set a header to mimetype and send file
@@ -216,7 +224,11 @@ router.get(
       // data:image/png;base64
       // res.setHeader("Content-Type", `data:${doc.mimetype};base64`);
       // res.setHeader('Cache-Control', 'public, max-age=31557600'); // one year
-      res.writeHead(200, { "Content-Type": doc.mimetype });
+      res.writeHead(200, {
+        "Content-Type": doc.mimetype,
+        "x-image-height": doc.height || "0",
+        "x-image-width": doc.width || "0",
+      });
       res.end(resource.toString("base64"));
     } catch (err) {
       next(err);
@@ -235,12 +247,20 @@ router.get(
 
       // Not found this file
       if (!doc) {
-        throw new MiddlewareError("File not found", 404);
+        throw new MiddlewareError("Không tìm thấy tài nguyên này", 404);
       }
 
       // Set a header to mimetype and send file
       const resource = await ResourceHelper.getBufferFromFile(doc.path);
+      
+      // res.writeHead(200, {
+      //   "Content-Type": doc.mimetype,
+      //   "x-image-height": doc.height || "0",
+      //   "x-image-width": doc.width || "0",
+      // });
       res.setHeader("Content-Type", doc.mimetype);
+      res.setHeader('Cache-Control', 'public, max-age=31557600'); // one year
+      // res.setHeader("x-image-width", doc.width.toString());
       res.send(resource);
     } catch (err) {
       next(err);

@@ -47,7 +47,8 @@ async function getChapterById(book, chapter) {
     $or: [{ _id: chapter }, { slug: chapter }],
   })
     .populate("thumbnail", "-__v")
-    .populate("content", "-__v");
+    .populate("content", "-__v")
+    .populate("book", "-__v -password");
 }
 
 /**

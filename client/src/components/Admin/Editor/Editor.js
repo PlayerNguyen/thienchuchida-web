@@ -21,9 +21,9 @@ export default function Editor({ data, onDataUpdate, ...children }) {
         ],
         plugin: ["table"],
       }}
-      onChange={(event, editor) => {
+      onChange={(_event, editor) => {
         const data = editor.getData();
-        // console.log({ event, editor, data });
+        // console.log({ _event, editor, data });
         onDataUpdate(data);
       }}
       {...children}

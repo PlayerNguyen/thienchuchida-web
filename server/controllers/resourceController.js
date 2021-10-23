@@ -8,15 +8,27 @@ const { MiddlewareError } = require("../errors/MiddlewareError");
  * @param {*} mimetype mimetype of file
  * @param {*} path a relative path
  * @param {*} private whether private or not
+ * @param {Number} width a width in pixels
+ * @param {Number} height a height in pixels
  * @returns generated file
  */
-async function createNewFile(name, size, mimetype, path, private) {
+async function createNewFile(
+  name,
+  size,
+  mimetype,
+  path,
+  private,
+  width,
+  height
+) {
   return Resource.create({
     filename: name,
     size: size,
     mimetype: mimetype,
     path: path,
     private: private,
+    width: width,
+    height: height,
   });
 }
 

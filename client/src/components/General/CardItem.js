@@ -1,6 +1,6 @@
+import React, { useState, useEffect } from "react";
 import { faClock, faEye, faUser } from "@fortawesome/free-regular-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import React from "react";
 import { Link } from "react-router-dom";
 import momentHelper from "../../helpers/momentHelper";
 import "./CardItem.scss";
@@ -8,12 +8,39 @@ import Thumbnail from "./Thumbnail";
 import { Container, Row, Col } from "react-bootstrap";
 import numberHelper from "../../helpers/numberHelper";
 
+/**
+ * Evaluate words (words count).
+ *
+ * @param {*} input an input string
+ *
+ * @return {Number} a number of words in a string
+ */
+function evaluateWord(input) {
+  return input.split(" ").length;
+}
+
 export default function CardItem({ data }) {
+  const [descriptionCharacterLimit] = useState(10);
+  const [descriptionTotalWords, setDescriptionTotalWords] = useState(-1);
+  const [formattedDescription] = useState(
+    data.description.replace(/(<([^>]+)>)/gi, "")
+  );
+
+  useEffect(() => {
+    console.log(formattedDescription);
+    setDescriptionTotalWords(evaluateWord(formattedDescription));
+    console.log(formattedDescription.split(" ")[3]);
+  }, [formattedDescription]);
+
   return (
     <Col xs={12} lg={6} className="mb-4">
       <Link className="bookcard" to={`/truyen/${data ? data.slug : null}`}>
         <div className="bookcard__body ">
-          <Thumbnail id={data.thumbnail} alt={`thumbnail `} height={"200px"} />
+          <Thumbnail
+            id={data.thumbnail}
+            alt={`Ảnh bìa của truyện ${data && data.title}`}
+            height={"200px"}
+          />
           <div className="bookcard__property--wrapper">
             <div className="bookcard__property">
               <div className="bookcard__property--bottom">
@@ -26,12 +53,16 @@ export default function CardItem({ data }) {
                     {/* description */}
                     <Col xs={12} className="bookcard__description fs-6 mb-2">
                       <span>
-                        {data && data.description.indexOf(" ", 40) > -1
-                          ? data.description.substring(
-                              0,
-                              data.description.indexOf(" ", 40)
-                            ) + "..."
-                          : data.description}
+                        {data &&
+                        descriptionTotalWords < descriptionCharacterLimit
+                          ? // Description is lower than the limit
+                            formattedDescription
+                          : // Otherwise, limit the text to the value descriptionCharacterLimit
+                            [...formattedDescription.split(" ")]
+                              .filter(
+                                (_, i) => i <= descriptionCharacterLimit
+                              )
+                              .join(" ").concat("...")}
                       </span>
                     </Col>
                     {/* Tag info */}

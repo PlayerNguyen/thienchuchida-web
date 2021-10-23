@@ -10,6 +10,7 @@ import Loading from "../Loading/Loading";
 import Footer from "../Footer/Footer";
 import "./BookReader.scss";
 import { Helmet } from "react-helmet-async";
+import { useInView } from "react-intersection-observer";
 
 export default function BookReader() {
   const { bookSlug, chapterId } = useParams();
@@ -24,7 +25,6 @@ export default function BookReader() {
         const { data, nextChapter } = response.data;
         setData(data);
         setNextChapter(nextChapter);
-        console.log(data)
       })
       .finally(() => {
         setLoading(false);
@@ -69,6 +69,7 @@ export default function BookReader() {
               </Col>
               <Col></Col>
             </Row>
+            {/* Body content */}
             {data &&
               data.content.map((e, i) => {
                 return (
@@ -128,7 +129,7 @@ export default function BookReader() {
             </div>
           </>
         ) : (
-          <Loading />
+          null
         )}
         <div>
           <Footer />

@@ -10,7 +10,7 @@ export default function RemoveModal(props) {
   const handleOnClose = () => {
     props.onClose();
   };
-  
+
   // const handleRemoveElementData = (id) => {
   //   const arr = props.data.filter((e) => e !== id)
   //   console.log(arr)
@@ -20,15 +20,15 @@ export default function RemoveModal(props) {
   const handleOnDelete = async () => {
     setLoading(true);
     setProgressValue(100);
-    
+
     for (let i in props.selection) {
       const id = props.selection[i];
-      // const response = 
-        await ResourceService.removeResource(id);
-      // const { data } = response.data; 
+      // const response =
+      await ResourceService.removeResource(id);
+      // const { data } = response.data;
     }
     // Reload the page to update
-    window.location.reload()
+    window.location.reload();
   };
 
   return (

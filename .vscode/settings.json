@@ -16,5 +16,6 @@
     "bookmanager",
     "resourceitem",
     "titlebar"
-  ]
+  ],
+  "cmake.configureOnOpen": false
 }
