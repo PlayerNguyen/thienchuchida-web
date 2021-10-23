@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "Thien Chu Chi Da Website",
   "main": "index.js",
+  "license": "MIT",
   "scripts": {
     "install:client": "cd client && yarn install ",
     "install:server": "cd server && yarn install ",
