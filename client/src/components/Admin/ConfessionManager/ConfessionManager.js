@@ -163,6 +163,7 @@ export default function ConfessionManager() {
               <ConfessionItem
                 index={index}
                 item={item}
+                key={index}
                 setConfessions={setConfessions}
                 confessions={confessions}
                 totalItems={totalItems}
